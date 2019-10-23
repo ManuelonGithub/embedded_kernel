@@ -1,0 +1,84 @@
+/**
+ * @file    Kernel_Scheduler.c
+ * @brief   Contains all the supporting functionality to schedule process in the kernel.
+ * @details This module should not be exposed to user programs.
+ * @author  Manuel Burnay
+ * @date    2019.10.23  (Created)
+ * @date    2019.10.23  (Last Modified)
+ */
+
+#include <stdio.h>
+#include <stdbool.h>
+#include "Kernel_Scheduler.h"
+
+pcb_t* ProcessQueue[PROCESS_QUEUES];
+
+/**
+ * @brief   Initializes the Process Queue's "heads" to null.
+ * @todo    Check if since it's a global variable that all values are null from the getgo.
+ *          If so this function is not needed.
+ */
+void scheduler_init()
+{
+    for (int i = 0; i < PROCESS_QUEUES; i++) {
+        ProcessQueue[i] = NULL;
+    }
+}
+
+/**
+ * @brief   Links a PCB into a specific priority queue.
+ * @param   [in, out] PCB: pointer to PCB element to link into the respective process queue.
+ * @return  PCB link return code. See pcb_link_code_t for more details.
+ * @details This function is used to also move PCBs in and out of the blocked queue
+ *          and to place the idle process in the idle process queue.
+ *          This poses a potential risk that processes may be initialized with a "priority"
+ *          lower than what is allowed, but that will only cause that process to never run.
+ */
+pcb_handle_code_t LinkPCB(pcb_t *PCB)
+{
+    if (queue > PROCESS_QUEUES)  return INVALID_PRIORITY;
+
+    pcb_t* front = ProcessQueue[PCB->priority];
+
+    if (front == NULL) {
+        front = PCB;
+        PCB->next = PCB;
+        PCB->prev = PCB;
+    }
+    else {
+        PCB->next = front;
+        PCB->prev = front->prev;
+        front->prev->next = PCB;
+        front->prev = PCB;
+    }
+
+    return INIT_SUCCESS;
+}
+
+/**
+ * @brief   Determines which PCB should run next.
+ * @return  Pointer to PCB of the next process that should run.
+ * @details This function does not perform any process switching.
+ *          It simply iterates through the process queues to find
+ *          the next available process to run.
+ */
+pcb_t* Schedule()
+{
+    pcb_t* front, retval = NULL;
+    for (int i = 0; i < PRIORITY_LEVELS; i++) {
+        front = ProcessQueue[i];
+        if (front != NULL) {        // If this priority queue isn't empty.
+            retval = front;         // The process in front of queue is determined to run next.
+            front = front->next;    // The front of queue then moves to the next process to run.
+        }
+    }
+
+    if (retval == NULL) {
+        retval = ProcessQueue[IDLE_LEVEL];  // We are assuming here that there will always be an idle process.
+    }
+
+    return retval;
+}
+
+
+
