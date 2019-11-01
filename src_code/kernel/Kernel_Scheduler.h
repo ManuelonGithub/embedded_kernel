@@ -24,7 +24,7 @@
 #define PROCESS_QUEUES  PRIORITY_LEVELS+2
 
 void scheduler_init();
-void LinkPCB(pcb_t *newPCB, uint32_t priority);
-
+pcb_handle_code_t LinkPCB(pcb_t *newPCB);
+pcb_t* Schedule();
 
 #endif	//  KERNEL_SCHEDULER_H

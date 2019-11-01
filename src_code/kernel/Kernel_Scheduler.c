@@ -20,7 +20,8 @@ pcb_t* ProcessQueue[PROCESS_QUEUES];
  */
 void scheduler_init()
 {
-    for (int i = 0; i < PROCESS_QUEUES; i++) {
+    int i;
+    for (i = 0; i < PROCESS_QUEUES; i++) {
         ProcessQueue[i] = NULL;
     }
 }
@@ -36,11 +37,25 @@ void scheduler_init()
  */
 pcb_handle_code_t LinkPCB(pcb_t *PCB)
 {
-    if (queue > PROCESS_QUEUES)  return INVALID_PRIORITY;
+    if (PCB->priority > PROCESS_QUEUES)  return INVALID_PRIORITY;
 
     pcb_t* front = ProcessQueue[PCB->priority];
 
-    if (front == NULL) {
+    /*
+     * If the process was previously linked to other PCBs,
+     * Severe those links before moving the PCB to a new queue.
+     */
+    if (PCB->next != NULL && PCB->prev != NULL) {
+        if (PCB->next == PCB || PCB->prev == PCB) { // The PCB is the only element in the queue.
+            ProcessQueue[PCB->priority] = NULL;
+        }
+        else {
+            PCB->next->prev = PCB->prev;
+            PCB->prev->next = PCB->next;
+        }
+    }
+
+    if (front == NULL) {    // If the queue where the PCB is being moved to is empty.
         front = PCB;
         PCB->next = PCB;
         PCB->prev = PCB;
@@ -52,7 +67,7 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB)
         front->prev = PCB;
     }
 
-    return INIT_SUCCESS;
+    return HANDLE_SUCCESS;
 }
 
 /**
@@ -64,19 +79,23 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB)
  */
 pcb_t* Schedule()
 {
-    pcb_t* front, retval = NULL;
-    for (int i = 0; i < PRIORITY_LEVELS; i++) {
+    pcb_t* front;
+    pcb_t* retval = NULL;
+    int i = 0;
+
+    while (i < PRIORITY_LEVELS && retval == NULL) {
         front = ProcessQueue[i];
         if (front != NULL) {        // If this priority queue isn't empty.
             retval = front;         // The process in front of queue is determined to run next.
             front = front->next;    // The front of queue then moves to the next process to run.
         }
+        i++;
     }
 
     if (retval == NULL) {
         retval = ProcessQueue[IDLE_LEVEL];  // We are assuming here that there will always be an idle process.
-    }
-
+    }                                       // Which if not then my kernel writer has betrayed me.
+                                            //
     return retval;
 }
 
