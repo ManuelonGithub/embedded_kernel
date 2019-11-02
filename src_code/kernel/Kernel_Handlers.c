@@ -21,8 +21,6 @@ pcb_t* running;
 
 void KernelCall_handler(cpu_context_t* argptr);
 
-//void KernelCall_handler(struct stack_frame *argptr);
-
 /**
  * @brief   Generic Idle process used by the kernel.
  */
@@ -33,7 +31,6 @@ void idle()
 
 /**
  * @brief   Initializes kernel data structures, drivers, and critical processes.
- * @details
  */
 void kernel_init()
 {
@@ -45,7 +42,7 @@ void kernel_init()
 	// 		uart init
 
     scheduler_init();
-    reg_proc(idle, 0, IDLE_LEVEL);
+    process_create(idle, 0, IDLE_LEVEL);
 	// register the server processes
 }
 
@@ -183,3 +180,4 @@ void KernelCall_handler(cpu_context_t* argptr)
     }
 }
 
+k_reg_proc

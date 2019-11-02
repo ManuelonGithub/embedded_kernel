@@ -12,42 +12,21 @@
 #include "Kernel_Scheduler.h"
 
 
-int reg_proc(void (*proc_func)(), uint32_t pid, uint32_t priority)
+int process_create(void (*proc_program)(), uint32_t pid, uint32_t priority)
 {
     // Check if another process has this pid
     // if (FindPID(pid))     return INVALID_PID;
     pcb_handle_code_t retval;
 
-	pcb_t* newPCB = (pcb_t*)malloc(sizeof(pcb_t));
+	pcb_t* newPCB = malloc(sizeof(pcb_t));
 	newPCB->sp = malloc(STACKSIZE);
 	newPCB->id = pid;
 	newPCB->priority = priority;
 
 	cpu_context_t* cpu = (cpu_context_t*)newPCB->sp;
-	cpu->psr PSR_INIT_VAL;
+	cpu->psr = PSR_INIT_VAL;
 	cpu->lr = (uint32_t)&terminate;
-	cpu->pc = (uint32_t)proc_func;
-
-
-	// Initialize CPU context by pushing register values.
-	cpu_context_t cpu = {
-	                     .psr = PSR_INIT_VAL,
-	                     .pc  = proc_func,
-	                     .lr  = (uint32_t)&terminate,
-	                     .r12 = 0,
-	                     .r4  = 0,
-	                     .r5  = 0,
-	                     .r6  = 0,
-	                     .r7  = 0,
-	                     .r8  = 0,
-	                     .r9  = 0,
-	                     .r10 = 0,
-	                     .r11 = 0,
-	                     .r0  = 0,
-	                     .r1  = 0,
-	                     .r2  = 0,
-	                     .r3  = 0,
-	};
+	cpu->pc = (uint32_t)proc_program;
 
     newPCB->next = NULL;
     newPCB->prev = NULL;

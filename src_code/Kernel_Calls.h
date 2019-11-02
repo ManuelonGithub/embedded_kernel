@@ -16,17 +16,19 @@
 #include <stdbool.h>
 
 typedef enum KERNEL_CALL_CODES {
-	GETID, NICE, SEND, RECV, TERMINATE
+	PROC_CREATE, GETID, NICE, SEND, RECV, TERMINATE
 } call_codes_t; /** Kernel Calls supported */
 
 typedef struct kernel_call_arguments_ {
-	unsigned int code;
-	unsigned int rtnvalue;
-	unsigned int arg1;
-	unsigned int arg2;
-} call_args_t; /** Kernel Call argument structure */ 
+	uint32_t    call_code;
+	uint32_t    retval;
+	uint32_t    argc;
+	uint32_t*   argv;
+} kernel_call_t ; /** Kernel Call argument structure */
 
-int reg_proc(void (*proc_func)(), uint32_t pid, uint32_t priority);
+
+
+int process_create(void (*proc_program)(), uint32_t pid, uint32_t priority);
 void terminate(void);
 
 

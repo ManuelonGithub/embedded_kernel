@@ -56,7 +56,7 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB)
     }
 
     if (front == NULL) {    // If the queue where the PCB is being moved to is empty.
-        front = PCB;
+        ProcessQueue[PCB->priority] = PCB;
         PCB->next = PCB;
         PCB->prev = PCB;
     }
