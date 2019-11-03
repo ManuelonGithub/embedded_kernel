@@ -1,5 +1,5 @@
 /**
- * @file    Kernel_Processes.h
+ * @file    k_processes.h
  * @brief   Contains all functions and entities related to
  *          processes and process control blocks.
  * @details This module should not be exposed to user programs.
@@ -8,8 +8,8 @@
  * @date    2019.10.23 (Last Modified)
  */
 
-#ifndef     KERNELL_PROCESSES_H
-#define     KERNELL_PROCESSES_H
+#ifndef     K_PROCESSES_H
+#define     K_PROCESSES_H
 
 #include <stdint.h>
 
@@ -76,4 +76,4 @@ typedef struct cpu_context_ {
     uint32_t psr;
 } cpu_context_t;
 
-#endif	//  KERNELL_PROCESSES_H
+#endif	//  K_PROCESSES_H

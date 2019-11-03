@@ -1,5 +1,5 @@
 /**
- * @file    Kernel_Scheduler.c
+ * @file    k_scheduler.c
  * @brief   Contains all the supporting functionality to schedule process in the kernel.
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "Kernel_Scheduler.h"
+#include "k_scheduler.h"
 
 pcb_t* ProcessQueue[PROCESS_QUEUES];
 
@@ -35,11 +35,11 @@ void scheduler_init()
  *          This poses a potential risk that processes may be initialized with a "priority"
  *          lower than what is allowed, but that will only cause that process to never run.
  */
-pcb_handle_code_t LinkPCB(pcb_t *PCB)
+pcb_handle_code_t LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
 {
-    if (PCB->priority > PROCESS_QUEUES)  return INVALID_PRIORITY;
+    if (proc_lvl > PROCESS_QUEUES)  return INVALID_PRIORITY;
 
-    pcb_t* front = ProcessQueue[PCB->priority];
+    pcb_t* front = ProcessQueue[proc_lvl];
 
     /*
      * If the process was previously linked to other PCBs,
@@ -47,7 +47,7 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB)
      */
     if (PCB->next != NULL && PCB->prev != NULL) {
         if (PCB->next == PCB || PCB->prev == PCB) { // The PCB is the only element in the queue.
-            ProcessQueue[PCB->priority] = NULL;
+            ProcessQueue[proc_lvl] = NULL;
         }
         else {
             PCB->next->prev = PCB->prev;
