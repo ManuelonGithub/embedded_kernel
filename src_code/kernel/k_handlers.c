@@ -36,8 +36,7 @@ void idle()
  */
 void kernel_init()
 {
-    // init pendSV priority
-    // init SVC priority ?
+    PendSV_init();
 
 	// init drivers
 	// 		systick init
@@ -53,22 +52,26 @@ void kernel_init()
  * @details When a kernel is in run mode, user processes are able to run.
  */
 inline void kernel_start() {
-	running = Schedule();
-
-	k_call_t call;     // May need a better solution b/c pretty sure this stack frame will never get cleared.
-	call.code = STARTUP;
-
-	k_SetCall(&call);
-
-	SVC();
+    PendSV();
 }
 
 /**
  * @brief   Pending Supervisor Call trap handler.
  */
-void PendSV_handler()
+void PendSV_handler(void)
 {
-    printf("hey");
+    // Because PendSV is called on start-up and when a process termination occurs,
+    // It needs to account for when there is no running process.
+    if (running != NULL) {  // Only save running process context is there is a running process
+        SaveProcessContext();
+        running->sp = (uint32_t*)GetPSP();
+    }
+
+    running = Schedule();
+    SetPSP((uint32_t)running->sp);
+    RestoreProcessContext();
+
+    StartProcess();
 }
 
 /**
@@ -109,11 +112,8 @@ void KernelCall_handler(k_call_t* call)
 
         case STARTUP: {
             //todo: Call PendSV instead of doing this
-            set_PSP((uint32_t)(running->sp) + 8 * sizeof(uint32_t));
-
-            __asm(" movw    LR,#0xFFFD");  /* Lower 16 [and clear top 16] */
-            __asm(" movt    LR,#0xFFFF");  /* Upper 16 only */
-            __asm(" bx  LR");          /* Force return to PSP */
+//            set_PSP((uint32_t)(running->sp) + 8 * sizeof(uint32_t));
+            PendSV();
         } break;
 
         case GETID: {

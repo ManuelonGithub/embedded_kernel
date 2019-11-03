@@ -78,6 +78,10 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
  * @details This function does not perform any process switching.
  *          It simply iterates through the process queues to find
  *          the next available process to run.
+ * @todo    Take in the running process so it can be compared with the selected process
+ *          b/c if the selected process has the same priority as the running process
+ *          and the running process' time allotted run time hasn't elapsed,
+ *          then a new process shouldn't be selected.
  */
 pcb_t* Schedule()
 {

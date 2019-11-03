@@ -14,6 +14,15 @@
 #include "k_cpu.h"
 
 /**
+ * @brief   Initializes the CPU to support the Pending Supervisor trap.
+ * @details A Pending Supervisor Trap is configured to be the lowest-priority trap.
+ */
+inline void PendSV_init()
+{
+    NVIC_SYS_PRI3_R |= PENDSV_LOWEST_PRIORITY;
+}
+
+/**
  * @brief   Determines the source of a trap call.
  * @retval  A code value related to the the source.
  *          See trap_souces_t for more information.
@@ -83,3 +92,40 @@ inline void InitProcessContext(cpu_context_t* cpu, void (*proc_program)(), void 
     cpu->lr = (uint32_t)exit_program;
     cpu->pc = (uint32_t)proc_program;
 }
+
+/**
+ * @brief   Sets the current process stack pointer value.
+ * @param   [in] ProcessStack: Stack pointer value to set the current process stack to.
+ */
+inline void SetPSP(volatile uint32_t ProcessStack)
+{
+    /* set PSP to ProcessStack */
+    __asm(" msr psp, r0");
+}
+
+/**
+ * @brief   Retrieves the current process' stack pointer value.
+ * @return  The current stack pointer's value.
+ */
+inline uint32_t GetPSP()
+{
+    /* Returns contents of PSP (current process stack */
+    __asm(" mrs     r0, psp");
+    __asm(" bx  lr");
+    return 0;   /* Not executed -- removes compiler warning */
+}
+
+/**
+ * @brief   Forces the machine to switch to a process' context when in handler mode.
+ * @details This does require the process stack to already be set up
+ *          And with the proper register values in it.
+ */
+inline void StartProcess()
+{
+    __asm(" movw    LR,#0xFFFD");  /* Lower 16 [and clear top 16] */
+    __asm(" movt    LR,#0xFFFF");  /* Upper 16 only */
+    __asm(" bx  LR");          /* Force return to PSP */
+}
+
+
+
