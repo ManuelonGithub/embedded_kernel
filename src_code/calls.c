@@ -3,18 +3,19 @@
  * @brief   Contains all the kernel call functions that user programs have access to.
  * @author  Manuel Burnay
  * @date    2019.10.23 (Created)
- * @date    2019.11.02 (Last Modified)
+ * @date    2019.11.03 (Last Modified)
  */
 
 #include <stdlib.h>
 #include "k_calls.h"
 #include "calls.h"
-#include "cpu.h"
 
-
-int ProcessCreate(void (*proc_program)(), uint32_t pid, uint32_t priority)
+/**
+ * @brief   Requests the creation and registration of a new process in kernel space.
+ */
+int ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)())
 {
-    kernel_call_t call;
+    k_call_t call;
     uint32_t args[] = {pid, priority, (uint32_t)(proc_program)};
 
     call.code = PROC_CREATE;
@@ -28,20 +29,52 @@ int ProcessCreate(void (*proc_program)(), uint32_t pid, uint32_t priority)
     return call.retval;
 }
 
+/**
+ * @brief   Requests the termination of the running process.
+ */
 void terminate(void)
 {
-	// call kernel handler to terminate running process.
+	k_call_t call;
+	call.code = TERMINATE;
+
+	k_SetCall(&call);
+
+	SVC();
 }
 
-//int getid()
-//{
-//	volatile struct kcallargs getidarg; /* Volatile to actually reserve space on stack */
-//	getidarg.code = GETID;
-//
-//	/* Assign address if getidarg to R7 */
-//	assignR7((unsigned long) &getidarg);
-//
-//	SVC();
-//
-//	return getidarg.rtnvalue;
-//}
+/**
+ * @brief   Requests the process ID of the running process.
+ * @return  The process ID value.
+ */
+uint32_t getpid(void)
+{
+    k_call_t call;
+    call.code = GETID;
+
+    k_SetCall(&call);
+
+    SVC();
+
+    return call.retval;
+}
+
+/**
+ * @brief   Requests that the running process' running priority to be changed.
+ * @param   [in] newPriority: New priority level for the running process to run.
+ * @return  New priority value if priority change was successful.
+ *          Any other value means the priority change was unsuccessful.
+ */
+uint32_t nice(uint32_t newPriority)
+{
+    k_call_t call;
+    call.code = NICE;
+    call.argc = 1;
+    call.argv = &newPriority;
+
+    k_SetCall(&call);
+
+    SVC();
+
+    return call.retval;
+}
+

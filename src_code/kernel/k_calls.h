@@ -1,4 +1,11 @@
-
+/**
+ * @file    k_calls.h
+ * @brief   Defines all priviledged functions and entities
+ *          regarding kernel calls
+ * @author  Manuel Burnay
+ * @date    2019.11.02  (Created)
+ * @date    2019.11.03  (Last Modified)
+ */
 
 #ifndef K_CALLS_H
 #define K_CALLS_H
@@ -7,6 +14,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "k_processes.h"
+#include "k_cpu.h"
 
 typedef enum KERNEL_CALL_CODES {
 	PROC_CREATE, STARTUP, GETID, NICE, SEND, RECV, TERMINATE
@@ -17,14 +25,16 @@ typedef struct kernel_call_arguments_ {
 	uint32_t        retval;
 	uint32_t        argc;
 	uint32_t*       argv;
-} kernel_call_t ; /** Kernel Call argument structure */
+} k_call_t ; /** Kernel Call argument structure */
 
-inline void k_SetCall(volatile kernel_call_t* call) {
-    __asm("     mov r7,r0");
+/** @brief  Sets up the Kernel call parameters for the trap handler to retrieve. */
+inline void k_SetCall(volatile k_call_t* call) {
+	SetCallReg((void*)call);
 }
 
-inline kernel_call_t* k_GetCall(cpu_context_t* cpu) {
-	return (kernel_call_t*)cpu->r7;
+/** @brief  Retrieves the Kernel call parameters for the trap handler. */
+inline k_call_t* k_GetCall() {
+	return (k_call_t*)GetCallReg();
 }
 
 #endif // K_CALLS_H

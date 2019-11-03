@@ -5,7 +5,7 @@
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
  * @date    2019.10.23 (Created)
- * @date    2019.10.23 (Last Modified)
+ * @date    2019.11.03 (Last Modified)
  */
 
 #include <stdlib.h>
@@ -17,11 +17,11 @@
 #include "k_processes.h"
 #include "k_calls.h"
 #include "calls.h"
-#include "cpu.h"
+#include "k_cpu.h"
 
 pcb_t* running;
 
-void KernelCall_handler(cpu_context_t* argptr);
+void KernelCall_handler(k_call_t* call);
 
 /**
  * @brief   Generic Idle process used by the kernel.
@@ -44,18 +44,18 @@ void kernel_init()
 	// 		uart init
 
     scheduler_init();
-    ProcessCreate(&idle, 0, IDLE_LEVEL);
+    ProcessCreate(0, IDLE_LEVEL, &idle);
 	// register the server processes
 }
 
 /**
- * @brief   Starts the kernel run-mode.
- * @details "Run-mode" means that now user processes are running.
+ * @brief   Starts the kernel's run-mode.
+ * @details When a kernel is in run mode, user processes are able to run.
  */
 inline void kernel_start() {
 	running = Schedule();
 
-	kernel_call_t call;     // May need a better solution b/c pretty sure this stack frame will never get cleared.
+	k_call_t call;     // May need a better solution b/c pretty sure this stack frame will never get cleared.
 	call.code = STARTUP;
 
 	k_SetCall(&call);
@@ -73,56 +73,42 @@ void PendSV_handler()
 
 /**
  * @brief   Supervisor Call trap handler.
+ * @details Trap handler has been structured so it's as CPU-generic as possible.
+ *          CPU-specific implementation is done in the k_cpu module.
  */
 void SVC_handler() 
 {
-	/* Supervisor call (trap) entry point
-	 * Using MSP - trapping process either MSP or PSP (specified in LR)
-	 * Source is specified in LR: F1 (MSP) or FD (PSP)
-	 * Save r4-r11 on trapping process stack (MSP or PSP)
-	 * Restore r4-r11 from trapping process stack to CPU
-	 * SVCHandler is called with r0 equal to MSP or PSP to access any arguments
-	 */
+    SaveTrapReturn();   // save the trap return address
 
-	/* Save LR for return via MSP or PSP */
-	__asm(" 	PUSH 	{LR}");	// Not sure if this is required. LR's state is saved 
+    if (TrapSource() == KERNEL) {   // Check if the trap was called by the kernel
+        SaveContext();              // In which case the trap needs to save its own context
+        KernelCall_handler(k_GetCall());
+        RestoreContext();
+    }
+    else {                      // Trap was called by a process
+        SaveProcessContext();   // So the process' context is saved
+        KernelCall_handler(k_GetCall());
+        RestoreProcessContext();
+    }
 
-	/* Trapping source: MSP or PSP? */
-	__asm(" 	TST 	LR,#4");	/* Bit #3 (0100b) indicates MSP (0) or PSP (1) */
-	__asm(" 	BNE 	RtnViaPSP");
-
-	/* Trapping source is MSP - save r4-r11 on stack (default, so just push) */
-	__asm(" 	PUSH 	{r4-r11}");
-	__asm(" 	MRS	r0,msp");
-	__asm(" 	BL	KernelCall_handler");	/* r0 is MSP */
-	__asm(" 	POP	{r4-r11}");
-	__asm(" 	POP 	{PC}");
-
-	/* Trapping source is PSP - save r4-r11 on psp stack (MSP is active stack) */
-	__asm("RtnViaPSP:");
-	__asm(" 	mrs 	r0,psp");
-	__asm("		stmdb 	r0!,{r4-r11}");	/* Store multiple, decrement before */
-	__asm("		msr	psp,r0");
-	__asm(" 	BL	KernelCall_handler");	/* r0 Is PSP */
-	  
-	/* Restore r4..r11 from trapping process stack  */
-	__asm(" 	mrs 	r0,psp");
-	__asm("		ldmia 	r0!,{r4-r11}");	/* Load multiple, increment after */
-	__asm("		msr	psp,r0");
-	__asm(" 	POP 	{PC}");
+    RestoreTrapReturn();
 }
 
-
-void KernelCall_handler(cpu_context_t* proc_cpu)
+/**
+ * @brief   Kernel Call Handler function.
+ * @param   [in, out] call: Pointer to call structure where the call's code and arguments reside.
+ * @details This function is in charge of analyzing the kernel call structure passed to the trap
+ *          and service the call if its parameters are valid.
+ */
+void KernelCall_handler(k_call_t* call)
 {
-    kernel_call_t* call = k_GetCall(proc_cpu);
-
     switch(call->code) {
         case PROC_CREATE: {
             call->retval = k_ProcessCreate(call->argv[0], call->argv[1], (void(*)())(call->argv[2]));
         } break;
 
         case STARTUP: {
+            //todo: Call PendSV instead of doing this
             set_PSP((uint32_t)(running->sp) + 8 * sizeof(uint32_t));
 
             __asm(" movw    LR,#0xFFFD");  /* Lower 16 [and clear top 16] */
@@ -135,13 +121,8 @@ void KernelCall_handler(cpu_context_t* proc_cpu)
         } break;
 
         case NICE: {
-            if (LinkPCB(running, call->argv[0]) == HANDLE_SUCCESS) {
-                call->retval = HANDLE_SUCCESS;
-                running->priority = call->argv[0];
-            }
-            else {
-                call->retval = (uint32_t)INVALID_PRIORITY;
-            }
+            call->retval = LinkPCB(running, call->argv[0]);
+            // Also need to check if PendSV needs to be called.
         } break;
 
         case SEND: {
@@ -155,25 +136,35 @@ void KernelCall_handler(cpu_context_t* proc_cpu)
         case TERMINATE: {
 
         } break;
+
+        default: {
+
+        } break;
     }
 }
 
+/**
+ * @brief   Creates a process and registers it in kernel space.
+ * @param   [in] pid: Unique process identifier value.
+ * @param   [in] priortity: Priority level that the process will run in.
+ * @param   [in] proc_program: Pointer to start of the program the process will execute.
+ * @retval  Returns -1 if the process wasn't able to be created,
+ *          otherwise will return the process' ID.
+ */
 uint32_t k_ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)())
 {
     pcb_t* newPCB = (pcb_t*)malloc(sizeof(pcb_t));
-    newPCB->sp = (uint32_t*)malloc(STACKSIZE);
+    newPCB->sp_bottom = (uint32_t*)malloc(STACKSIZE);
     newPCB->id = pid;
-    newPCB->priority = priority;
 
-    cpu_context_t* cpu = (cpu_context_t*)newPCB->sp;
-    cpu->psr = PSR_INIT_VAL;
-    cpu->lr = (uint32_t)&terminate;
-    cpu->pc = (uint32_t)proc_program;
+    newPCB->sp = newPCB->sp_bottom;
+
+    InitProcessContext((cpu_context_t*)newPCB->sp, proc_program, &terminate);
 
     newPCB->next = NULL;
     newPCB->prev = NULL;
 
-    int retval = LinkPCB(newPCB, newPCB->priority);
+    int retval = LinkPCB(newPCB, priority);
 
     if (retval < 0) {   // Something went wrong with pcb linking
       free(newPCB->sp);

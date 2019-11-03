@@ -27,12 +27,13 @@ typedef enum PCB_HANDLE_CODES_ {
 
 /** Process control block structure */
 typedef struct pcb_ {
-    uint32_t        id;
-    uint32_t        priority;
-    uint32_t*       sp;
-    process_state_t state;
     struct pcb_*    next;
     struct pcb_*    prev;
+    uint32_t        id;
+    uint32_t        priority;
+    uint32_t*       sp_bottom;
+    uint32_t*       sp;
+    process_state_t state;
 } pcb_t;
 
 void set_LR(volatile uint32_t);
@@ -44,36 +45,5 @@ uint32_t get_SP();
 
 void volatile save_registers();
 void volatile restore_registers();
-
-/**
- * @brief   CPU context structure.
- * @details This structure is aligned with how registers are placed onto the stack
- *          when a context switch occurs.
- *          By casting the process' stack pointer to a pointer to this structure,
- *          You are able to explicitly analyze the process' CPU context.
- */
-typedef struct cpu_context_ {
-    /* Registers saved by s/w (explicit) */
-    /* There is no actual need to reserve space for R4-R11, other than
-     * for initialization purposes.  Note that r0 is the h/w top-of-stack.
-     */
-    uint32_t r4;
-    uint32_t r5;
-    uint32_t r6;
-    uint32_t r7;
-    uint32_t r8;
-    uint32_t r9;
-    uint32_t r10;
-    uint32_t r11;
-    /* Stacked by hardware (implicit)*/
-    uint32_t r0;
-    uint32_t r1;
-    uint32_t r2;
-    uint32_t r3;
-    uint32_t r12;
-    uint32_t lr;
-    uint32_t pc;
-    uint32_t psr;
-} cpu_context_t;
 
 #endif	//  K_PROCESSES_H

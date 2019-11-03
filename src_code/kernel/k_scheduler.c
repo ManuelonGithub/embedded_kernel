@@ -4,7 +4,7 @@
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
  * @date    2019.10.23  (Created)
- * @date    2019.10.23  (Last Modified)
+ * @date    2019.11.03  (Last Modified)
  */
 
 #include <stdio.h>
@@ -56,7 +56,7 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
     }
 
     if (front == NULL) {    // If the queue where the PCB is being moved to is empty.
-        ProcessQueue[PCB->priority] = PCB;
+        ProcessQueue[proc_lvl] = PCB;
         PCB->next = PCB;
         PCB->prev = PCB;
     }
@@ -66,6 +66,8 @@ pcb_handle_code_t LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
         front->prev->next = PCB;
         front->prev = PCB;
     }
+
+    PCB->priority = proc_lvl;
 
     return HANDLE_SUCCESS;
 }
