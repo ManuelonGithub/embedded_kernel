@@ -11,21 +11,17 @@
 #include "SysTick.h"
 
 
-systick_descriptor_t* sys;
-
 /**
  * @brief   Initializes the sysTick driver & sets up the descriptor for the driver.
- * @param   [in, out] descriptor: pointer to SysTick descriptor that the driver will configure
- *                                with to have access to it.
+ * @param   [in] rate: Frequency that SysTick should trigger (in Hz).
  * @details The descriptor's pointer will be saved internally into the driver module so the
  *          interrupt handler can have access to it.
  */
-void SysTick_Init(systick_descriptor_t* descriptor)
+void SysTick_Init(uint32_t rate)
 {
 	ST_CTRL_R = ST_CTRL_CLK_SRC;
 
-    sys = descriptor;
-    SysTick_SetPeriod(F_CPU_CLK/sys->tick_rate);
+    SysTick_SetPeriod(F_CPU_CLK/rate);
     SysTick_Reset();
 }
 
@@ -53,69 +49,7 @@ void SysTick_Reset()
     SysTick_IntEnable();
 }
 
-/**
- * @brief	Sets the interrupt enable bit in the SysTick control register
- */
-void SysTick_IntEnable(void)
-{
-    // Set the interrupt bit in STCTRL
-    ST_CTRL_R |= ST_CTRL_INTEN;
-}
 
-/**
- * @brief	Clears the interrupt enable bit in the SysTick control register
- */
-void SysTick_IntDisable(void)
-{
-    // Clear the interrupt bit in STCTRL
-    ST_CTRL_R &= ~(ST_CTRL_INTEN);
-}
 
-/**
- * @brief 	Starts the Systick.
- * @details	This function does not interfere with the ST CURRENT register, 
- *			so the systick will count from the value already in it.
- */
-void SysTick_Start(void)
-{
-	// Set the clock source to internal and enable the counter to interrupt
-	ST_CTRL_R |= ST_CTRL_ENABLE;  
-}
 
-/**
- * @brief	Stops the SysTick.
- */
-void SysTick_Stop(void)
-{
-	// Clear the enable bit to stop the counter
-	ST_CTRL_R &= ~(ST_CTRL_ENABLE);  
-}
 
-/**
- * @brief	Interrupt Handler for the SysTick driver.
- * @details This systick interrupt handler performs two functions:
- *          - Increments the counter value
- *              - If comparison is enable it'll compare with the cmp value,
- *                  - If they are equal, it'll reset the counter and call the callback function.
- *          - Decrements the countdown value if enabled
- *              - If the value is 0, it'll disable the countdown and call the callback function.
- *
- */
-void SysTick_IntHandler(void)
-{
-    sys->counter.value++;
-
-    if (sys->counter.cmp_en && (sys->counter.value == sys->counter.cmp)) {
-        sys->counter.counter_cb();
-        sys->counter.value = 0;
-    }
-
-    if (sys->countdown.en) {
-        sys->countdown.value--;
-
-        if (!sys->countdown.value) {
-            sys->countdown.countdown_cb();
-            sys->countdown.en = false;
-        }
-    }
-}

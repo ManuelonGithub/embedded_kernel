@@ -92,16 +92,20 @@ pcb_t* Schedule()
     while (i < PRIORITY_LEVELS && retval == NULL) {
         front = ProcessQueue[i];
         if (front != NULL) {        // If this priority queue isn't empty.
+            // Check if running process in this priority
+            // If so check its run quantum
+            // If it hasn't run out, don't make the switch
+
             retval = front;         // The process in front of queue is determined to run next.
-            front = front->next;    // The front of queue then moves to the next process to run.
+            ProcessQueue[i] = front->next;    // The front of queue then moves to the next process to run.
         }
         i++;
     }
 
     if (retval == NULL) {
         retval = ProcessQueue[IDLE_LEVEL];  // We are assuming here that there will always be an idle process.
-    }                                       // Which if not then my kernel writer has betrayed me.
-                                            //
+    }                                       // Which if not then this is weird self-prank
+
     return retval;
 }
 

@@ -14,15 +14,22 @@
 #define K_CPU_H
 
     #include <stdint.h>
+    #include "SysTick.h"
 
-    #define NVIC_INT_CTRL_R (*((volatile unsigned long *) 0xE000ED04))
+    #define NVIC_INT_CTRL_R (*((volatile uint32_t*) 0xE000ED04))
     #define TRIGGER_PENDSV 0x10000000
-    #define NVIC_SYS_PRI3_R (*((volatile unsigned long *) 0xE000ED20))
+    #define NVIC_SYS_PRI3_R (*((volatile uint32_t*) 0xE000ED20))
     #define PENDSV_LOWEST_PRIORITY 0x00E00000
 
     inline void PendSV_init();
 
     #define PendSV()    (NVIC_INT_CTRL_R |= TRIGGER_PENDSV)
+
+    #define SystemTick_init(rate)  SysTick_Init(rate)
+    #define SystemTick_reset()  SysTick_Reset()
+
+    #define SystemTick_resume() SysTick_Start()
+    #define SystemTick_pause()  SysTick_Stop()
 
     /** @brief   Enables Interrupt Requests. */
 	#define ENABLE_IRQ() __asm(" cpsie i")
@@ -84,7 +91,7 @@
 	inline void* GetCallReg();
 	inline void* GetProcessCall();
 
-	inline void InitProcessContext(cpu_context_t* cpu, void (*proc_program)(), void (*exit_program)());
+	inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)());
 
 	inline void SetPSP(volatile uint32_t ProcessStack);
 	inline uint32_t GetPSP();

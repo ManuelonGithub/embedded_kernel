@@ -9,6 +9,13 @@
  */
 
 #include "k_handlers.h"
+#include "calls.h"
+
+void proc_test(void)
+{
+    uint32_t id = getpid();
+    while(1) {}
+}
 
 /**
  * main.c
@@ -18,7 +25,8 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-
+    ProcessCreate(10, 0, &proc_test);
+    ProcessCreate(11, 0, &proc_test);
 
     kernel_start();
 

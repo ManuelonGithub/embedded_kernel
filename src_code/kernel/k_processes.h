@@ -15,7 +15,7 @@
 
 #define STACKSIZE	1024
 
-#define PSR_INIT_VAL    0x01000000
+#define PROC_RUNTIME    100
 
 typedef enum PROCESS_STATES_ {
     WAITING_TO_RUN = -1, RUNNING, SEND_WAIT, RECV_WAIT, DELAY_WAIT, TERMINATED
@@ -31,19 +31,10 @@ typedef struct pcb_ {
     struct pcb_*    prev;
     uint32_t        id;
     uint32_t        priority;
-    uint32_t*       sp_bottom;
+    uint32_t*       sp_top;
     uint32_t*       sp;
-    process_state_t state;
+    uint32_t        timer;
 } pcb_t;
 
-void set_LR(volatile uint32_t);
-uint32_t get_PSP();
-void set_PSP(volatile uint32_t);
-uint32_t get_MSP(void);
-void set_MSP(volatile uint32_t);
-uint32_t get_SP();
-
-void volatile save_registers();
-void volatile restore_registers();
 
 #endif	//  K_PROCESSES_H

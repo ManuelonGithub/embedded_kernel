@@ -18,6 +18,8 @@
 
 int ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)());
 void terminate(void);
+uint32_t getpid(void);
+uint32_t nice(uint32_t newPriority);
 
 
 #endif // CALLS_H

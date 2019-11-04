@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include "k_handlers.h"
 #include "k_scheduler.h"
 #include "k_processes.h"
@@ -38,9 +37,7 @@ void kernel_init()
 {
     PendSV_init();
 
-	// init drivers
-	// 		systick init
-	// 		uart init
+    SystemTick_init(1000);  // 1000hz rate -> system tick triggers every milisecond
 
     scheduler_init();
     ProcessCreate(0, IDLE_LEVEL, &idle);
@@ -56,10 +53,32 @@ inline void kernel_start() {
 }
 
 /**
+ * @brief   System Tick Exception handler.
+ * @details Manages the running process' allotted runtime
+ *          and to provide the system an accurate time-keeping system.
+ * @todo    Implement a sleep feature for the processes.
+ */
+void SystemTick_handler(void)
+{
+    running->timer--;
+    if (running->timer == 0) {
+        PendSV();
+    }
+
+    // Do time queue thing
+
+}
+
+/**
  * @brief   Pending Supervisor Call trap handler.
+ * @details When this trap is called, the system will evaluate
+ *          Which process should run next.
+ *          It also performs the process switching.
  */
 void PendSV_handler(void)
 {
+    DISABLE_IRQ();  // Disable interrupts to procedure doesn't get corrupted
+
     // Because PendSV is called on start-up and when a process termination occurs,
     // It needs to account for when there is no running process.
     if (running != NULL) {  // Only save running process context is there is a running process
@@ -70,6 +89,13 @@ void PendSV_handler(void)
     running = Schedule();
     SetPSP((uint32_t)running->sp);
     RestoreProcessContext();
+
+    running->timer = PROC_RUNTIME;
+
+    SystemTick_reset();
+    SystemTick_resume();
+
+    ENABLE_IRQ();
 
     StartProcess();
 }
@@ -83,8 +109,10 @@ void SVC_handler()
 {
     SaveTrapReturn();   // save the trap return address
 
+    SystemTick_pause();
+
     if (TrapSource() == KERNEL) {   // Check if the trap was called by the kernel
-        SaveContext();              // In which case the trap needs to save its own context
+        SaveContext();              // In which case the trap needs to save its own context (since the trap itself is the kernel)
         KernelCall_handler(k_GetCall());
         RestoreContext();
     }
@@ -93,6 +121,8 @@ void SVC_handler()
         KernelCall_handler(k_GetCall());
         RestoreProcessContext();
     }
+
+    SystemTick_resume();
 
     RestoreTrapReturn();
 }
@@ -111,8 +141,6 @@ void KernelCall_handler(k_call_t* call)
         } break;
 
         case STARTUP: {
-            //todo: Call PendSV instead of doing this
-//            set_PSP((uint32_t)(running->sp) + 8 * sizeof(uint32_t));
             PendSV();
         } break;
 
@@ -154,12 +182,12 @@ void KernelCall_handler(k_call_t* call)
 uint32_t k_ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)())
 {
     pcb_t* newPCB = (pcb_t*)malloc(sizeof(pcb_t));
-    newPCB->sp_bottom = (uint32_t*)malloc(STACKSIZE);
+    newPCB->sp_top = (uint32_t*)malloc(STACKSIZE);
     newPCB->id = pid;
 
-    newPCB->sp = newPCB->sp_bottom;
+    newPCB->sp = newPCB->sp_top+STACKSIZE;
 
-    InitProcessContext((cpu_context_t*)newPCB->sp, proc_program, &terminate);
+    InitProcessContext(&newPCB->sp, proc_program, &terminate);
 
     newPCB->next = NULL;
     newPCB->prev = NULL;

@@ -87,10 +87,16 @@ inline void* GetCallReg() {
 /**
  * @brief   Initializes the CPU context of a process.
  */
-inline void InitProcessContext(cpu_context_t* cpu, void (*proc_program)(), void (*exit_program)()) {
+inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)()) {
+
+    *sp -= sizeof(cpu_context_t);
+
+    cpu_context_t* cpu = (cpu_context_t*)(*sp);
+
 	cpu->psr = PSR_INIT_VAL;
     cpu->lr = (uint32_t)exit_program;
     cpu->pc = (uint32_t)proc_program;
+
 }
 
 /**
