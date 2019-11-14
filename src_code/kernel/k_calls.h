@@ -17,7 +17,7 @@
 #include "k_cpu.h"
 
 typedef enum KERNEL_CALL_CODES {
-	PROC_CREATE, STARTUP, GETID, NICE, SEND, RECV, TERMINATE
+	PROC_CREATE, STARTUP, GETID, NICE, BIND, UNBIND, SEND, RECV, TERMINATE
 } call_codes_t; /** Kernel Calls supported */
 
 typedef struct kernel_call_arguments_ {

@@ -8,8 +8,8 @@
  */
 
 #include <stdio.h>
-#include <stdbool.h>
 #include "k_scheduler.h"
+#include "double_link_list.h"
 
 pcb_t* ProcessQueue[PROCESS_QUEUES];
 
@@ -29,47 +29,53 @@ void scheduler_init()
 /**
  * @brief   Links a PCB into a specific priority queue.
  * @param   [in, out] PCB: pointer to PCB element to link into the respective process queue.
- * @return  PCB link return code. See pcb_link_code_t for more details.
+ * @return  False if process wasn't able be linked (invalid priority level)
+ *          True if it was successfully linked.
  * @details This function is used to also move PCBs in and out of the blocked queue
  *          and to place the idle process in the idle process queue.
  *          This poses a potential risk that processes may be initialized with a "priority"
  *          lower than what is allowed, but that will only cause that process to never run.
  */
-pcb_handle_code_t LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
+bool LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
 {
-    if (proc_lvl > PROCESS_QUEUES)  return INVALID_PRIORITY;
-
-    pcb_t* front = ProcessQueue[proc_lvl];
+    if (proc_lvl > PROCESS_QUEUES)  return false;
 
     /*
      * If the process was previously linked to other PCBs,
      * Severe those links before moving the PCB to a new queue.
      */
     if (PCB->next != NULL && PCB->prev != NULL) {
-        if (PCB->next == PCB || PCB->prev == PCB) { // The PCB is the only element in the queue.
-            ProcessQueue[proc_lvl] = NULL;
-        }
-        else {
-            PCB->next->prev = PCB->prev;
-            PCB->prev->next = PCB->next;
-        }
+        UnlinkPCB(PCB);
     }
 
-    if (front == NULL) {    // If the queue where the PCB is being moved to is empty.
+    if (ProcessQueue[proc_lvl] == NULL) {    // If the queue where the PCB is being moved to is empty.
         ProcessQueue[proc_lvl] = PCB;
         PCB->next = PCB;
         PCB->prev = PCB;
     }
     else {
-        PCB->next = front;
-        PCB->prev = front->prev;
-        front->prev->next = PCB;
-        front->prev = PCB;
+        list_link((node_t*)PCB, (node_t*)ProcessQueue[proc_lvl]);
     }
 
     PCB->priority = proc_lvl;
 
-    return HANDLE_SUCCESS;
+    return true;
+}
+
+/**
+ * @brief   Unlinks PCB from its Process queue.
+ * @param   [in, out] pcb: Pointer to PCB to be unlinked from its queue.
+ * @details This function can only be called if the pcb has an established priority,
+ *          otherwise it will fault.
+ */
+void UnlinkPCB(pcb_t* pcb)
+{
+    if (ProcessQueue[pcb->priority] == pcb) {
+        if (pcb == pcb->next)   ProcessQueue[pcb->priority] = NULL;
+        else                    ProcessQueue[pcb->priority] = pcb->next;
+    }
+
+    list_unlink((node_t*)pcb);
 }
 
 /**
@@ -104,10 +110,24 @@ pcb_t* Schedule()
 
     if (retval == NULL) {
         retval = ProcessQueue[IDLE_LEVEL];  // We are assuming here that there will always be an idle process.
-    }                                       // Which if not then this is weird self-prank
+    }                                       // Which if not then this is a weird self-prank
 
     return retval;
 }
 
+/**
+ * @brief   Finds the highest priority level with processes in its queue.
+ * @return  -1 if no queue has a process in them,
+ *          otherwise the highest priority level with a process.
+ */
+inline int32_t GetHighestPriority()
+{
+    int i = 0;
+    while (i < PRIORITY_LEVELS) {
+        if (ProcessQueue[i] != NULL)    return i;   // Stops progression of function if a process if found.
+        i++;                                        // Makes for some ugly code, but efficient.
+    }
 
+    return NO_PROCESS_FOUND;
+}
 

@@ -85,10 +85,20 @@ inline void* GetCallReg() {
 }
 
 /**
+ * @brief   Gets a process' kernel call structure based on its program memory.
+ * @details This function assumes the process' CPU context was pushed onto its stack prior to this call.
+ */
+inline void* GetProcessCall(uint32_t* psp) {
+    cpu_context_t* cpu = (cpu_context_t*)(psp);
+
+    return (void*)cpu->r7;
+}
+
+/**
  * @brief   Initializes the CPU context of a process.
  */
-inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)()) {
-
+inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)())
+{
     *sp -= sizeof(cpu_context_t);
 
     cpu_context_t* cpu = (cpu_context_t*)(*sp);
@@ -96,7 +106,6 @@ inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exi
 	cpu->psr = PSR_INIT_VAL;
     cpu->lr = (uint32_t)exit_program;
     cpu->pc = (uint32_t)proc_program;
-
 }
 
 /**

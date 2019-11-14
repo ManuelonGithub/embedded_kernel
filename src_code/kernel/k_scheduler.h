@@ -10,21 +10,27 @@
 #ifndef     K_SCHEDULER_H
 #define     K_SCHEDULER_H
 
-#include "k_processes.h"
+#include "k_types.h"
 
 #define PRIORITY_LEVELS 5   /** Priority levels supported by the kernel. */
 #define IDLE_LEVEL      5   /** Index to the Idle queue */
-#define BLOCKED_LEVEL   6   /** Index to the Blocked queue */
 
+#define LOWEST_PRIORITY 4
 /**
- * @brief   Total amount of process queues the kernel scheduler contains.
+ * @brief   Total amount of process levels the kernel scheduler accepts.
  * @details Five queues for the priority levels,
- *          and then two more for the "Idle" process and the block process queue.
+ *          and then one more for the idle process.
  */
-#define PROCESS_QUEUES  PRIORITY_LEVELS+2
+#define PROCESS_QUEUES  PRIORITY_LEVELS+1
+
+enum PCB_LINK_RETURN_VALUES {INVALID_PRIORITY = -1, LINK_SUCCESS};
+
+#define NO_PROCESS_FOUND -1 /// Value returned if there was a query into a processes queue but no process was found.
 
 void scheduler_init();
-pcb_handle_code_t LinkPCB(pcb_t *newPCB, uint32_t proc_lvl);
+int32_t LinkPCB(pcb_t *newPCB, uint32_t proc_lvl);
+void UnlinkPCB(pcb_t* pcb);
 pcb_t* Schedule();
+inline int32_t GetHighestPriority();
 
 #endif	//  K_SCHEDULER_H

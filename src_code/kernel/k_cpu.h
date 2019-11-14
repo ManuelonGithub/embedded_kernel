@@ -13,89 +13,96 @@
 #ifndef K_CPU_H
 #define K_CPU_H
 
-    #include <stdint.h>
-    #include "SysTick.h"
+#include <stdint.h>
+#include "SysTick.h"
 
-    #define NVIC_INT_CTRL_R (*((volatile uint32_t*) 0xE000ED04))
-    #define TRIGGER_PENDSV 0x10000000
-    #define NVIC_SYS_PRI3_R (*((volatile uint32_t*) 0xE000ED20))
-    #define PENDSV_LOWEST_PRIORITY 0x00E00000
+#define NVIC_INT_CTRL_R (*((volatile uint32_t*) 0xE000ED04))
+#define TRIGGER_PENDSV 0x10000000
+#define NVIC_SYS_PRI3_R (*((volatile uint32_t*) 0xE000ED20))
+#define PENDSV_LOWEST_PRIORITY 0x00E00000
 
-    inline void PendSV_init();
+inline void PendSV_init();
 
-    #define PendSV()    (NVIC_INT_CTRL_R |= TRIGGER_PENDSV)
+/** @brief  Triggers the PendSV trap to be called. */
+#define PendSV()    (NVIC_INT_CTRL_R |= TRIGGER_PENDSV)
 
-    #define SystemTick_init(rate)  SysTick_Init(rate)
-    #define SystemTick_reset()  SysTick_Reset()
+/** @brief  SysTick Initialize alias function */
+#define SystemTick_init(rate)  SysTick_Init(rate)
 
-    #define SystemTick_resume() SysTick_Start()
-    #define SystemTick_pause()  SysTick_Stop()
+/** @brief  SysTick Reset alias function */
+#define SystemTick_reset()  SysTick_Reset()
 
-    /** @brief   Enables Interrupt Requests. */
-	#define ENABLE_IRQ() __asm(" cpsie i")
+/** @brief  SysTick Start alias function */
+#define SystemTick_resume() SysTick_Start()
 
-    /** @brief   Disables Interrupt Requests. */
-	#define DISABLE_IRQ() __asm(" cpsid i")
+/** @brief  SysTick Stop alias function */
+#define SystemTick_pause()  SysTick_Stop()
 
-    /** @brief   Triggers the Supervisor (kernel) Trap. */
-	#define SVC()	__asm(" SVC #0")
+/** @brief   Enables Interrupt Requests. */
+#define ENABLE_IRQ() __asm(" cpsie i")
 
-    /** @brief   Saves the Trap Return address to the kernel's stack. */
-    #define SaveTrapReturn()    __asm("     PUSH    {LR}")
+/** @brief   Disables Interrupt Requests. */
+#define DISABLE_IRQ() __asm(" cpsid i")
 
-    /** @brief  Restores the Trap return address to the CPU's exception return link register */
-    #define RestoreTrapReturn()   __asm("     POP     {LR}")
+/** @brief   Triggers the Supervisor (kernel) Trap. */
+#define SVC()	__asm(" SVC #0")
 
-	#define PSR_INIT_VAL    0x01000000  /// CPU's Status Register initial value
+/** @brief   Saves the Trap Return address to the kernel's stack. */
+#define SaveTrapReturn()    __asm("     PUSH    {LR}")
 
-    /**
-     * @brief   Process' CPU context structure.
-     * @details This structure is laid out in a way that the
-     *          context is used throughout the kernel/cpu.
+/** @brief  Restores the Trap return address to the CPU's exception return link register */
+#define RestoreTrapReturn()   __asm("     POP     {LR}")
+
+#define PSR_INIT_VAL    0x01000000  /// CPU's Status Register initial value
+
+/**
+ * @brief   Process' CPU context structure.
+ * @details This structure is laid out in a way that the
+ *          context is used throughout the kernel/cpu.
+ */
+typedef struct cpu_context_ {
+    /* Registers saved by s/w (explicit) */
+    /* There is no actual need to reserve space for R4-R11, other than
+     * for initialization purposes.  Note that r0 is the h/w top-of-stack.
      */
-	typedef struct cpu_context_ {
-	    /* Registers saved by s/w (explicit) */
-	    /* There is no actual need to reserve space for R4-R11, other than
-	     * for initialization purposes.  Note that r0 is the h/w top-of-stack.
-	     */
-	    uint32_t r4;
-	    uint32_t r5;
-	    uint32_t r6;
-	    uint32_t r7;
-	    uint32_t r8;
-	    uint32_t r9;
-	    uint32_t r10;
-	    uint32_t r11;
-	    /* Stacked by hardware (implicit)*/
-	    uint32_t r0;
-	    uint32_t r1;
-	    uint32_t r2;
-	    uint32_t r3;
-	    uint32_t r12;
-	    uint32_t lr;
-	    uint32_t pc;
-	    uint32_t psr;
-	} cpu_context_t;
+    uint32_t r4;
+    uint32_t r5;
+    uint32_t r6;
+    uint32_t r7;
+    uint32_t r8;
+    uint32_t r9;
+    uint32_t r10;
+    uint32_t r11;
+    /* Stacked by hardware (implicit)*/
+    uint32_t r0;
+    uint32_t r1;
+    uint32_t r2;
+    uint32_t r3;
+    uint32_t r12;
+    uint32_t lr;
+    uint32_t pc;
+    uint32_t psr;
+} cpu_context_t;
 
-	typedef enum TRAP_SOURCES {KERNEL, USER} trap_sources_t;    /// Possible Sources of the trap call
+typedef enum TRAP_SOURCES {KERNEL, USER} trap_sources_t;    /// Possible Sources of the trap call
 
-	inline trap_sources_t TrapSource();
+inline trap_sources_t TrapSource();
 
-	inline void SaveContext();
-	inline void RestoreContext();
+inline void SaveContext();
+inline void RestoreContext();
 
-	inline void SaveProcessContext();
-	inline void RestoreProcessContext();
+inline void SaveProcessContext();
+inline void RestoreProcessContext();
 
-	inline void SetCallReg(volatile void* call);
-	inline void* GetCallReg();
-	inline void* GetProcessCall();
+inline void SetCallReg(volatile void* call);
+inline void* GetCallReg();
+inline void* GetProcessCall();
 
-	inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)());
+inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)());
 
-	inline void SetPSP(volatile uint32_t ProcessStack);
-	inline uint32_t GetPSP();
+inline void SetPSP(volatile uint32_t ProcessStack);
+inline uint32_t GetPSP();
 
-	inline void StartProcess();
+inline void StartProcess();
 
 #endif	// k_CPU_H

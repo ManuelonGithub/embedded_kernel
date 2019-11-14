@@ -2,57 +2,24 @@
 #include <stdint.h>
 #include "k_processes.h"
 
-uint32_t get_PSP(void)
+bool k_CreatePCB(pcb_t* pcb, pid_t id);
 {
-    /* Returns contents of PSP (current process stack */
-    __asm(" mrs     r0, psp");
-    __asm(" bx  lr");
-    return 0;   /***** Not executed -- shuts compiler up */
-            /***** If used, will clobber 'r0' */
+    pcb_t* newPCB = (pcb_t*)malloc(sizeof(pcb_t));
+    if (newPCB == NULL) return false;
+
+    newPCB->sp_top = (uint32_t*)malloc(STACKSIZE);  // If malloc fails it returns 0
+    if (newPCB->sp_top == NULL) return false;
+
+    newPCB->id = pid;
+
+    newPCB->sp = newPCB->sp_top+STACKSIZE;
+
+    newPCB->next = NULL;
+    newPCB->prev = NULL;
 }
 
-uint32_t get_MSP(void)
+void k_DeletePCB(pcb_t* pcb)
 {
-    /* Returns contents of MSP (main stack) */
-    __asm(" mrs     r0, msp");
-    __asm(" bx  lr");
-    return 0;
-}
-
-void set_PSP(volatile uint32_t ProcessStack)
-{
-    /* set PSP to ProcessStack */
-    __asm(" msr psp, r0");
-}
-
-void set_MSP(volatile uint32_t MainStack)
-{
-    /* Set MSP to MainStack */
-    __asm(" msr msp, r0");
-}
-
-void volatile save_registers()
-{
-    /* Save r4..r11 on process stack */
-    __asm(" mrs     r0,psp");
-    /* Store multiple, decrement before; '!' - update R0 after each store */
-    __asm(" stmdb   r0!,{r4-r11}");
-    __asm(" msr psp,r0");
-}
-
-void volatile restore_registers()
-{
-    /* Restore r4..r11 from stack to CPU */
-    __asm(" mrs r0,psp");
-    /* Load multiple, increment after; '!' - update R0 */
-    __asm(" ldmia   r0!,{r4-r11}");
-    __asm(" msr psp,r0");
-}
-
-uint32_t get_SP()
-{
-    /**** Leading space required -- for label ****/
-    __asm("     mov     r0,SP");
-    __asm(" bx  lr");
-    return 0;
+    free(pcb->sp_top);
+    free(pcb);
 }

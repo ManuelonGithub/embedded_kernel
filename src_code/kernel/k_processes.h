@@ -11,30 +11,15 @@
 #ifndef     K_PROCESSES_H
 #define     K_PROCESSES_H
 
-#include <stdint.h>
+#include "k_types.h"
 
 #define STACKSIZE	1024
 
 #define PROC_RUNTIME    100
 
-typedef enum PROCESS_STATES_ {
-    WAITING_TO_RUN = -1, RUNNING, SEND_WAIT, RECV_WAIT, DELAY_WAIT, TERMINATED
-} process_state_t;
+bool k_CreatePCB(pcb_t* pcb, pid_t id);
+bool k_DeletePCB(pcb_t* pcb);
 
-typedef enum PCB_HANDLE_CODES_ {
-    INVALID_PID = -2, INVALID_PRIORITY, HANDLE_SUCCESS
-} pcb_handle_code_t;
-
-/** Process control block structure */
-typedef struct pcb_ {
-    struct pcb_*    next;
-    struct pcb_*    prev;
-    uint32_t        id;
-    uint32_t        priority;
-    uint32_t*       sp_top;
-    uint32_t*       sp;
-    uint32_t        timer;
-} pcb_t;
 
 
 #endif	//  K_PROCESSES_H

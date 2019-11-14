@@ -16,6 +16,6 @@
 void kernel_init();
 inline void kernel_start();
 
-uint32_t k_ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)());
+int32_t k_ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)());
 
 #endif  //	K_HANDLERS_H
