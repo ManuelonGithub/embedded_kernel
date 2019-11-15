@@ -31,6 +31,5 @@ void scheduler_init();
 int32_t LinkPCB(pcb_t *newPCB, uint32_t proc_lvl);
 void UnlinkPCB(pcb_t* pcb);
 pcb_t* Schedule();
-inline int32_t GetHighestPriority();
 
 #endif	//  K_SCHEDULER_H

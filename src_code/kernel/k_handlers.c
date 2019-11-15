@@ -185,12 +185,12 @@ void KernelCall_handler(k_call_t* call)
         } break;
 
         case GETID: {
-            call->retval = running->id;
+            call->retval = (int32_t)running->id;
         } break;
 
         case NICE: {
             call->retval = LinkPCB(running, call->argv[0]);
-            if (GetHighestPriority() > running->priority)   PendSV();
+            PendSV();
         } break;
 
         case BIND: {

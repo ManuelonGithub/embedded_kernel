@@ -18,16 +18,16 @@ typedef uint32_t    id_t; /// System ID type alias
 
 /** @brief  Process Mailbox structure */
 typedef struct pmsgbox_descriptor_ {
-    struct pmsgbox_descriptor_*    next;
-    struct pmsgbox_descriptor_*    prev;
-    void*               owner;
-    ipc_msg_t*          front_msg;
-    bool                waiting;
-    id_t                ID;
+    struct pmsgbox_descriptor_*     next;
+    struct pmsgbox_descriptor_*     prev;
+    void*       owner;
+    ipc_msg_t*  front_msg;
+    bool        waiting;
+    id_t        ID;
 } pmsgbox_t;
 
 typedef id_t        pid_t;      /// Process ID type alias
-typedef uint32_t    priority_t;   /// Process priority type alias
+typedef uint32_t    priority_t; /// Process priority type alias
 
 /** @brief  Process control block structure */
 typedef struct pcb_ {

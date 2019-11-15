@@ -84,10 +84,7 @@ void UnlinkPCB(pcb_t* pcb)
  * @details This function does not perform any process switching.
  *          It simply iterates through the process queues to find
  *          the next available process to run.
- * @todo    Take in the running process so it can be compared with the selected process
- *          b/c if the selected process has the same priority as the running process
- *          and the running process' time allotted run time hasn't elapsed,
- *          then a new process shouldn't be selected.
+ * @todo    Remove the IDLE process queue
  */
 pcb_t* Schedule()
 {
@@ -98,9 +95,6 @@ pcb_t* Schedule()
     while (i < PRIORITY_LEVELS && retval == NULL) {
         front = ProcessQueue[i];
         if (front != NULL) {        // If this priority queue isn't empty.
-            // Check if running process in this priority
-            // If so check its run quantum
-            // If it hasn't run out, don't make the switch
 
             retval = front;         // The process in front of queue is determined to run next.
             ProcessQueue[i] = front->next;    // The front of queue then moves to the next process to run.
@@ -113,21 +107,5 @@ pcb_t* Schedule()
     }                                       // Which if not then this is a weird self-prank
 
     return retval;
-}
-
-/**
- * @brief   Finds the highest priority level with processes in its queue.
- * @return  -1 if no queue has a process in them,
- *          otherwise the highest priority level with a process.
- */
-inline int32_t GetHighestPriority()
-{
-    int i = 0;
-    while (i < PRIORITY_LEVELS) {
-        if (ProcessQueue[i] != NULL)    return i;   // Stops progression of function if a process if found.
-        i++;                                        // Makes for some ugly code, but efficient.
-    }
-
-    return NO_PROCESS_FOUND;
 }
 
