@@ -28,7 +28,7 @@ enum PCB_LINK_RETURN_VALUES {INVALID_PRIORITY = -1, LINK_SUCCESS};
 #define NO_PROCESS_FOUND -1 /// Value returned if there was a query into a processes queue but no process was found.
 
 void scheduler_init();
-int32_t LinkPCB(pcb_t *newPCB, uint32_t proc_lvl);
+bool LinkPCB(pcb_t *newPCB, priority_t proc_lvl);
 void UnlinkPCB(pcb_t* pcb);
 pcb_t* Schedule();
 

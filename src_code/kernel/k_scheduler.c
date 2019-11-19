@@ -36,7 +36,7 @@ void scheduler_init()
  *          This poses a potential risk that processes may be initialized with a "priority"
  *          lower than what is allowed, but that will only cause that process to never run.
  */
-bool LinkPCB(pcb_t *PCB, uint32_t proc_lvl)
+bool LinkPCB(pcb_t *PCB, priority_t proc_lvl)
 {
     if (proc_lvl > PROCESS_QUEUES)  return false;
 

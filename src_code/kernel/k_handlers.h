@@ -12,10 +12,14 @@
 #define		KERNEL_HANDLERS_H
 
 #include <stdint.h>
+#include "k_types.h"
+#include "k_calls.h"
 
 void kernel_init();
 inline void kernel_start();
 
-int32_t k_ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)());
+int32_t k_pcreate(pcreate_args_t* args);
+int32_t k_Bind(bind_args_t* args);
+int32_t k_Unbind(pmbox_t* box);
 
 #endif  //	K_HANDLERS_H

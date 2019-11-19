@@ -96,7 +96,7 @@ inline void RestoreProcessContext();
 
 inline void SetCallReg(volatile void* call);
 inline void* GetCallReg();
-inline void* GetProcessCall();
+inline void* GetProcessCall(uint32_t* psp);
 
 inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)());
 

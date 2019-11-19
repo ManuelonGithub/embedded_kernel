@@ -14,15 +14,14 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "k_types.h"
 
 
-
-
-int ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)());
+int32_t pcreate(proc_t* p, pid_t pid, priority_t priority, void (*proc_program)());
 void terminate(void);
-uint32_t getpid(void);
-uint32_t nice(uint32_t newPriority);
-
-
+pid_t getpid(void);
+priority_t nice(priority_t newPriority);
+int32_t bind(pmbox_t* box, uint32_t box_no);
+int32_t unbind(pmbox_t* box);
 
 #endif // CALLS_H

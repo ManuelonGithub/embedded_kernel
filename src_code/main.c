@@ -14,7 +14,13 @@
 
 void proc_test(void)
 {
-    uint32_t id = getpid();
+    pid_t id = getpid();
+    pmbox_t box;
+
+    if (bind(&box, 0) == 0) {
+        unbind(&box);
+    }
+
     while(1) {}
 }
 
@@ -26,8 +32,8 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-    ProcessCreate(10, 0, &proc_test);
-    ProcessCreate(11, 0, &proc_test);
+    pcreate(NULL, 0, 0, &proc_test);
+    pcreate(NULL, 0, 0, &proc_test);
 
     kernel_start();
 

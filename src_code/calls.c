@@ -13,13 +13,12 @@
 /**
  * @brief   Requests the creation and registration of a new process in kernel space.
  */
-int ProcessCreate(uint32_t pid, uint32_t priority, void (*proc_program)())
+int pcreate(proc_t* p, pid_t pid, priority_t priority, void (*proc_program)())
 {
     k_call_t call;
-    uint32_t args[] = {pid, priority, (uint32_t)(proc_program)};
+    uint32_t args[] = {(uint32_t)p, (uint32_t)pid, (uint32_t)priority, (uint32_t)(proc_program)};
 
     call.code = PROC_CREATE;
-    call.argc = sizeof(args)/sizeof(args[0]);
     call.argv = args;
 
     k_SetCall(&call);
@@ -46,7 +45,7 @@ void terminate(void)
  * @brief   Requests the process ID of the running process.
  * @return  The process ID value.
  */
-uint32_t getpid(void)
+pid_t getpid(void)
 {
     k_call_t call;
     call.code = GETID;
@@ -64,11 +63,10 @@ uint32_t getpid(void)
  * @return  New priority value if priority change was successful.
  *          Any other value means the priority change was unsuccessful.
  */
-uint32_t nice(uint32_t newPriority)
+priority_t nice(priority_t newPriority)
 {
     k_call_t call;
     call.code = NICE;
-    call.argc = 1;
     call.argv = &newPriority;
 
     k_SetCall(&call);
@@ -78,3 +76,32 @@ uint32_t nice(uint32_t newPriority)
     return call.retval;
 }
 
+int32_t bind(pmbox_t* box, uint32_t box_no)
+{
+    k_call_t call;
+    uint32_t args[] = {(uint32_t)box, (uint32_t)box_no};
+
+    call.code = BIND;
+    call.argv = args;
+
+    k_SetCall(&call);
+
+    SVC();
+
+    return call.retval;
+}
+
+int32_t unbind(pmbox_t* box)
+{
+    k_call_t call;
+    uint32_t args[] = {(uint32_t)box};
+
+    call.code = UNBIND;
+    call.argv = args;
+
+    k_SetCall(&call);
+
+    SVC();
+
+    return call.retval;
+}

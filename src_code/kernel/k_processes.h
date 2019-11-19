@@ -17,8 +17,8 @@
 
 #define PROC_RUNTIME    100
 
-bool k_CreatePCB(pcb_t* pcb, pid_t id);
-bool k_DeletePCB(pcb_t* pcb);
+bool k_CreatePCB(pcb_t** pcb, pid_t id);
+inline void k_DeletePCB(pcb_t** pcb);
 
 
 

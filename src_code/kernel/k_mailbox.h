@@ -5,10 +5,18 @@
 
 #include "k_types.h"
 
-#define SYS_MAILBOXES 32
+#define SYS_MSGBOXES 32
 
-void mailbox_init(pmsgbox_t* mbox, uint32_t count);
-uint32_t mailbox_bind(pmsgbox_t* box, void* owner);
-uint32_t mailbox_unbind(pmsgbox_t* box);
+void k_MsgBoxBind(pmsgbox_t* box, pcb_t* owner);
+void k_MsgBoxUnbind(pmsgbox_t* box);
+
+inline ipc_msg_t* k_IPCMsgCreate(uint8_t* data, uint32_t size);
+inline void k_DeleteIPCMsg(ipc_msg_t** msg);
+inline uint32_t k_IPCMsgRecv(ipc_msg_t* msg, uint8_t* data, uint32_t size);
+inline uint32_t k_IPCMsgSend(ipc_msg_t* msg, pmsgbox_t* box);
+
 
 #endif // K_MAILBOX_H
+
+
+
