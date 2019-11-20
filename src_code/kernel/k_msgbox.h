@@ -1,7 +1,7 @@
 
 
-#ifndef K_MAILBOX_H
-#define K_MAILBOX_H
+#ifndef K_MSGBOX_H
+#define K_MSGBOX_H
 
 #include "k_types.h"
 
@@ -16,7 +16,7 @@ inline uint32_t k_pMsgRecv(pmsg_t* dst, pmsg_t* src);
 inline uint32_t k_pMsgSend(pmsg_t* msg, pmsgbox_t* box);
 
 
-#endif // K_MAILBOX_H
+#endif // K_MSGBOX_H
 
 
 

@@ -8,7 +8,7 @@
 
 
 #include <string.h>
-#include "circular_buffer.h"
+#include "cirbuffer.h"
 
 /**
  * @brief  Initializes a circular buffer structure.

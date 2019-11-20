@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include "k_scheduler.h"
-#include "double_link_list.h"
+#include "dlist.h"
 
 pcb_t* ProcessQueue[PROCESS_QUEUES];
 
@@ -54,7 +54,7 @@ bool LinkPCB(pcb_t *PCB, priority_t proc_lvl)
         PCB->prev = PCB;
     }
     else {
-        list_link((node_t*)PCB, (node_t*)ProcessQueue[proc_lvl]);
+        dLink(&PCB->list, &ProcessQueue[proc_lvl]->list);
     }
 
     PCB->priority = proc_lvl;
@@ -75,7 +75,7 @@ void UnlinkPCB(pcb_t* pcb)
         else                    ProcessQueue[pcb->priority] = pcb->next;
     }
 
-    list_unlink((node_t*)pcb);
+    dUnlink(&pcb->list);
 }
 
 /**

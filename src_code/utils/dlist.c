@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "double_link_list.h"
+#include "dlist.h"
 
-inline void list_link(node_t* node, node_t* front)
+inline void dLink(node_t* node, node_t* front)
 {
     node->next = front;
     node->prev = front->prev;
@@ -14,8 +14,11 @@ inline void list_link(node_t* node, node_t* front)
     front->prev = node;
 }
 
-inline void list_unlink(node_t* node)
+inline void dUnlink(node_t* node)
 {
     if (node->prev != NULL)    node->prev->next = node->next;
     if (node->next != NULL)    node->next->prev = node->prev;
+
+    node->next = NULL;
+    node->prev = NULL;
 }

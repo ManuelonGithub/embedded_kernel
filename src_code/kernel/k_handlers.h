@@ -23,5 +23,6 @@ pmbox_t k_Bind(pmbox_t id);
 pmbox_t k_Unbind(pmbox_t id);
 size_t k_SendMessage(pmsg_t* msg);
 bool k_ReceiveMessage(pmsg_t* dst_msg);
+void k_Terminate();
 
 #endif  //	K_HANDLERS_H

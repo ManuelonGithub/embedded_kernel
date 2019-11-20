@@ -15,8 +15,8 @@
 #include "k_processes.h"
 #include "calls.h"
 #include "k_cpu.h"
-#include "k_mailbox.h"
-#include "double_link_list.h"
+#include "k_msgbox.h"
+#include "dlist.h"
 
 pcb_t* running;
 pmsgbox_t* free_box;
@@ -145,7 +145,7 @@ void SVC_handler()
     else {                      // Trap was called by a process
         SaveProcessContext();   // So the process' context is saved
         KernelCall_handler(k_GetCall());
-        if (running != NULL)    RestoreProcessContext();
+        RestoreProcessContext();
     }
 
     SystemTick_resume();
@@ -222,12 +222,7 @@ void KernelCall_handler(k_call_t* call)
         } break;
 
         case TERMINATE: {
-            // Unlink Process from Process Queue
-            // Unbind any message boxes
-            // De-allocate stack
-            // de-allocate pcb
-            // set new running process
-
+            k_Terminate();
         } break;
 
         default: {
@@ -304,7 +299,6 @@ pmbox_t k_Bind(pmbox_t id)
     }
     else    return 0;   // Wasn't able to bind mailbox, return 0
 
-    list_unlink((node_t*)box);
     k_MsgBoxBind(box, running);
     id = box->ID;
 
@@ -324,8 +318,13 @@ pmbox_t k_Unbind(pmbox_t id)
 {
     if (id < SYS_MSGBOXES && mbox[id].owner == running) {
         k_MsgBoxUnbind(&mbox[id]);
-        if (free_box != NULL) {
-            list_link((node_t*)&mbox[id], (node_t*)free_box);
+        if (free_box == NULL) {
+            mbox[id].list.next = NULL;
+            mbox[id].list.prev = NULL;
+            free_box = &mbox[id];
+        }
+        else {
+            dLink(&mbox[id].list, &free_box->list);
         }
 
         // the free_box list is a FIFO,
@@ -381,8 +380,15 @@ bool k_ReceiveMessage(pmsg_t* dst_msg)
             // todo: create a "specified source" check system
 
             pmsg_t* src_msg = mbox[dst_msg->dst].front_msg;
+
             mbox[dst_msg->dst].front_msg = mbox[dst_msg->dst].front_msg->next;
-            if (mbox[dst_msg->dst].front_msg == src_msg)    mbox[dst_msg->dst].front_msg = NULL;
+
+            if (mbox[dst_msg->dst].front_msg == src_msg) {
+                mbox[dst_msg->dst].front_msg = NULL;
+            }
+            else {
+                dUnlink(&src_msg->list);
+            }
 
             k_pMsgRecv(dst_msg, src_msg);
             k_pMsgDeallocate(&src_msg);
@@ -397,9 +403,26 @@ bool k_ReceiveMessage(pmsg_t* dst_msg)
 void k_Terminate()
 {
     // 1. Unlink process from its process queue
+    UnlinkPCB(running);
+
+    pmsgbox_t* box;
     // 2. Unbind all message boxes from process
-    // 3. Link process to the terminate queue
-    // 4. PendSV
+    while (running->msgbox != NULL) {
+        box = running->msgbox;
+        running->msgbox = running->msgbox->next;
+        k_Unbind(box->ID);
+    }
+
+    // 3. Erase PCB
+    k_DeletePCB(&running);
+
+    // 4. Schedule a new process
+    running = Schedule();
+    SetPSP((uint32_t)running->sp);
+    running->timer = PROC_RUNTIME;
+
+    // 5. Reset the System timer
+    SystemTick_reset();
 }
 
 // todo: Move this business to k_processes module

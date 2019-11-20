@@ -1,25 +1,21 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "k_mailbox.h"
-#include "double_link_list.h"
+#include "k_msgbox.h"
+#include "dlist.h"
 
 
 void k_MsgBoxBind(pmsgbox_t* box, pcb_t* owner)
 {
     // Unlink box from its current place
-    list_unlink((node_t*)box);
+    dUnlink((node_t*)box);
 
     // Set the box's owner
     box->owner = owner;
 
     // Link box onto the owner PCB
-    if (owner->msgbox == NULL) {
-        owner->msgbox = box;
-    }
-    else {
-        list_link((node_t*)box, (node_t*)owner->msgbox);
-    }
+    if (owner->msgbox == NULL)  owner->msgbox = box;
+    dLink(&box->list, &owner->msgbox->list);
 }
 
 void k_MsgBoxUnbind(pmsgbox_t* box)
@@ -29,23 +25,18 @@ void k_MsgBoxUnbind(pmsgbox_t* box)
         box->owner->msgbox = NULL;
     }
     else {
-        list_unlink((node_t*)box);
+        dUnlink(&box->list);
     }
 
     pmsg_t* msg;
 
-    // Erase all messages inside the box
-    if (box->front_msg != NULL) {
-        msg = box->front_msg->next;
-                                                 // Procedure unlinks message
-        while (msg->next != box->front_msg) {    // In front of the "head" message in the MB
-            list_unlink((node_t*)msg);           // And then erases it.
-            k_pMsgDeallocate(&msg);                 // Procedure keeps going until all but the head message is left
-            msg = box->front_msg->next;
-        }
+    while (box->front_msg != NULL) {
+        msg = box->front_msg;
+        box->front_msg = box->front_msg->next;
 
-        k_pMsgDeallocate(&msg); // Head message is then erased here.
-        box->front_msg = NULL;
+        if (msg == box->front_msg)  box->front_msg = NULL;
+
+        k_pMsgDeallocate(&msg);
     }
 
     // Reset the box's ownership
@@ -62,8 +53,8 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
         free(msg);
         return NULL;
     }
-    msg->next = NULL;
-    msg->prev = NULL;
+    msg->list.next = NULL;
+    msg->list.prev = NULL;
     msg->size = size;
 
     memcpy(msg->data, data, size);
@@ -75,7 +66,7 @@ inline void k_pMsgDeallocate(pmsg_t** msg)
 {
     free((*msg)->data);
     free((*msg));
-    (*msg) = NULL;
+    *msg = NULL;
 }
 
 inline uint32_t k_pMsgRecv(pmsg_t* dst, pmsg_t* src)
@@ -89,7 +80,7 @@ inline uint32_t k_pMsgSend(pmsg_t* msg, pmsgbox_t* box)
 {
     if (box->front_msg == NULL)     box->front_msg = msg;
 
-    list_link((node_t*)msg, (node_t*)box->front_msg);
+    dLink(&msg->list, &box->front_msg->list);
     return msg->size;
 }
 

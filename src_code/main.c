@@ -12,17 +12,32 @@
 #include "calls.h"
 
 
-void proc_test(void)
+void rx_test(void)
 {
-    pid_t id = getpid();
-    pmbox_t box = bind(0);
+    pid_t rx_id = getpid();
+    pmbox_t rx_box = bind(rx_id);
 
-    uint32_t tx = 100, rx = 0;
-    send(box, box, (uint8_t*)&tx, sizeof(uint32_t));
-    recv(box, box, (uint8_t*)&rx, sizeof(uint32_t));
+    pid_t tx_id = (uint32_t)(-1);
 
-    while(1) {}
+    recv(rx_box, 11, (uint8_t*)&tx_id, sizeof(pid_t));
+    send(11, rx_box, (uint8_t*)&rx_id, sizeof(pid_t));
+
+    while(1);
 }
+
+void tx_test(void)
+{
+    pid_t tx_id = getpid();
+    pmbox_t tx_box = bind(tx_id);
+
+    pid_t rx_id = (pid_t)(-1);
+
+    send(10, tx_box, (uint8_t*)&tx_id, sizeof(pid_t));
+    recv(tx_box, 10, (uint8_t*)&rx_id, sizeof(pid_t));
+
+    while(1);
+}
+
 
 /**
  * main.c
@@ -32,8 +47,8 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-    pcreate(0, 0, &proc_test);
-    pcreate(0, 0, &proc_test);
+    pcreate(10, 0, &rx_test);
+    pcreate(11, 0, &tx_test);
 
     kernel_start();
 
