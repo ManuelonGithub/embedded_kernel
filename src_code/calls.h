@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include "k_types.h"
 
+inline k_ret_t kcall(k_code_t code, k_arg_t arg);
 
 proc_t pcreate(pid_t pid, priority_t priority, void (*proc_program)());
 void terminate(void);

@@ -9,7 +9,7 @@
 
 #define LOWEST_PRIORITY 4   /// Lowest Priority supported by the kernel
 
-#define STACKSIZE 1024      /// Stack size allocated for the processes.
+#define STACKSIZE 2048      /// Stack size allocated for the processes.
 
 #define PROC_RUNTIME 100    /// Time quantum of a process in ms
 
@@ -17,6 +17,8 @@
 
 #define PID_MAX 256         /// Maximum PID value supported
 
-
+typedef enum KERNEL_CALL_CODES {
+    PCREATE, STARTUP, GETID, NICE, BIND, UNBIND, SEND, RECV, TERMINATE
+} k_code_t; /** Kernel Calls supported */
 
 #endif // K_DEFINITIONS_H

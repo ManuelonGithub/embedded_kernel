@@ -16,10 +16,6 @@
 #include "k_types.h"
 #include "k_cpu.h"
 
-typedef enum KERNEL_CALL_CODES {
-	PROC_CREATE, STARTUP, GETID, NICE, BIND, UNBIND, SEND, RECV, TERMINATE
-} k_code_t; /** Kernel Calls supported */
-
 typedef struct kernel_call_arguments_ {
     k_code_t    code;
     k_ret_t     retval;

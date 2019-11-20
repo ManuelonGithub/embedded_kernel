@@ -43,12 +43,8 @@ void idle()
 void output_proc()
 {
     pmbox_t box = bind(SYS_MSGBOXES-1);
-//    uint8_t buffer[CIRCULAR_BUFFER_SIZE];
-//    uint32_t msg_head, msg_tail;
-
     circular_buffer_t buffer;
     circular_buffer_init(&buffer);
-
 
     while(1) {
         buffer.wr_ptr = recv(box, 0, (uint8_t*)buffer.data, CIRCULAR_BUFFER_SIZE);
@@ -194,7 +190,7 @@ void SVC_handler()
 void KernelCall_handler(k_call_t* call)
 {
     switch(call->code) {
-        case PROC_CREATE: {
+        case PCREATE: {
             call->retval = k_pcreate((pcreate_args_t*)call->arg);
         } break;
 
@@ -283,7 +279,7 @@ proc_t k_pcreate(pcreate_args_t* args)
     if (args->id == 0)  args->id = FindFreePID();
 
     // The ladder to process creation success!
-    if (args->id < PID_MAX && AvailablePID(args->id)) {                     // PID is valid
+    if (args->id < PID_MAX && AvailablePID(args->id)) {  // PID is valid
         if (k_CreatePCB(&pcb, args->id)) {             // PCB was successfully allocated
             InitProcessContext(&pcb->sp, args->proc_program, &terminate);
 

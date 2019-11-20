@@ -44,9 +44,9 @@ void output_test()
     pid_t id = getpid();
     pmbox_t box = bind(0);
 
-    char text[] = {"Hello!\n"};
+    char text[64];
 
-//    sprintf(text, "Hello from process %u!\n", id);
+    sprintf(text, "Hello from process %u!\n", id);
 
     send(31, box, (uint8_t*)text, strlen(text));
 }
