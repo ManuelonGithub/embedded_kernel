@@ -32,7 +32,7 @@ void k_MsgBoxUnbind(pmsgbox_t* box)
         list_unlink((node_t*)box);
     }
 
-    ipc_msg_t* msg;
+    pmsg_t* msg;
 
     // Erase all messages inside the box
     if (box->front_msg != NULL) {
@@ -40,11 +40,11 @@ void k_MsgBoxUnbind(pmsgbox_t* box)
                                                  // Procedure unlinks message
         while (msg->next != box->front_msg) {    // In front of the "head" message in the MB
             list_unlink((node_t*)msg);           // And then erases it.
-            k_DeleteIPCMsg(msg);                 // Procedure keeps going until all but the head message is left
+            k_pMsgDeallocate(&msg);                 // Procedure keeps going until all but the head message is left
             msg = box->front_msg->next;
         }
 
-        k_DeleteIPCMsg(msg); // Head message is then erased here.
+        k_pMsgDeallocate(&msg); // Head message is then erased here.
         box->front_msg = NULL;
     }
 
@@ -52,9 +52,9 @@ void k_MsgBoxUnbind(pmsgbox_t* box)
     box->owner = NULL;
 }
 
-inline ipc_msg_t* k_IPCMsgCreate(uint8_t* data, uint32_t size)
+inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
 {
-    ipc_msg_t* msg = malloc(sizeof(ipc_msg_t));
+    pmsg_t* msg = malloc(sizeof(pmsg_t));
     if (msg == NULL) return NULL;
 
     msg->data = malloc(size);
@@ -62,28 +62,33 @@ inline ipc_msg_t* k_IPCMsgCreate(uint8_t* data, uint32_t size)
         free(msg);
         return NULL;
     }
+    msg->next = NULL;
+    msg->prev = NULL;
+    msg->size = size;
 
     memcpy(msg->data, data, size);
 
     return msg;
 }
 
-inline void k_DeleteIPCMsg(ipc_msg_t** msg)
+inline void k_pMsgDeallocate(pmsg_t** msg)
 {
     free((*msg)->data);
     free((*msg));
     (*msg) = NULL;
 }
 
-inline uint32_t k_IPCMsgRecv(ipc_msg_t* msg, uint8_t* data, uint32_t size)
+inline uint32_t k_pMsgRecv(pmsg_t* dst, pmsg_t* src)
 {
-    if (size > msg->size)   size = msg->size;   // Truncate if not enough bytes in msg
-    memcpy(data, msg->data, size);
-    return size;
+    if (dst->size > src->size)   dst->size = src->size;   // Truncate if not enough bytes in msg
+    memcpy(dst->data, src->data, dst->size);
+    return dst->size;
 }
 
-inline uint32_t k_IPCMsgSend(ipc_msg_t* msg, pmsgbox_t* box)
+inline uint32_t k_pMsgSend(pmsg_t* msg, pmsgbox_t* box)
 {
+    if (box->front_msg == NULL)     box->front_msg = msg;
+
     list_link((node_t*)msg, (node_t*)box->front_msg);
     return msg->size;
 }

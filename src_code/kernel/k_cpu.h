@@ -16,6 +16,12 @@
 #include <stdint.h>
 #include "SysTick.h"
 
+// todo: Give up on the idea and distribute this code where it's relevant
+// This file is just so damn bloated
+// And the kernel code is structure so very clearly for an ARM cpu
+// that it's pointless to have this file
+// You'd need to perform a lot of changes to the kernel code to port it anyways...
+
 #define NVIC_INT_CTRL_R (*((volatile uint32_t*) 0xE000ED04))
 #define TRIGGER_PENDSV 0x10000000
 #define NVIC_SYS_PRI3_R (*((volatile uint32_t*) 0xE000ED20))

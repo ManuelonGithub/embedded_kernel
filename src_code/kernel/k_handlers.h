@@ -18,8 +18,10 @@
 void kernel_init();
 inline void kernel_start();
 
-int32_t k_pcreate(pcreate_args_t* args);
-int32_t k_Bind(bind_args_t* args);
-int32_t k_Unbind(pmbox_t* box);
+proc_t k_pcreate(pcreate_args_t* args);
+pmbox_t k_Bind(pmbox_t id);
+pmbox_t k_Unbind(pmbox_t id);
+size_t k_SendMessage(pmsg_t* msg);
+bool k_ReceiveMessage(pmsg_t* dst_msg);
 
 #endif  //	K_HANDLERS_H

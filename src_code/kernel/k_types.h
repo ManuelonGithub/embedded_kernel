@@ -4,29 +4,32 @@
 #define K_TYPES_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
-/** @brief  Internal Inter-process message structure */
-typedef struct ipc_msg_ {
-    struct ipc_msg_*    next;
-    struct ipc_msg_*    prev;
-    uint32_t            size;
-    uint8_t*            data;
-} ipc_msg_t;
+typedef uint32_t    id_t;   /// System ID type alias
+typedef id_t        pmbox_t; /// Message Box ID type alias
+typedef id_t        proc_t; /// Process type alias
 
-typedef uint32_t    id_t; /// System ID type alias
+/** @brief  Internal Inter-process message structure */
+typedef struct pmsg_ {
+    struct pmsg_*   next;
+    struct pmsg_*   prev;
+    pmbox_t          src;
+    pmbox_t          dst;
+    size_t          size;
+    uint8_t*        data;
+} pmsg_t;
 
 /** @brief  Inter-process communication Message box structure */
 typedef struct pmsgbox_ {
     struct pmsgbox_*    next;
     struct pmsgbox_*    prev;
     struct pcb_*        owner;
-    ipc_msg_t*          front_msg;
-    bool                waiting;
-    id_t                ID;
+    pmsg_t*             front_msg;
+    pmsg_t*             wait_msg;
+    pmbox_t             ID;
 } pmsgbox_t;
-
-typedef id_t    pmbox_t; /// Message Box type alias
 
 typedef id_t        pid_t;      /// Process ID type alias
 typedef uint32_t    priority_t; /// Process priority type alias
@@ -43,8 +46,6 @@ typedef struct pcb_ {
     pmsgbox_t*      msgbox;
 } pcb_t;
 
-typedef pid_t   proc_t;
-
 #define PID_MAX 256
 
 typedef struct pid_bitmap_ {
@@ -57,5 +58,8 @@ typedef struct pid_bitmap_ {
 //    pmsgbox_t mbox[SYS_MSGBOXES];
 //    pid_bitmap_t pid_bitmap;
 //} kernel_t;
+
+typedef uint32_t*   k_arg_t;
+typedef uint32_t    k_ret_t;
 
 #endif

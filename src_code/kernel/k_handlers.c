@@ -57,9 +57,10 @@ void kernel_init()
     for (i = 1; i < SYS_MSGBOXES; i++) {
         mbox[i].ID = i;
         mbox[i-1].next = &mbox[i];
+        mbox[i].prev = &mbox[i-1];
     }
 
-    pcreate(NULL, 0, IDLE_LEVEL, &idle);
+    pcreate(0, IDLE_LEVEL, &idle);
     running = Schedule();   // This causes running to always be pointing to a valid process.
                             // This will make the "null" check in PendSV unnecessary
 
@@ -162,7 +163,7 @@ void KernelCall_handler(k_call_t* call)
 {
     switch(call->code) {
         case PROC_CREATE: {
-            call->retval = k_pcreate((pcreate_args_t*)call->argv);
+            call->retval = k_pcreate((pcreate_args_t*)call->arg);
         } break;
 
         case STARTUP: {
@@ -193,24 +194,31 @@ void KernelCall_handler(k_call_t* call)
         } break;
 
         case NICE: {
-            call->retval = LinkPCB(running, call->argv[0]);
+            call->retval = LinkPCB(running, (priority_t)call->arg[0]);
             PendSV();
         } break;
 
         case BIND: {
-            call->retval = k_Bind((bind_args_t*)call->argv);
+            call->retval = k_Bind((pmbox_t)call->arg[0]);
         } break;
 
         case UNBIND: {
-            call->retval = k_Unbind((pmbox_t*)call->argv[0]);
+            call->retval = k_Unbind((pmbox_t)call->arg[0]);
         } break;
 
         case SEND: {
-
+            call->retval = k_SendMessage((pmsg_t*)call->arg);
         } break;
 
         case RECV: {
-
+            if (!k_ReceiveMessage((pmsg_t*)call->arg)) {
+                UnlinkPCB(running);
+                PendSV();
+            }
+            // "Message size" retval is taken care by the call function.
+            // b/c this call may not have the desired retval when its called
+            // i.e. when there is no message to receive
+            call->retval = 0;
         } break;
 
         case TERMINATE: {
@@ -240,10 +248,10 @@ void KernelCall_handler(k_call_t* call)
  *          -1 if bad process attribute (PID or priority)
  *          -2 if process wasn't able to be allocated in memory
  */
-int32_t k_pcreate(pcreate_args_t* args)
+proc_t k_pcreate(pcreate_args_t* args)
 {
     pcb_t* pcb = NULL;
-    int32_t retval = -1;
+    proc_t retval = 0;
 
     if (args->id == 0)  args->id = FindFreePID();
 
@@ -253,9 +261,8 @@ int32_t k_pcreate(pcreate_args_t* args)
             InitProcessContext(&pcb->sp, args->proc_program, &terminate);
 
             if (LinkPCB(pcb, args->prio)) {    // PCB was successfully linked into its queue
-                retval = 0;
+                retval = args->id;  // set return value to ID
                 SetPIDbit(args->id);
-                if (args->p != NULL)  *args->p = args->id;
             }
             else {
                 k_DeletePCB(&pcb);
@@ -263,7 +270,7 @@ int32_t k_pcreate(pcreate_args_t* args)
         }
     }
 
-    return retval; // todo: give the ret value a #define
+    return retval;
 }
 
 /**
@@ -282,34 +289,26 @@ int32_t k_pcreate(pcreate_args_t* args)
  *          or the requested msgbox is already taken,
  *          no message box will be bound to the process.
  */
-int32_t k_Bind(bind_args_t* args)
+pmbox_t k_Bind(pmbox_t id)
 {
-    pmsgbox_t* box = NULL;
+    pmsgbox_t* box;
 
-    /*
-     * This function is structured differently than others
-     * (I usually use 'retvals' instead of multiple return points)
-     * to improve the efficiency of the function.
-     */
-
-    if (args->box == NULL)  return -1;  // A valid pointer to a msgbox_id is required.
-
-    if (args->box_no == 0 && free_box != NULL ) {
+    if (id == 0 && free_box != NULL ) {
         box = free_box;
         free_box = free_box->next;
     }
-    else if (args->box_no < SYS_MSGBOXES && mbox[args->box_no].owner == NULL) {
-        box = &mbox[args->box_no];
-        if (&mbox[args->box_no] == free_box)    free_box = free_box->next;    // Move free list pointer if it pointed to msgbox
+    else if (id < SYS_MSGBOXES && mbox[id].owner == NULL) {
+        box = &mbox[id];
+        // Move free list pointer if it pointed to msgbox
+        if (&mbox[id] == free_box)    free_box = free_box->next;
     }
-    else    return -1;  // Invalid input | No available boxes | Box is taken
+    else    return 0;   // Wasn't able to bind mailbox, return 0
 
+    list_unlink((node_t*)box);
     k_MsgBoxBind(box, running);
-    *(args->box) = box->ID;
+    id = box->ID;
 
-    return 0;
-
-
+    return id;
 }
 
 /**
@@ -321,81 +320,79 @@ int32_t k_Bind(bind_args_t* args)
  *          Unlike the binding procedure, it does require an explicit msgbox value owned
  *          by the running process in order to unbind it.
  */
-int32_t k_Unbind(pmbox_t* box)
+pmbox_t k_Unbind(pmbox_t id)
 {
-    int32_t retval = -1;
-    int32_t box_no = *box;
-
-    if (box_no < SYS_MSGBOXES && mbox[box_no].owner == running) {
-        retval = 0;
-        k_MsgBoxUnbind(&mbox[box_no]);
+    if (id < SYS_MSGBOXES && mbox[id].owner == running) {
+        k_MsgBoxUnbind(&mbox[id]);
         if (free_box != NULL) {
-            list_link((node_t*)&mbox[box_no], (node_t*)free_box);
+            list_link((node_t*)&mbox[id], (node_t*)free_box);
         }
 
-        free_box = &mbox[box_no];
+        // the free_box list is a FIFO,
+        // so the "newest" available box is at the front of the list
+        free_box = &mbox[id];
+        id = 0;
     }
 
-    return retval;
+    return id;
 }
 
-uint32_t k_SendMessage(int32_t dst, int32_t src, uint8_t* data, uint32_t size)
+size_t k_SendMessage(pmsg_t* msg)
 {
-    bool err = (dst >= SYS_MSGBOXES     || src >= SYS_MSGBOXES  ||
-                mbox[dst].owner == NULL || mbox[src].owner != running);
+    bool err = (msg->dst >= SYS_MSGBOXES     || msg->src >= SYS_MSGBOXES  ||
+                mbox[msg->dst].owner == NULL || mbox[msg->src].owner != running);
 
     uint32_t retval = 0;
 
     if (!err) {
-        if (mbox[dst].waiting) {
-            ipc_msg_t msg = {.next = NULL, .prev = NULL, .size = size, .data = data};
-            k_call_t* dst_call = GetProcessCall(mbox[dst].owner->sp);
-            recv_args_t* dst_args = (recv_args_t*)dst_call->argv;
-
-            retval = k_IPCMsgRecv(&msg, dst_args->data, dst_args->size);
-
-            LinkPCB(mbox[dst].owner, mbox[dst].owner->priority);
+        if (mbox[msg->dst].wait_msg != NULL) {  // todo: check if wait msg's src is the dst's mailbox
+            retval = k_pMsgRecv(mbox[msg->dst].wait_msg, msg);
+            LinkPCB(mbox[msg->dst].owner, mbox[msg->dst].owner->priority);
             PendSV();
         }
         else {
-            // Create Message
-            ipc_msg_t* msg = k_IPCMsgCreate(data, size);
-
-            retval = k_IPCMsgSend(msg, &mbox[dst]);
+            // Allocate Message
+            pmsg_t* msg_out = k_pMsgAllocate(msg->data, msg->size);
+            msg_out->dst = msg->dst;
+            msg_out->src = msg->src;
+            // Send if message allocation was successful
+            if (msg_out != NULL)    retval = k_pMsgSend(msg_out, &mbox[msg->dst]);
         }
     }
 
     return retval;
 }
 
-uint32_t k_ReceiveMessage(int32_t dst, int32_t src, uint8_t* data, uint32_t size)
+bool k_ReceiveMessage(pmsg_t* dst_msg)
 {
-    // 1. Check if dst box has a message
-    //   1.1. If so, memcpy data until there are no more bytes in message or size has reached
-    //   1.2. If not:
-    //       1.2.1. Remove process from the process queues by unlinking it
-    //       1.2.2. Set the waiting flag on the msgbox
-    //       1.2.3. Trigger PendSV.
-    if (dst >= SYS_MSGBOXES || mbox[dst].owner != running) return 0;
+    // Initialized will all possible error conditions checked
+    bool retval = (
+        dst_msg == NULL || dst_msg->dst >= SYS_MSGBOXES ||
+        mbox[dst_msg->dst].owner != running
+    );
 
-    if (mbox[dst].front_msg == NULL) {
-        // block process
-        // 1. Unlink process from Process queue
+    // If no errors were found
+    if (!retval) {
+        if (mbox[dst_msg->dst].front_msg == NULL) {
+            mbox[dst_msg->dst].wait_msg = dst_msg;
+            retval = false;
+        }
+        else {
+            // todo: create a "specified source" check system
 
-        mbox[dst].waiting = true;
-        PendSV();
+            pmsg_t* src_msg = mbox[dst_msg->dst].front_msg;
+            mbox[dst_msg->dst].front_msg = mbox[dst_msg->dst].front_msg->next;
+            if (mbox[dst_msg->dst].front_msg == src_msg)    mbox[dst_msg->dst].front_msg = NULL;
+
+            k_pMsgRecv(dst_msg, src_msg);
+            k_pMsgDeallocate(&src_msg);
+
+            retval = true;
+        }
     }
-    else {
-        ipc_msg_t* msg = mbox[dst].front_msg;
-        mbox[dst].front_msg = mbox[dst].front_msg->next;
 
-        k_IPCMsgRecv(msg, data, size);
-        k_DeleteIPCMsg(&msg);
-    }
-
-    return size;
+    return retval;
 }
-
 
 void k_Terminate()
 {
@@ -405,6 +402,7 @@ void k_Terminate()
     // 4. PendSV
 }
 
+// todo: Move this business to k_processes module
 pid_t FindFreePID()
 {
     pid_t i = 0;

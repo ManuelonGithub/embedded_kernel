@@ -15,11 +15,11 @@
 void proc_test(void)
 {
     pid_t id = getpid();
-    pmbox_t box;
+    pmbox_t box = bind(0);
 
-    if (bind(&box, 0) == 0) {
-        unbind(&box);
-    }
+    uint32_t tx = 100, rx = 0;
+    send(box, box, (uint8_t*)&tx, sizeof(uint32_t));
+    recv(box, box, (uint8_t*)&rx, sizeof(uint32_t));
 
     while(1) {}
 }
@@ -32,8 +32,8 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-    pcreate(NULL, 0, 0, &proc_test);
-    pcreate(NULL, 0, 0, &proc_test);
+    pcreate(0, 0, &proc_test);
+    pcreate(0, 0, &proc_test);
 
     kernel_start();
 

@@ -13,19 +13,19 @@
 /**
  * @brief   Requests the creation and registration of a new process in kernel space.
  */
-int pcreate(proc_t* p, pid_t pid, priority_t priority, void (*proc_program)())
+proc_t pcreate(pid_t pid, priority_t priority, void (*proc_program)())
 {
     k_call_t call;
-    uint32_t args[] = {(uint32_t)p, (uint32_t)pid, (uint32_t)priority, (uint32_t)(proc_program)};
+    uint32_t args[] = {(uint32_t)pid, (uint32_t)priority, (uint32_t)(proc_program)};
 
     call.code = PROC_CREATE;
-    call.argv = args;
+    call.arg = args;
 
     k_SetCall(&call);
 
     SVC();
 
-    return call.retval;
+    return (proc_t)call.retval;
 }
 
 /**
@@ -54,7 +54,7 @@ pid_t getpid(void)
 
     SVC();
 
-    return call.retval;
+    return (pid_t)call.retval;
 }
 
 /**
@@ -67,41 +67,72 @@ priority_t nice(priority_t newPriority)
 {
     k_call_t call;
     call.code = NICE;
-    call.argv = &newPriority;
+    call.arg = &newPriority;
 
     k_SetCall(&call);
 
     SVC();
 
-    return call.retval;
+    return (priority_t)call.retval;
 }
 
-int32_t bind(pmbox_t* box, uint32_t box_no)
+pmbox_t bind(pmbox_t box)
 {
     k_call_t call;
-    uint32_t args[] = {(uint32_t)box, (uint32_t)box_no};
 
     call.code = BIND;
-    call.argv = args;
+    call.arg = &box;
 
     k_SetCall(&call);
 
     SVC();
 
-    return call.retval;
+    return (pmbox_t)call.retval;
 }
 
-int32_t unbind(pmbox_t* box)
+pmbox_t unbind(pmbox_t box)
 {
     k_call_t call;
-    uint32_t args[] = {(uint32_t)box};
 
     call.code = UNBIND;
-    call.argv = args;
+    call.arg = &box;
 
     k_SetCall(&call);
 
     SVC();
 
-    return call.retval;
+    return (pmbox_t)call.retval;
+}
+
+size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
+{
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
+
+    k_call_t call;
+
+    call.code = SEND;
+    call.arg = (k_arg_t)&msg;
+
+    k_SetCall(&call);
+
+    SVC();
+
+    return (pmbox_t)call.retval;
+}
+
+size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
+{
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
+
+    k_call_t call;
+
+    call.code = RECV;
+    call.arg = (k_arg_t)&msg;
+
+    k_SetCall(&call);
+
+    SVC();
+
+    // retval for this call is irrelevant b/c msg may not be receive at "call" time.
+    return (pmbox_t)msg.size;
 }

@@ -17,11 +17,13 @@
 #include "k_types.h"
 
 
-int32_t pcreate(proc_t* p, pid_t pid, priority_t priority, void (*proc_program)());
+proc_t pcreate(pid_t pid, priority_t priority, void (*proc_program)());
 void terminate(void);
 pid_t getpid(void);
 priority_t nice(priority_t newPriority);
-int32_t bind(pmbox_t* box, uint32_t box_no);
-int32_t unbind(pmbox_t* box);
+pmbox_t bind(pmbox_t box);
+pmbox_t unbind(pmbox_t box);
+size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
+size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
 
 #endif // CALLS_H
