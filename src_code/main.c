@@ -10,6 +10,7 @@
 
 #include "k_handlers.h"
 #include "calls.h"
+#include <string.h>
 
 
 void rx_test(void)
@@ -38,6 +39,18 @@ void tx_test(void)
     while(1);
 }
 
+void output_test()
+{
+    pid_t id = getpid();
+    pmbox_t box = bind(0);
+
+    char text[] = {"Hello!\n"};
+
+//    sprintf(text, "Hello from process %u!\n", id);
+
+    send(31, box, (uint8_t*)text, strlen(text));
+}
+
 
 /**
  * main.c
@@ -47,8 +60,10 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-    pcreate(10, 0, &rx_test);
-    pcreate(11, 0, &tx_test);
+    pcreate(0, 1, &output_test);
+    pcreate(0, 1, &output_test);
+    pcreate(0, 1, &output_test);
+    pcreate(0, 1, &output_test);
 
     kernel_start();
 

@@ -17,11 +17,13 @@
 #include "k_cpu.h"
 #include "k_msgbox.h"
 #include "dlist.h"
+#include "uart.h"
 
 pcb_t* running;
 pmsgbox_t* free_box;
 pmsgbox_t mbox[SYS_MSGBOXES];
 pid_bitmap_t pid_bitmap;
+uart_descriptor_t uart;
 
 void KernelCall_handler(k_call_t* call);
 
@@ -38,6 +40,30 @@ void idle()
     while(1) {}
 }
 
+void output_proc()
+{
+    pmbox_t box = bind(SYS_MSGBOXES-1);
+//    uint8_t buffer[CIRCULAR_BUFFER_SIZE];
+//    uint32_t msg_head, msg_tail;
+
+    circular_buffer_t buffer;
+    circular_buffer_init(&buffer);
+
+
+    while(1) {
+        buffer.wr_ptr = recv(box, 0, (uint8_t*)buffer.data, CIRCULAR_BUFFER_SIZE);
+
+        while (buffer.rd_ptr < buffer.wr_ptr) {
+            buffer.rd_ptr +=
+                    UART0_put((buffer.data+buffer.rd_ptr), buffer_size(&buffer));
+        }
+
+        buffer.wr_ptr = 0;
+        buffer.rd_ptr = 0;
+    }
+
+}
+
 /**
  * @brief   Initializes kernel data structures, drivers, and critical processes.
  */
@@ -46,6 +72,9 @@ void kernel_init()
     PendSV_init();
 
     SystemTick_init(1000);  // 1000 Hz rate -> system tick triggers every milisecond
+
+    uart.echo = false;
+    UART0_Init(&uart);
 
     scheduler_init();
 
@@ -61,10 +90,13 @@ void kernel_init()
     }
 
     pcreate(0, IDLE_LEVEL, &idle);
-    running = Schedule();   // This causes running to always be pointing to a valid process.
-                            // This will make the "null" check in PendSV unnecessary
+    // Set the initial running process to be running
+    // This avoids any "NULL" checks of the running process,
+    // As it'll always be associated with a process.
+    running = Schedule();
 
 	// register the server processes
+    pcreate(0, 0, &output_proc);
 }
 
 /**
@@ -251,7 +283,7 @@ proc_t k_pcreate(pcreate_args_t* args)
     if (args->id == 0)  args->id = FindFreePID();
 
     // The ladder to process creation success!
-    if (AvailablePID(args->id)) {                     // PID is valid
+    if (args->id < PID_MAX && AvailablePID(args->id)) {                     // PID is valid
         if (k_CreatePCB(&pcb, args->id)) {             // PCB was successfully allocated
             InitProcessContext(&pcb->sp, args->proc_program, &terminate);
 

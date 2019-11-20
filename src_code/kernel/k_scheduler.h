@@ -12,10 +12,7 @@
 
 #include "k_types.h"
 
-#define PRIORITY_LEVELS 5   /** Priority levels supported by the kernel. */
-#define IDLE_LEVEL      5   /** Index to the Idle queue */
 
-#define LOWEST_PRIORITY 4
 /**
  * @brief   Total amount of process levels the kernel scheduler accepts.
  * @details Five queues for the priority levels,

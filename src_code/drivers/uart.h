@@ -10,7 +10,7 @@
 #ifndef UART_H
 	#define UART_H
 
-	#include "circular_buffer.h"
+	#include "cirbuffer.h"
 
 	// UART0 & PORTA Registers
 	#define GPIO_PORTA_AFSEL_R  (*((volatile unsigned long *)0x40058420))   /// GPIOA Alternate Function Select Register

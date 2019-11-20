@@ -5,8 +5,6 @@
 
 #include "k_types.h"
 
-#define SYS_MSGBOXES 32
-
 void k_MsgBoxBind(pmsgbox_t* box, pcb_t* owner);
 void k_MsgBoxUnbind(pmsgbox_t* box);
 

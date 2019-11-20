@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "dlist.h"
+#include "k_defs.h"
 
 typedef uint32_t    id_t;   /// System ID type alias
 typedef id_t        pmbox_t; /// Message Box ID type alias
@@ -64,8 +65,6 @@ typedef struct pcb_ {
     uint32_t    timer;
     pmsgbox_t*  msgbox;
 } pcb_t;
-
-#define PID_MAX 256
 
 typedef struct pid_bitmap_ {
     uint8_t byte[((PID_MAX)/8)];
