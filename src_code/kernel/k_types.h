@@ -1,4 +1,10 @@
-
+/**
+ * @file    k_types.h
+ * @brief   Defines all data types used through the kernel
+ * @author  Manuel Burnay
+ * @date    2019.11.19 (Created)
+ * @date    2019.11.21 (Last Modified)
+ */
 
 #ifndef K_TYPES_H
 #define K_TYPES_H
@@ -9,12 +15,13 @@
 #include "dlist.h"
 #include "k_defs.h"
 
-typedef uint32_t    id_t;   /// System ID type alias
-typedef id_t        pmbox_t; /// Message Box ID type alias
-typedef id_t        proc_t; /// Process type alias
+typedef uint32_t    id_t;       /// System ID type alias
+typedef id_t        pmbox_t;    /// Message Box ID type alias
+typedef id_t        proc_t;     /// Process type alias
 
-/** @brief  Internal Inter-process message structure */
+/** @brief Inter-process message structure */
 typedef struct pmsg_ {
+    // This union makes the coding for the linked list a lot cleaner
     union {
         struct {
             struct pmsg_*   next;
@@ -66,18 +73,14 @@ typedef struct pcb_ {
     pmsgbox_t*  msgbox;
 } pcb_t;
 
-typedef struct pid_bitmap_ {
-    uint8_t byte[((PID_MAX)/8)];
-} pid_bitmap_t;
+typedef uint32_t*   k_arg_t;    /// Kernel call argument type alias
+typedef uint32_t    k_ret_t;    /// Kernel call return value type alias
 
-//typedef struct kernel_data_ {
-//    pcb_t* running;
-//    pmsgbox_t* free_mbox;
-//    pmsgbox_t mbox[SYS_MSGBOXES];
-//    pid_bitmap_t pid_bitmap;
-//} kernel_t;
-
-typedef uint32_t*   k_arg_t;
-typedef uint32_t    k_ret_t;
+/** @brief Kernel Call structure */
+typedef struct kernel_call_arguments_ {
+    k_code_t    code;
+    k_ret_t     retval;
+    k_arg_t     arg;
+} k_call_t ;
 
 #endif

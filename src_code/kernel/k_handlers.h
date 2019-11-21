@@ -15,6 +15,12 @@
 #include "k_types.h"
 #include "k_calls.h"
 
+typedef struct pcreate_args_ {
+    pid_t       id;
+    priority_t  prio;
+    void        (*proc_program)();
+} pcreate_args_t;
+
 void kernel_init();
 inline void kernel_start();
 

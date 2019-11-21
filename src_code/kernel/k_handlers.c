@@ -18,19 +18,14 @@
 #include "k_msgbox.h"
 #include "dlist.h"
 #include "uart.h"
+#include "systick.h"
 
 pcb_t* running;
 pmsgbox_t* free_box;
 pmsgbox_t mbox[SYS_MSGBOXES];
-pid_bitmap_t pid_bitmap;
 uart_descriptor_t uart;
 
 void KernelCall_handler(k_call_t* call);
-
-pid_t FindFreePID();
-inline void SetPIDbit(pid_t pid);
-inline void ClearPIDbit(pid_t pid);
-inline bool AvailablePID(pid_t pid);
 
 /**
  * @brief   Generic Idle process used by the kernel.
@@ -67,12 +62,10 @@ void kernel_init()
 {
     PendSV_init();
 
-    SystemTick_init(1000);  // 1000 Hz rate -> system tick triggers every milisecond
+    SysTick_Init(1000);  // 1000 Hz rate -> system tick triggers every milisecond
 
     uart.echo = false;
     UART0_Init(&uart);
-
-    scheduler_init();
 
     int i;
 
@@ -104,7 +97,7 @@ inline void kernel_start()
     k_call_t call;
     call.code = STARTUP;
 
-    k_SetCall(&call);
+    SetCallReg(&call);
 
     SVC();
 }
@@ -135,7 +128,7 @@ void SystemTick_handler(void)
 void PendSV_handler(void)
 {
     DISABLE_IRQ();  // Disable interrupts to procedure doesn't get corrupted
-    SystemTick_pause();
+    SysTick_Stop();
 
     SaveProcessContext();
     running->sp = (uint32_t*)GetPSP();
@@ -147,8 +140,8 @@ void PendSV_handler(void)
 
     running->timer = PROC_RUNTIME;
 
-    SystemTick_reset();
-    SystemTick_resume();
+    SysTick_Reset();
+    SysTick_Start();
     ENABLE_IRQ();
 
     StartProcess();
@@ -163,20 +156,20 @@ void SVC_handler()
 {
     SaveTrapReturn();   // save the trap return address
 
-    SystemTick_pause();
+    SysTick_Stop();
 
     if (TrapSource() == KERNEL) {   // Check if the trap was called by the kernel
         SaveContext();              // In which case the trap needs to save its own context (since the trap itself is the kernel)
-        KernelCall_handler(k_GetCall());
+        KernelCall_handler(GetCallReg());
         RestoreContext();
     }
     else {                      // Trap was called by a process
         SaveProcessContext();   // So the process' context is saved
-        KernelCall_handler(k_GetCall());
+        KernelCall_handler(GetCallReg());
         RestoreProcessContext();
     }
 
-    SystemTick_resume();
+    SysTick_Start();
 
     RestoreTrapReturn();
 }
@@ -217,7 +210,7 @@ void KernelCall_handler(k_call_t* call)
             PendSV();
         } break;
 
-        case GETID: {
+        case GETPID: {
             call->retval = (int32_t)running->id;
         } break;
 
@@ -273,23 +266,17 @@ void KernelCall_handler(k_call_t* call)
  */
 proc_t k_pcreate(pcreate_args_t* args)
 {
-    pcb_t* pcb = NULL;
+    pcb_t* pcb = k_AllocatePCB(args->id);
     proc_t retval = 0;
 
-    if (args->id == 0)  args->id = FindFreePID();
+    if (pcb != NULL) {             // PCB was successfully allocated
+        InitProcessContext(&pcb->sp, args->proc_program, &terminate);
 
-    // The ladder to process creation success!
-    if (args->id < PID_MAX && AvailablePID(args->id)) {  // PID is valid
-        if (k_CreatePCB(&pcb, args->id)) {             // PCB was successfully allocated
-            InitProcessContext(&pcb->sp, args->proc_program, &terminate);
-
-            if (LinkPCB(pcb, args->prio)) {    // PCB was successfully linked into its queue
-                retval = args->id;  // set return value to ID
-                SetPIDbit(args->id);
-            }
-            else {
-                k_DeletePCB(&pcb);
-            }
+        if (LinkPCB(pcb, args->prio)) {    // PCB was successfully linked into its queue
+            retval = pcb->id;  // set return value to ID
+        }
+        else {
+            k_DeallocatePCB(&pcb);
         }
     }
 
@@ -347,8 +334,8 @@ pmbox_t k_Unbind(pmbox_t id)
     if (id < SYS_MSGBOXES && mbox[id].owner == running) {
         k_MsgBoxUnbind(&mbox[id]);
         if (free_box == NULL) {
-            mbox[id].list.next = NULL;
-            mbox[id].list.prev = NULL;
+            mbox[id].next = NULL;
+            mbox[id].prev = NULL;
             free_box = &mbox[id];
         }
         else {
@@ -442,7 +429,7 @@ void k_Terminate()
     }
 
     // 3. Erase PCB
-    k_DeletePCB(&running);
+    k_DeallocatePCB(&running);
 
     // 4. Schedule a new process
     running = Schedule();
@@ -450,43 +437,8 @@ void k_Terminate()
     running->timer = PROC_RUNTIME;
 
     // 5. Reset the System timer
-    SystemTick_reset();
+    SysTick_Reset();
 }
-
-// todo: Move this business to k_processes module
-pid_t FindFreePID()
-{
-    pid_t i = 0;
-    bool pid_found = false;
-    while (i < PID_MAX && !pid_found) {
-        if (!AvailablePID(i))   i++;
-        else                    pid_found = true;
-    }
-
-    return i;   // pid 0 indicates there is no available PID (PID 0 is always the idle process).
-}
-
-inline void SetPIDbit(pid_t pid)
-{
-    /*
-     * bitmap is comprised of an array of bytes (smallest addressable element).
-     * So it find a specific bit within the bitmap, two values need to be derived:
-     * (pid >> 3) derives the byte index of the bitmap associated with the bit (pid).
-     * (1 << (pid & 7)) derives the location of the bit (pid) within the addressed byte.
-     */
-    pid_bitmap.byte[(pid >> 3)] |= (1 << (pid & 7));
-}
-
-inline void ClearPIDbit(pid_t pid)
-{
-    pid_bitmap.byte[(pid >> 3)] &= ~(1 << (pid & 7));
-}
-
-inline bool AvailablePID(pid_t pid)
-{
-    return !(pid_bitmap.byte[pid >> 3] & (1 << (pid & 7)));
-}
-
 
 
 

@@ -71,14 +71,14 @@ inline void RestoreProcessContext() {
 /**
  * @brief   Sets the designated kernel call register with a pointer to a kernel call structure.
  */
-inline void SetCallReg(volatile void* call) {
+inline void SetCallReg(volatile k_call_t* call) {
     __asm("     mov r7,r0");
 }
 
 /**
  * @brief   Gets the pointer to a kernel call structure out of the designated kernel call register.
  */
-inline void* GetCallReg() {
+inline k_call_t* GetCallReg() {
     __asm("     mov r0,r7");
 	__asm(" bx  lr");
 	return NULL;
@@ -88,10 +88,10 @@ inline void* GetCallReg() {
  * @brief   Gets a process' kernel call structure based on its program memory.
  * @details This function assumes the process' CPU context was pushed onto its stack prior to this call.
  */
-inline void* GetProcessCall(uint32_t* psp) {
+inline k_call_t* GetProcessCall(uint32_t* psp) {
     cpu_context_t* cpu = (cpu_context_t*)(psp);
 
-    return (void*)cpu->r7;
+    return (k_call_t*)cpu->r7;
 }
 
 /**

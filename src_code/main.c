@@ -5,7 +5,7 @@
  *          its process creation requests so they get registered with the kernel.
  * @author  Manuel Burnay
  * @date    2019.10.22  (Created)
- * @date    2019.11.03  (Last Modified)
+ * @date    2019.11.21  (Last Modified)
  */
 
 #include "k_handlers.h"
@@ -53,7 +53,10 @@ void output_test()
 
 
 /**
- * main.c
+ * @brief   main.c
+ * @details Initializes the kernel and all processes to run in the system.
+ *          It also start's kernel's "run-mode".
+ *
  */
 int main(void)
 {

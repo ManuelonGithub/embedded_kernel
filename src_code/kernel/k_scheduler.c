@@ -1,10 +1,11 @@
 /**
  * @file    k_scheduler.c
- * @brief   Contains all the supporting functionality to schedule process in the kernel.
+ * @brief   Contains The System's process queues and all the supporting
+ *          functionality to schedule process in the kernel.
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
  * @date    2019.10.23  (Created)
- * @date    2019.11.03  (Last Modified)
+ * @date    2019.11.21  (Last Modified)
  */
 
 #include <stdio.h>
@@ -14,27 +15,16 @@
 pcb_t* ProcessQueue[PROCESS_QUEUES];
 
 /**
- * @brief   Initializes the Process Queue's "heads" to null.
- * @todo    Check if since it's a global variable that all values are null from the getgo.
- *          If so this function is not needed.
- */
-void scheduler_init()
-{
-    int i;
-    for (i = 0; i < PROCESS_QUEUES; i++) {
-        ProcessQueue[i] = NULL;
-    }
-}
-
-/**
  * @brief   Links a PCB into a specific priority queue.
- * @param   [in, out] PCB: pointer to PCB element to link into the respective process queue.
+ * @param   [in,out] PCB:
+ *              pointer to PCB element to link into the respective process queue.
  * @return  False if process wasn't able be linked (invalid priority level)
  *          True if it was successfully linked.
- * @details This function is used to also move PCBs in and out of the blocked queue
- *          and to place the idle process in the idle process queue.
- *          This poses a potential risk that processes may be initialized with a "priority"
- *          lower than what is allowed, but that will only cause that process to never run.
+ * @details This function is also used to place the
+ *          idle process in the idle process queue.
+ *          This poses a potential risk that processes
+ *          may be initialized with a "priority" lower than what is allowed,
+ *          but that will only cause that process to never run.
  */
 bool LinkPCB(pcb_t *PCB, priority_t proc_lvl)
 {
@@ -48,7 +38,8 @@ bool LinkPCB(pcb_t *PCB, priority_t proc_lvl)
         UnlinkPCB(PCB);
     }
 
-    if (ProcessQueue[proc_lvl] == NULL) {    // If the queue where the PCB is being moved to is empty.
+    if (ProcessQueue[proc_lvl] == NULL) {
+        // If the queue where the PCB is being moved to is empty.
         ProcessQueue[proc_lvl] = PCB;
         PCB->next = PCB;
         PCB->prev = PCB;
@@ -94,17 +85,21 @@ pcb_t* Schedule()
 
     while (i < PRIORITY_LEVELS && retval == NULL) {
         front = ProcessQueue[i];
-        if (front != NULL) {        // If this priority queue isn't empty.
+        if (front != NULL) {    // If this priority queue isn't empty.
+            // The process in front of queue is determined to run next.
+            retval = front;
 
-            retval = front;         // The process in front of queue is determined to run next.
-            ProcessQueue[i] = front->next;    // The front of queue then moves to the next process to run.
+            // The front of queue then moves to the next process to run.
+            ProcessQueue[i] = front->next;
         }
         i++;
     }
 
     if (retval == NULL) {
-        retval = ProcessQueue[IDLE_LEVEL];  // We are assuming here that there will always be an idle process.
-    }                                       // Which if not then this is a weird self-prank
+        // We are assuming here that there will always be an idle process.
+        // Which if not then this is a weird self-prank
+        retval = ProcessQueue[IDLE_LEVEL];
+    }
 
     return retval;
 }

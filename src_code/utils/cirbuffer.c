@@ -1,9 +1,9 @@
 /**
- * @file   circular_buffer.c
+ * @file   cirbuffer.c
  * @brief  C file all function definitions regarding circular buffer operation.
  * @author Manuel Burnay
  * @date   2019.09.17 (Created)
- * @date   2019.10.03 (Last Modified)
+ * @date   2019.11.21 (Last Modified)
  */
 
 
@@ -38,9 +38,10 @@ inline void enqueuec(circular_buffer_t* buffer, char c)
  * @brief   Safely Queues a char/byte into a circular buffer.
  * @param   [in, out] buffer: pointer to circular buffer being used.
  * @param   [in] data: char data being queued.
- * @param   [in] OVERWRITE: This flag determines the enqueuing behaviour if the queue is full.
- *                          If true, the enqueuing takes place (overwrites the oldest entry),
- *                          If false, the enqueuing will not take place.
+ * @param   [in] OVERWRITE:
+ *              This flag determines the enqueuing behaviour if the queue is full.
+ *              If true, the enqueuing takes place (overwrites the oldest entry),
+ *              If false, the enqueuing will not take place.
  * @return  [bool] True if an enqueue was taken place, False if not.
  */
 bool enqueuec_s(circular_buffer_t* buffer, char c, bool OVERWRITE)
@@ -122,7 +123,8 @@ uint32_t enqueue(circular_buffer_t* buffer, char* src_buf, uint32_t length)
  * @param   [in, out] buffer: pointer to circular buffer being used.
  * @return  char/byte that was dequeued from buffer.
  * @details This function may corrupt the buffer if the buffer is empty.
- *          Always make sure to check if buffer contains data before using this function,
+ *          Always make sure to check if buffer contains data
+ *          before using this function,
  *          or use dequeue_s(), which will dequeue from the buffer safely,
  *          albeit with added overhead.
  */
@@ -137,7 +139,9 @@ char dequeuec(circular_buffer_t* buffer)
 /**
  * @brief   Safely dequeues a character from a circular buffer.
  * @param   [in, out] buffer: pointer to circular buffer being used.
- * @param   [out] dst: pointer to char where the dequeued character will be placed if a dequeue can take place.
+ * @param   [out] dst:
+ *              pointer to char where the dequeued character
+ *              will be placed if a dequeue can take place.
  * @return  [bool] True if a dequeue was taken place, False if not.
  * @details dst can be NULL if you don't wish to retain the dequeued entry.
  */
@@ -156,7 +160,9 @@ bool dequeuec_s(circular_buffer_t* buffer, char* dst)
 /**
  * @brief   Dequeues a length of bytes.
  * @param   [in, out] buffer: pointer to circular buffer being used.
- * @param   [out] dst: pointer to byte buffer where the dequeued characters will be copied to.
+ * @param   [out] dst:
+ *              pointer to byte buffer where
+ *              the dequeued characters will be copied to.
  * @param   [in] length: Amount of bytes to be queued.
  * @return  [uint32_t] Amount of bytes dequeued.
  * @details This function will only dequeue bytes until the buffer is empty.

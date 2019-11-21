@@ -7,14 +7,14 @@
  *          the kernel from one cpu to another.
  * @author  Manuel Burnay
  * @date    2019.11.02  (Created)
- * @date    2019.11.03  (Last Modified)
+ * @date    2019.11.21  (Last Modified)
  */
 
 #ifndef K_CPU_H
 #define K_CPU_H
 
 #include <stdint.h>
-#include "SysTick.h"
+#include "k_types.h"
 
 // todo: Give up on the idea and distribute this code where it's relevant
 // This file is just so damn bloated
@@ -32,18 +32,6 @@ inline void PendSV_init();
 /** @brief  Triggers the PendSV trap to be called. */
 #define PendSV()    (NVIC_INT_CTRL_R |= TRIGGER_PENDSV)
 
-/** @brief  SysTick Initialize alias function */
-#define SystemTick_init(rate)  SysTick_Init(rate)
-
-/** @brief  SysTick Reset alias function */
-#define SystemTick_reset()  SysTick_Reset()
-
-/** @brief  SysTick Start alias function */
-#define SystemTick_resume() SysTick_Start()
-
-/** @brief  SysTick Stop alias function */
-#define SystemTick_pause()  SysTick_Stop()
-
 /** @brief   Enables Interrupt Requests. */
 #define ENABLE_IRQ() __asm(" cpsie i")
 
@@ -56,7 +44,9 @@ inline void PendSV_init();
 /** @brief   Saves the Trap Return address to the kernel's stack. */
 #define SaveTrapReturn()    __asm("     PUSH    {LR}")
 
-/** @brief  Restores the Trap return address to the CPU's exception return link register */
+/** @brief  Restores the Trap return address
+ *          to the CPU's exception return link register
+ */
 #define RestoreTrapReturn()   __asm("     POP     {LR}")
 
 #define PSR_INIT_VAL    0x01000000  /// CPU's Status Register initial value
@@ -68,9 +58,6 @@ inline void PendSV_init();
  */
 typedef struct cpu_context_ {
     /* Registers saved by s/w (explicit) */
-    /* There is no actual need to reserve space for R4-R11, other than
-     * for initialization purposes.  Note that r0 is the h/w top-of-stack.
-     */
     uint32_t r4;
     uint32_t r5;
     uint32_t r6;
@@ -79,7 +66,7 @@ typedef struct cpu_context_ {
     uint32_t r9;
     uint32_t r10;
     uint32_t r11;
-    /* Stacked by hardware (implicit)*/
+    /* Stacked by hardware (implicit) */
     uint32_t r0;
     uint32_t r1;
     uint32_t r2;
@@ -100,9 +87,9 @@ inline void RestoreContext();
 inline void SaveProcessContext();
 inline void RestoreProcessContext();
 
-inline void SetCallReg(volatile void* call);
-inline void* GetCallReg();
-inline void* GetProcessCall(uint32_t* psp);
+inline void SetCallReg(volatile k_call_t* call);
+inline k_call_t* GetCallReg();
+inline k_call_t* GetProcessCall(uint32_t* psp);
 
 inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)());
 
