@@ -117,7 +117,7 @@ size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
     pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
 
-    kcall(SEND, (k_arg_t)&msg);
+    kcall(RECV, (k_arg_t)&msg);
 
     // retval for this call is irrelevant b/c msg may not be receive at "call" time.
     return (size_t)msg.size;

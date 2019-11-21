@@ -15,14 +15,12 @@
 #include "k_processes.h"
 #include "calls.h"
 #include "k_cpu.h"
-#include "k_msgbox.h"
+#include "k_messaging.h"
 #include "dlist.h"
 #include "uart.h"
 #include "systick.h"
 
 pcb_t* running;
-pmsgbox_t* free_box;
-pmsgbox_t mbox[SYS_MSGBOXES];
 uart_descriptor_t uart;
 
 void KernelCall_handler(k_call_t* call);
@@ -67,16 +65,7 @@ void kernel_init()
     uart.echo = false;
     UART0_Init(&uart);
 
-    int i;
-
-    free_box = &mbox[0];
-    mbox[0].ID = 0;
-
-    for (i = 1; i < SYS_MSGBOXES; i++) {
-        mbox[i].ID = i;
-        mbox[i-1].next = &mbox[i];
-        mbox[i].prev = &mbox[i-1];
-    }
+    k_MsgInit();
 
     pcreate(0, IDLE_LEVEL, &idle);
     // Set the initial running process to be running
@@ -220,19 +209,19 @@ void KernelCall_handler(k_call_t* call)
         } break;
 
         case BIND: {
-            call->retval = k_Bind((pmbox_t)call->arg[0]);
+            call->retval = k_MsgBoxBind((pmbox_t)call->arg[0], running);
         } break;
 
         case UNBIND: {
-            call->retval = k_Unbind((pmbox_t)call->arg[0]);
+            call->retval = k_MsgBoxUnbind((pmbox_t)call->arg[0], running);
         } break;
 
         case SEND: {
-            call->retval = k_SendMessage((pmsg_t*)call->arg);
+            call->retval = k_MsgSend((pmsg_t*)call->arg, running);
         } break;
 
         case RECV: {
-            if (!k_ReceiveMessage((pmsg_t*)call->arg)) {
+            if (!k_MsgRecv((pmsg_t*)call->arg, running)) {
                 UnlinkPCB(running);
                 PendSV();
             }
@@ -283,137 +272,6 @@ proc_t k_pcreate(pcreate_args_t* args)
     return retval;
 }
 
-/**
- * @brief   Binds a message box to the running process.
- * @param   [out] b: pointer to a valid msgbox id variable.
- *          This variable gets the id of the msgbox that was successfully
- *          bound to the process, which is then used when the process wishes
- *          to send/receive messages from the msgbox.
- * @param   [in] box_no: The message box number to bind to the process.
- * @return  -1 if a message box wasn't able to be bound,
- *          0 if a successful bind was performed.
- * @details If the message box value passed is 0,
- *          this procedure will instead find
- *          an available message box to bind to the process.
- *          If an available message box isn't found,
- *          or the requested msgbox is already taken,
- *          no message box will be bound to the process.
- */
-pmbox_t k_Bind(pmbox_t id)
-{
-    pmsgbox_t* box;
-
-    if (id == 0 && free_box != NULL ) {
-        box = free_box;
-        free_box = free_box->next;
-    }
-    else if (id < SYS_MSGBOXES && mbox[id].owner == NULL) {
-        box = &mbox[id];
-        // Move free list pointer if it pointed to msgbox
-        if (&mbox[id] == free_box)    free_box = free_box->next;
-    }
-    else    return 0;   // Wasn't able to bind mailbox, return 0
-
-    k_MsgBoxBind(box, running);
-    id = box->ID;
-
-    return id;
-}
-
-/**
- * @brief   Unbinds a msgbox from the running process.
- * @param   [in] mbox_no: msgbox number to be unbound from the running process.
- * @return  -1 if the msgbox wasn't able to be unbound,
- *          otherwise the msgbox number for the unbound msgbox is returned.
- * @details This procedure also makes sure that all messages in the msgbox are erased.
- *          Unlike the binding procedure, it does require an explicit msgbox value owned
- *          by the running process in order to unbind it.
- */
-pmbox_t k_Unbind(pmbox_t id)
-{
-    if (id < SYS_MSGBOXES && mbox[id].owner == running) {
-        k_MsgBoxUnbind(&mbox[id]);
-        if (free_box == NULL) {
-            mbox[id].next = NULL;
-            mbox[id].prev = NULL;
-            free_box = &mbox[id];
-        }
-        else {
-            dLink(&mbox[id].list, &free_box->list);
-        }
-
-        // the free_box list is a FIFO,
-        // so the "newest" available box is at the front of the list
-        free_box = &mbox[id];
-        id = 0;
-    }
-
-    return id;
-}
-
-size_t k_SendMessage(pmsg_t* msg)
-{
-    bool err = (msg->dst >= SYS_MSGBOXES     || msg->src >= SYS_MSGBOXES  ||
-                mbox[msg->dst].owner == NULL || mbox[msg->src].owner != running);
-
-    uint32_t retval = 0;
-
-    if (!err) {
-        if (mbox[msg->dst].wait_msg != NULL) {  // todo: check if wait msg's src is the dst's mailbox
-            retval = k_pMsgRecv(mbox[msg->dst].wait_msg, msg);
-            LinkPCB(mbox[msg->dst].owner, mbox[msg->dst].owner->priority);
-            PendSV();
-        }
-        else {
-            // Allocate Message
-            pmsg_t* msg_out = k_pMsgAllocate(msg->data, msg->size);
-            msg_out->dst = msg->dst;
-            msg_out->src = msg->src;
-            // Send if message allocation was successful
-            if (msg_out != NULL)    retval = k_pMsgSend(msg_out, &mbox[msg->dst]);
-        }
-    }
-
-    return retval;
-}
-
-bool k_ReceiveMessage(pmsg_t* dst_msg)
-{
-    // Initialized will all possible error conditions checked
-    bool retval = (
-        dst_msg == NULL || dst_msg->dst >= SYS_MSGBOXES ||
-        mbox[dst_msg->dst].owner != running
-    );
-
-    // If no errors were found
-    if (!retval) {
-        if (mbox[dst_msg->dst].front_msg == NULL) {
-            mbox[dst_msg->dst].wait_msg = dst_msg;
-            retval = false;
-        }
-        else {
-            // todo: create a "specified source" check system
-
-            pmsg_t* src_msg = mbox[dst_msg->dst].front_msg;
-
-            mbox[dst_msg->dst].front_msg = mbox[dst_msg->dst].front_msg->next;
-
-            if (mbox[dst_msg->dst].front_msg == src_msg) {
-                mbox[dst_msg->dst].front_msg = NULL;
-            }
-            else {
-                dUnlink(&src_msg->list);
-            }
-
-            k_pMsgRecv(dst_msg, src_msg);
-            k_pMsgDeallocate(&src_msg);
-
-            retval = true;
-        }
-    }
-
-    return retval;
-}
 
 void k_Terminate()
 {
@@ -425,7 +283,7 @@ void k_Terminate()
     while (running->msgbox != NULL) {
         box = running->msgbox;
         running->msgbox = running->msgbox->next;
-        k_Unbind(box->ID);
+        k_MsgBoxUnbind(box->ID, running);
     }
 
     // 3. Erase PCB
