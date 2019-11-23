@@ -171,6 +171,16 @@ uint32_t UART0_put(char* data, uint8_t length)
     return bytes_sent;
 }
 
+bool UART_getc(char* c)
+{
+    if (buffer_size(&UART0->rx) != BUFFER_EMPTY) {
+        *c = dequeuec(&UART0->rx);
+        return true;
+    }
+
+    return false;
+}
+
 /**
  * @brief   Retrieves string from UART 0.
  * @param   [out] str: where the string will be copied onto.

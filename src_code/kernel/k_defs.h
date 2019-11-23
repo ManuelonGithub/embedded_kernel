@@ -31,7 +31,7 @@
 
 #define PROC_RUNTIME 100    /// Time quantum of a process in ms
 
-#define PID_MAX 32          /// Maximum Processes supported.
+#define PID_MAX 16          /// Maximum Processes supported.
 
 #define RTS_PROCESSES       /// Enables "Real Time Systems" process management
 

@@ -15,10 +15,15 @@ char CLEAR_SCREEN[]     = {"\x1b[2J"};
 char CURSOR_SAVE[] 		= {"\x1b""7"};
 char CURSOR_HOME[] 		= {"\x1b[H"};
 char CLEAR_LINE[]       = {"\x1b[2K"};
-char HOME_COLOURS[]     = {"\x1b[2;30;47m"};
+char HOME_COLOURS[]     = {"\x1b[0;30;47m"};
 char CURSOR_MIDDLE[] 	= {"\x1b[20C"};
 char TERM_COLOURS[]     = {"\x1b[0;0;0m"};
 char CURSOR_RESTORE[] 	= {"\x1b""8"};
+
+char CURSOR_LEFT[] = {"\x1b[D"};
+char CURSOR_RIGHT[] = {"\x1b[C"};
+char CURSOR_UP[] = {"\x1b[A"};
+char CURSOR_DOWN[] = {"\x1b[B"};
 
 uint8_t term_state;
 pid_t	active_pid;
@@ -96,8 +101,11 @@ void term_out()
         .size = CIRCULAR_BUFFER_SIZE
     };
 
+    send_home(&home);
+
     while(1) {
         buffer.wr_ptr = recv_msg(&proc_rx);
+        proc_rx.size = CIRCULAR_BUFFER_SIZE;
 
         switch (proc_rx.src) {
         	case IDLE_BOX: {
@@ -105,13 +113,11 @@ void term_out()
         	} break;
 
         	case IN_BOX: {
-        		if (term_state == USER_TERMINAL) {
-        			while (buffer.rd_ptr < buffer.wr_ptr) {
-            			buffer.rd_ptr +=
-                    		UART0_put((buffer.data+buffer.rd_ptr),
-                    		          buffer_size(&buffer));
-        			}
-        		}
+                while (buffer.rd_ptr < buffer.wr_ptr) {
+                    buffer.rd_ptr +=
+                        UART0_put((buffer.data+buffer.rd_ptr),
+                                  buffer_size(&buffer));
+                }
         	} break;
 
         	default: {
@@ -133,16 +139,69 @@ void term_out()
         	} break;
         }
 
+
         buffer.wr_ptr = 0;
         buffer.rd_ptr = 0;
-
-        send_home(&home);
     }
 }
 
 void term_in()
 {
+    pmbox_t box = bind(IN_BOX);
 
+    circular_buffer_t buffer;
+    circular_buffer_init(&buffer);
+
+    term_state = USER_TERMINAL;
+    active_pid = 0;
+    term_size = 40;
+
+    pmsg_t proc_tx = {
+        .dst = box,
+        .src = 0,
+        .data = (uint8_t*)buffer.data,
+        .size = CIRCULAR_BUFFER_SIZE
+    };
+
+    char in_char;
+
+    bool proc_input_en = false;
+
+    while (1) {
+        if (UART_getc(&in_char)) {
+            switch (term_state) {
+                case USER_TERMINAL: {
+                    if (in_char != TERM_ESC)    {
+                        send(OUT_BOX, box, &in_char, 1);
+                    }
+
+                } break;
+
+                case PROCESS_FOCUS: {
+                    if (in_char != TERM_ESC) {
+                        if (proc_input_en) {
+                            UART0_put(in_char, 1);
+
+                            if (in_char != '\b' || in_char != 0x7F) {
+                                enqueuec(&buffer, in_char);
+                            }
+                            else {
+                                proc_tx.size = buffer_size(&buffer);
+                                send_msg(&proc_tx);
+                            }
+                        }
+                    }
+                    else {
+                        circular_buffer_init(&buffer);
+                        term_state = USER_TERMINAL;
+                    }
+                } break;
+
+                default:
+                break;
+            }
+        }
+    }
 }
 
 

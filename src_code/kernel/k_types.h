@@ -32,6 +32,7 @@ typedef struct pmsg_ {
 
     pmbox_t     src;
     pmbox_t     dst;
+    proc_t      owner;
     size_t      size;
     uint8_t*    data;
 } pmsg_t;

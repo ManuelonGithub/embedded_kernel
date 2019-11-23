@@ -87,6 +87,7 @@
     uint32_t UART0_put(char* data, uint8_t length);
     void UART0_puts(char* data);
 
+    bool UART_getc(char* c);
     uint32_t UART0_gets(char* str, uint32_t MAX_BYTES);
 
 #endif // UART_H

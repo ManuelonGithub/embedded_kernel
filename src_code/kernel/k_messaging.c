@@ -185,7 +185,10 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
         if (mbox[msg->dst].wait_msg != NULL) {
             // todo: check if wait msg's src is the dst's mailbox
             retval = k_pMsgTransfer(mbox[msg->dst].wait_msg, msg);
+
             mbox[msg->dst].wait_msg->src = msg->src;
+            mbox[msg->dst].wait_msg->size = retval;
+
             LinkPCB(mbox[msg->dst].owner, mbox[msg->dst].owner->priority);
             PendSV();
         }
