@@ -31,13 +31,20 @@
 
 #define PROC_RUNTIME 100    /// Time quantum of a process in ms
 
-#define PID_MAX 256         /// Maximum PID value supported
+#define PID_MAX 32          /// Maximum Processes supported.
+
+#define RTS_PROCESSES       /// Enables "Real Time Systems" process management
 
 
 /***************************** IPC Related Definitions *****************************/
 
 #define SYS_MSGBOXES 32     /// Amount of Message boxes supported by the kernel
 
+#define IDLE_BOX    0
+
+#define OUT_BOX     31
+
+#define IN_BOX      30
 
 /************************ Kernel Calls Related Definitions *************************/
 

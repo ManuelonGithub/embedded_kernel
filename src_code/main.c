@@ -12,7 +12,6 @@
 #include "calls.h"
 #include <string.h>
 
-
 void rx_test(void)
 {
     pid_t rx_id = getpid();
@@ -48,7 +47,7 @@ void output_test()
 
     sprintf(text, "Hello from process %u!\n", id);
 
-    send(31, box, (uint8_t*)text, strlen(text));
+    send(OUT_BOX, box, (uint8_t*)text, strlen(text));
 }
 
 

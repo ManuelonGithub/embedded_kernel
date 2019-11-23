@@ -13,8 +13,12 @@
 
 #include "k_types.h"
 
+void process_init();
+
 pcb_t* k_AllocatePCB(pid_t id);
-inline void k_DeallocatePCB(pcb_t** pcb);
+inline void k_DeallocatePCB(pid_t id);
+
+pcb_t* k_CreatePCB(pid_t id);
 
 pid_t FindFreePID();
 inline void SetPIDbit(pid_t pid);

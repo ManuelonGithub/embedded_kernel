@@ -5,7 +5,7 @@
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
  * @date    2019.10.23 (Created)
- * @date    2019.10.23 (Last Modified)
+ * @date    2019.11.21 (Last Modified)
  */
 
 #ifndef 	K_HANDLERS_H

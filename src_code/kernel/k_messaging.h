@@ -1,7 +1,15 @@
 
+/**
+ * @file    k_messaging.h
+ * @brief   Contains all definitions and function prototypes regarding
+ *          inter-process communications via messaging.
+ * @author  Manuel Burnay
+ * @date    2019.11.18 (Created)
+ * @date    2019.11.21 (Last Modified)
+ */
 
-#ifndef K_MSGBOX_H
-#define K_MSGBOX_H
+#ifndef K_MESSAGING_H
+#define K_MESSAGING_H
 
 #include "k_types.h"
 
@@ -22,7 +30,7 @@ inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src);
 
 void k_MsgClearAll(pmbox_t id);
 
-#endif // K_MSGBOX_H
+inline pid_t OwnerID(pmbox_t boxID);
 
-
+#endif // K_MESSAGING_H
 

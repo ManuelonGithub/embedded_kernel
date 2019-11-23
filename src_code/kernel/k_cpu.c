@@ -26,14 +26,16 @@ inline void PendSV_init()
  * @brief   Determines the source of a trap call.
  * @retval  A code value related to the the source.
  *          See trap_souces_t for more information.
- * @details This function relies on the trap return address to be saved in the kernel stack.
- * @todo    See about cleaning up the assembly code: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.kui0097a/armcc_cihccdja.htm
+ * @details This function relies on the trap return address
+ *          to be saved in the kernel stack.
  */
 inline trap_sources_t TrapSource() {
     __asm("     LDR r0,[sp]");
 	__asm(" 	ANDS r0,r0,#4");
 	__asm(" bx  lr");
-    return KERNEL; // function will return with the line above, this is just to remove compiler warning
+	// function will return with the line above,
+	// this is just to remove compiler warning
+    return KERNEL;
 }
 
 /** @brief  Saves the current CPU context onto the running stack. */

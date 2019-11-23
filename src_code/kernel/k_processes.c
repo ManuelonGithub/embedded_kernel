@@ -1,6 +1,7 @@
 /**
  * @file    k_processes.c
- * @brief   Defines supporting functionality related to the kernel processes.
+ * @brief   Contains the process allocation management and all
+ *          supporting functionality related to the kernel processes.
  * @author  Manuel Burnay
  * @date    2019.11.13  (Created)
  * @date    2019.11.21  (Last Modified)
@@ -12,6 +13,23 @@
 #include "k_processes.h"
 
 uint8_t pid_bitmap[PID_MAX/8];
+pcb_t*  proc_table[PID_MAX];
+
+void process_init()
+{
+    int i = 0;
+    for (i = 0; i < PID_MAX; i++) {
+#ifdef  RTS_PROCESSES
+        proc_table[i] = k_CreatePCB(i);
+#else
+        proc_table[i] = NULL;
+#endif
+    }
+
+    for(i = 0; i < PID_MAX/8; i++) {
+        pid_bitmap[i] = 0;
+    }
+}
 
 /**
  * @brief   Allocates and initializes a new PCB.
@@ -28,24 +46,16 @@ pcb_t* k_AllocatePCB(pid_t id)
     if (id == 0) id = FindFreePID();
 
     if (id < PID_MAX && AvailablePID(id)) {
-        pcb = (pcb_t*)malloc(sizeof(pcb_t));
-        if (pcb == NULL) return NULL;
-
-        pcb->sp_top = (uint32_t*)malloc(STACKSIZE);
-        if (pcb->sp_top == NULL) {
-            free(pcb);
-            return NULL;
-        }
-
-        pcb->id = id;
-
-        pcb->sp = pcb->sp_top+STACKSIZE;
-
-        pcb->next = NULL;
-        pcb->prev = NULL;
-        pcb->msgbox = NULL;
-
+#ifdef  RTS_PROCESSES
         SetPIDbit(id);
+        pcb = proc_table[id];
+#else
+        pcb = k_CreatePCB(id);
+        if (pcb != NULL) {
+            SetPIDbit(id);
+            proc_table[id] = pcb;
+        }
+#endif
     }
 
     return pcb;
@@ -53,12 +63,48 @@ pcb_t* k_AllocatePCB(pid_t id)
 
 /**
  * @brief   De-allocates a PCB.
+ * @param   [in] id: Process ID to be de-allocated.
  */
-inline void k_DeallocatePCB(pcb_t** pcb)
+inline void k_DeallocatePCB(pid_t id)
 {
-    ClearPIDbit((*pcb)->id);
-    free((*pcb)->sp_top);
-    free((*pcb));
+    ClearPIDbit(id);
+
+#ifndef RTS_PROCESSES
+    pcb_t* pcb = proc_table[id];
+
+    free(pcb->sp_top);
+    free(pcb);
+#endif
+}
+
+/**
+ * @brief   Creates a Process Control block in Heap Memory.
+ * @param   [in] id: Process ID to set PCB to.
+ * @return  NULL if a process was unable to be created.
+ *          pointer to created PCB if creation was successful.
+ */
+pcb_t* k_CreatePCB(pid_t id)
+{
+    pcb_t* pcb = NULL;
+
+    pcb = (pcb_t*)malloc(sizeof(pcb_t));
+    if (pcb == NULL) return NULL;
+
+    pcb->sp_top = (uint32_t*)malloc(STACKSIZE);
+    if (pcb->sp_top == NULL) {
+        free(pcb);
+        return NULL;
+    }
+
+    pcb->id = id;
+
+    pcb->sp = pcb->sp_top+STACKSIZE;
+
+    pcb->next = NULL;
+    pcb->prev = NULL;
+    pcb->msgbox = NULL;
+
+    return pcb;
 }
 
 /**

@@ -122,3 +122,11 @@ size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
     // retval for this call is irrelevant b/c msg may not be receive at "call" time.
     return (size_t)msg.size;
 }
+
+size_t recv_msg(pmsg_t* rx_msg)
+{
+    kcall(RECV, (k_arg_t)rx_msg);
+
+    // retval for this call is irrelevant b/c msg may not be receive at "call" time.
+    return (size_t)rx_msg->size;
+}

@@ -26,5 +26,6 @@ pmbox_t bind(pmbox_t box);
 pmbox_t unbind(pmbox_t box);
 size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
 size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
+size_t recv_msg(pmsg_t* rx_msg);
 
 #endif // CALLS_H
