@@ -21,10 +21,10 @@
 #include "systick.h"
 #include "k_terminal.h"
 
-pcb_t* running;
+pcb_t *running, *term_in, *term_out, *idle;
 uart_descriptor_t uart;
 
-void KernelCall_handler(k_call_t* call);
+void p_KernelCall_handler(k_call_t* call);
 
 /**
  * @brief   Generic Idle process used by the kernel.
@@ -66,10 +66,8 @@ void kernel_init()
  */
 inline void kernel_start()
 {
-    k_call_t call;
-    call.code = STARTUP;
-
-    SetCallReg(&call);
+    k_code_t code = STARTUP;
+    SetCallReg((k_call_t*)&code);
 
     SVC();
 }
@@ -133,18 +131,129 @@ void SVC_handler()
     if (TrapSource() == KERNEL) {   // Check if the trap was called by the kernel
         // In which case the kernel needs to save its own context
         SaveContext();
-        KernelCall_handler(GetCallReg());
+        p_KernelCall_handler(GetCallReg());
         RestoreContext();
     }
     else {                      // Trap was called by a process
         SaveProcessContext();   // So the process' context is saved
-        KernelCall_handler(GetCallReg());
+        p_KernelCall_handler(GetCallReg());
         RestoreProcessContext();
     }
 
     SysTick_Start();
 
     RestoreTrapReturn();
+}
+
+void k_KernelCall_handler(k_code_t call)
+{
+    switch(call->code) {
+        case STARTUP: {
+                /*
+                 * This block of code is here to counter-act what PendSV would do to a
+                 * Non-initialized process.
+                 * While admittedly a bit ugly,
+                 * it does allow for both PendSV and this Call handler
+                 * to be as efficient as possible at "steady-state" operation.
+                 * Here we're making the assumption
+                 * that running is set to be the idle process.
+                 */
+
+                // Initializes the process stack pointer to the idle process stack
+                SetPSP((uint32_t)running->sp);
+
+                /*
+                 * This essentially removes the initial "non-essential"
+                 * cpu context in the process' stack, which is necessary since
+                 * PendSV will save the current "non-essential" cpu context
+                 * onto the process stack at the beginning of its handler.
+                 */
+                RestoreProcessContext();
+
+                PendSV();
+        } break;
+
+        case TERM_WAKEUP: {
+            if (term_in_proc->priority != 0) {
+                LinkPCB(&term_in_proc, 0);
+                PendSV();
+            }
+        } break;
+    }
+}
+
+void k_KernelCall_handler(k_call_t* call)
+{
+    switch(call->code) {
+        case PCREATE: {
+            call->retval = k_pcreate((pcreate_args_t*)call->arg);
+        } break;
+
+        case STARTUP: {
+            /*
+             * This block of code is here to counter-act what PendSV would do to a
+             * Non-initialized process.
+             * While admittedly a bit ugly,
+             * it does allow for both PendSV and this Call handler
+             * to be as efficient as possible at "steady-state" operation.
+             * Here we're making the assumption
+             * that running is set to be the idle process.
+             */
+
+            // Initializes the process stack pointer to the idle process stack
+            SetPSP((uint32_t)running->sp);
+
+            /*
+             * This essentially removes the initial "non-essential"
+             * cpu context in the process' stack, which is necessary since
+             * PendSV will save the current "non-essential" cpu context
+             * onto the process stack at the beginning of its handler.
+             */
+            RestoreProcessContext();
+
+            PendSV();
+        } break;
+
+        case GETPID: {
+            call->retval = (int32_t)running->id;
+        } break;
+
+        case NICE: {
+            call->retval = LinkPCB(running, (priority_t)call->arg[0]);
+            PendSV();
+        } break;
+
+        case BIND: {
+            call->retval = k_MsgBoxBind((pmbox_t)call->arg[0], running);
+        } break;
+
+        case UNBIND: {
+            call->retval = k_MsgBoxUnbind((pmbox_t)call->arg[0], running);
+        } break;
+
+        case SEND: {
+            call->retval = k_MsgSend((pmsg_t*)call->arg, running);
+        } break;
+
+        case RECV: {
+            if (!k_MsgRecv((pmsg_t*)call->arg, running)) {
+                UnlinkPCB(running);
+                PendSV();
+            }
+            // "Message size" retval is taken care by the call function.
+            // b/c this call may not have the desired retval when its called
+            // i.e. when there is no message to receive
+            call->retval = 0;
+        } break;
+
+        case TERMINATE: {
+            k_Terminate();
+        } break;
+
+        default: {
+
+        } break;
+    }
 }
 
 /**
@@ -155,7 +264,7 @@ void SVC_handler()
  *          the kernel call structure passed to the trap
  *          and service the call if its parameters are valid.
  */
-void KernelCall_handler(k_call_t* call)
+void p_KernelCall_handler(k_call_t* call)
 {
     switch(call->code) {
         case PCREATE: {

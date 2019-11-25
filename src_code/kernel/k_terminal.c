@@ -83,7 +83,7 @@ void send_home(home_data_t* home)
 	UART0_puts(CURSOR_RESTORE);
 }
 
-void term_out()
+void output_manager()
 {
 	pmbox_t box = bind(OUT_BOX);
 
@@ -108,10 +108,6 @@ void term_out()
         proc_rx.size = CIRCULAR_BUFFER_SIZE;
 
         switch (proc_rx.src) {
-        	case IDLE_BOX: {
-//        		modify_home(idle, )
-        	} break;
-
         	case IN_BOX: {
                 while (buffer.rd_ptr < buffer.wr_ptr) {
                     buffer.rd_ptr +=
@@ -139,13 +135,16 @@ void term_out()
         	} break;
         }
 
+        if (term_state == USER) {
+            send_home(&home);
+        }
 
         buffer.wr_ptr = 0;
         buffer.rd_ptr = 0;
     }
 }
 
-void term_in()
+void terminal()
 {
     pmbox_t box = bind(IN_BOX);
 
@@ -154,7 +153,6 @@ void term_in()
 
     term_state = USER_TERMINAL;
     active_pid = 0;
-    term_size = 40;
 
     pmsg_t proc_tx = {
         .dst = box,
@@ -168,43 +166,38 @@ void term_in()
     bool proc_input_en = false;
 
     while (1) {
+        // if in Process focus mode & process input enable is false
+        // check if process is looking for input
+
         if (UART_getc(&in_char)) {
-            switch (term_state) {
-                case USER_TERMINAL: {
-                    if (in_char != TERM_ESC)    {
-                        send(OUT_BOX, box, &in_char, 1);
-                    }
-
-                } break;
-
-                case PROCESS_FOCUS: {
-                    if (in_char != TERM_ESC) {
-                        if (proc_input_en) {
-                            UART0_put(in_char, 1);
-
-                            if (in_char != '\b' || in_char != 0x7F) {
-                                enqueuec(&buffer, in_char);
-                            }
-                            else {
-                                proc_tx.size = buffer_size(&buffer);
-                                send_msg(&proc_tx);
-                            }
-                        }
-                    }
-                    else {
-                        circular_buffer_init(&buffer);
-                        term_state = USER_TERMINAL;
-                    }
-                } break;
-
-                default:
-                break;
+            if (in_char == TERM_ESC) {
+                term_state = USER_TERMINAL;
+                circular_buffer_init(&buffer);
+                // Send Home line to terminal
             }
+            else {
+                switch (term_state) {
+                    case USER_TERMINAL: {
+                        SEND(OUT_BOX, box, &in_char, 1);
+                        // Command Analysis
+                    } break;
+
+                    case PROCESS_FOCUS: {
+                        // If process is looking for input
+                        // Buffer character
+                        // Else ignore it
+                    } break;
+
+                    default:
+                    break;
+                }
+            }
+        }
+        else {
+            SEND(OUT_BOX, box, idling, sizeof(idling));
         }
     }
 }
-
-
 
 
 

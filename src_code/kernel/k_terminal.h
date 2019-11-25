@@ -3,7 +3,7 @@
 #define K_TERMINAL_H
 
 typedef enum TERMINAL_MODES {
-    USER_TERMINAL,
+    USER,
     PROCESS_FOCUS,
     PROCESS_STREAM,
     BACKGROUND
@@ -33,7 +33,7 @@ void init_term(home_data_t* home);
 
 void send_home(home_data_t* home);
 
-void term_out();
+void output_manager();
 
 #endif // K_TERMINAL_H
 

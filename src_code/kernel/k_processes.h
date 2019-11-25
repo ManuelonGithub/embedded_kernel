@@ -20,6 +20,8 @@ inline void k_DeallocatePCB(pid_t id);
 
 pcb_t* k_CreatePCB(pid_t id);
 
+pcb_t* GetPCB(pid_t id);
+
 pid_t FindFreePID();
 inline void SetPIDbit(pid_t pid);
 inline void ClearPIDbit(pid_t pid);

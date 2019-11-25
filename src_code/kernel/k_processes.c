@@ -107,6 +107,14 @@ pcb_t* k_CreatePCB(pid_t id)
     return pcb;
 }
 
+pcb_t* GetPCB(pid_t id)
+{
+    if (id < PID_MAX) {
+        return &proc_table[id];
+    }
+    return NULL;
+}
+
 /**
  * @brief   Finds an available PID in the bitmap to be allocated.
  */
