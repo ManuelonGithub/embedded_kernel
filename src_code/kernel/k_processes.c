@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "k_processes.h"
+#include "bitmap.h"
 
 uint8_t pid_bitmap[PID_MAX/8];
 pcb_t*  proc_table[PID_MAX];
@@ -43,11 +44,11 @@ pcb_t* k_AllocatePCB(pid_t id)
 {
     pcb_t* pcb = NULL;
 
-    if (id == 0) id = FindFreePID();
+    if (id == 0) id = FindClear(pid_bitmap, 0, PID_MAX);
 
-    if (id < PID_MAX && AvailablePID(id)) {
+    if (id < PID_MAX && GetBit(pid_bitmap, id)) {
 #ifdef  RTS_PROCESSES
-        SetPIDbit(id);
+        SetBit(pid_bitmap, id);
         pcb = proc_table[id];
 #else
         pcb = k_CreatePCB(id);
@@ -67,7 +68,7 @@ pcb_t* k_AllocatePCB(pid_t id)
  */
 inline void k_DeallocatePCB(pid_t id)
 {
-    ClearPIDbit(id);
+    ClearBit(pid_bitmap, id);
 
 #ifndef RTS_PROCESSES
     pcb_t* pcb = proc_table[id];
@@ -102,7 +103,11 @@ pcb_t* k_CreatePCB(pid_t id)
 
     pcb->next = NULL;
     pcb->prev = NULL;
-    pcb->msgbox = NULL;
+
+    int i = 0;
+    for (; i < SYS_MSGBOXES/8; i++) {
+        pcb->box_bitmap[i] = 0;
+    }
 
     return pcb;
 }
@@ -110,63 +115,9 @@ pcb_t* k_CreatePCB(pid_t id)
 pcb_t* GetPCB(pid_t id)
 {
     if (id < PID_MAX) {
-        return &proc_table[id];
+        return proc_table[id];
     }
     return NULL;
-}
-
-/**
- * @brief   Finds an available PID in the bitmap to be allocated.
- */
-pid_t FindFreePID()
-{
-    pid_t i = 0;
-    bool pid_found = false;
-    while (i < PID_MAX && !pid_found) {
-        if (!AvailablePID(i))   i++;
-        else                    pid_found = true;
-    }
-
-    return i;
-}
-
-/**
- * @brief   Sets a PID bit in the bitmap to indicate that it's taken.
- * @param   [in] PID value.
- */
-inline void SetPIDbit(pid_t pid)
-{
-    /*
-     * bitmap is comprised of an array of bytes
-     * (smallest addressable element).
-     * So it find a specific bit within the bitmap,
-     * two values need to be derived:
-     * (pid >> 3) derives the byte index of the
-     * bitmap associated with the bit (pid).
-     * (1 << (pid & 7)) derives the location of the bit
-     * (pid) within the addressed byte.
-     */
-    pid_bitmap[(pid >> 3)] |= (1 << (pid & 7));
-}
-
-/**
- * @brief   Clears a PID bit from the bitmap to indicate that it's available.
- * @param   [in] PID value.
- */
-inline void ClearPIDbit(pid_t pid)
-{
-    pid_bitmap[(pid >> 3)] &= ~(1 << (pid & 7));
-}
-
-/**
- * @brief   Checks if a PID value is available to be assigned.
- * @param   [in] PID value.
- * @return  True if PID value is available,
- *          False if not.
- */
-inline bool AvailablePID(pid_t pid)
-{
-    return !(pid_bitmap[pid >> 3] & (1 << (pid & 7)));
 }
 
 

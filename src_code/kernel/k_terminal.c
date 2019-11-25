@@ -10,30 +10,15 @@
 #include "uart.h"
 #include "k_defs.h"
 #include "k_messaging.h"
-
-char CLEAR_SCREEN[]     = {"\x1b[2J"};
-char CURSOR_SAVE[] 		= {"\x1b""7"};
-char CURSOR_HOME[] 		= {"\x1b[H"};
-char CLEAR_LINE[]       = {"\x1b[2K"};
-char HOME_COLOURS[]     = {"\x1b[0;30;47m"};
-char CURSOR_MIDDLE[] 	= {"\x1b[20C"};
-char TERM_COLOURS[]     = {"\x1b[0;0;0m"};
-char CURSOR_RESTORE[] 	= {"\x1b""8"};
-
-char CURSOR_LEFT[] = {"\x1b[D"};
-char CURSOR_RIGHT[] = {"\x1b[C"};
-char CURSOR_UP[] = {"\x1b[A"};
-char CURSOR_DOWN[] = {"\x1b[B"};
+#include "bitmap.h"
 
 uint8_t term_state;
-pid_t	active_pid;
 uint8_t term_size;
-
+uint8_t active_msgbox[SYS_MSGBOXES/8];
 
 void init_term(home_data_t* home)
 {
     term_state = PROCESS_STREAM;
-    active_pid = 0;
     term_size = 40;
 
     strcpy(home->idle, "=");
@@ -67,25 +52,25 @@ void init_term(home_data_t* home)
 
 void send_home(home_data_t* home)
 {
-	UART0_puts(CURSOR_SAVE);
-	UART0_puts(CURSOR_HOME);
-	UART0_puts(CLEAR_LINE);
-	UART0_puts(HOME_COLOURS);
+    UART0_puts(CURSOR_SAVE);
+    UART0_puts(CURSOR_HOME);
+    UART0_puts(CLEAR_LINE);
+    UART0_puts(HOME_COLOURS);
 
-	UART0_puts(home->idle);
+    UART0_puts(home->idle);
 
-	UART0_puts(home->mid_buf);
+    UART0_puts(home->mid_buf);
 
-	UART0_puts(home->middle);
+    UART0_puts(home->middle);
 
-	UART0_puts(home->end_buf);
+    UART0_puts(home->end_buf);
 
-	UART0_puts(CURSOR_RESTORE);
+    UART0_puts(CURSOR_RESTORE);
 }
 
 void output_manager()
 {
-	pmbox_t box = bind(OUT_BOX);
+    pmbox_t box = bind(OUT_BOX);
 
     circular_buffer_t buffer;
     circular_buffer_init(&buffer);
@@ -107,36 +92,12 @@ void output_manager()
         buffer.wr_ptr = recv_msg(&proc_rx);
         proc_rx.size = CIRCULAR_BUFFER_SIZE;
 
-        switch (proc_rx.src) {
-        	case IN_BOX: {
-                while (buffer.rd_ptr < buffer.wr_ptr) {
-                    buffer.rd_ptr +=
-                        UART0_put((buffer.data+buffer.rd_ptr),
-                                  buffer_size(&buffer));
-                }
-        	} break;
-
-        	default: {
-                switch (term_state) {
-                    case (PROCESS_FOCUS): {
-                        // Don't output if message source isn't from
-                        // the currently active PID
-                        if (active_pid != OwnerID(proc_rx.src)) break;
-                    }
-                    case (PROCESS_STREAM): {
-                        while (buffer.rd_ptr < buffer.wr_ptr) {
-                            buffer.rd_ptr += UART0_put((buffer.data+buffer.rd_ptr),
-                                    buffer_size(&buffer));
-                        }
-                    } break;
-                    default:
-                        break;
-                }
-        	} break;
-        }
-
-        if (term_state == USER) {
-            send_home(&home);
+        if (GetBit(active_msgbox, proc_rx.src)) {
+            while (buffer.rd_ptr < buffer.wr_ptr) {
+                buffer.rd_ptr += UART0_put (
+                        (buffer.data+buffer.rd_ptr), buffer_size(&buffer)
+                    );
+            }
         }
 
         buffer.wr_ptr = 0;
@@ -151,8 +112,7 @@ void terminal()
     circular_buffer_t buffer;
     circular_buffer_init(&buffer);
 
-    term_state = USER_TERMINAL;
-    active_pid = 0;
+    term_state = USER;
 
     pmsg_t proc_tx = {
         .dst = box,
@@ -171,15 +131,15 @@ void terminal()
 
         if (UART_getc(&in_char)) {
             if (in_char == TERM_ESC) {
-                term_state = USER_TERMINAL;
+                term_state = USER;
                 circular_buffer_init(&buffer);
                 // Send Home line to terminal
             }
             else {
                 switch (term_state) {
-                    case USER_TERMINAL: {
-                        SEND(OUT_BOX, box, &in_char, 1);
-                        // Command Analysis
+                    case USER: {
+                        send(OUT_BOX, box, (uint8_t*)&in_char, 1);
+
                     } break;
 
                     case PROCESS_FOCUS: {
@@ -193,9 +153,9 @@ void terminal()
                 }
             }
         }
-        else {
-            SEND(OUT_BOX, box, idling, sizeof(idling));
-        }
+//        else {
+//            SEND(OUT_BOX, box, idling, sizeof(idling));
+//        }
     }
 }
 

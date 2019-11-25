@@ -77,7 +77,7 @@ typedef struct cpu_context_ {
     uint32_t psr;
 } cpu_context_t;
 
-typedef enum TRAP_SOURCES {KERNEL, USER} trap_sources_t;    /// Possible Sources of the trap call
+typedef enum TRAP_SOURCES {KERNEL, PROCESS} trap_sources_t;    /// Possible Sources of the trap call
 
 inline trap_sources_t TrapSource();
 

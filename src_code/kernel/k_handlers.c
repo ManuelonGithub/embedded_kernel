@@ -21,7 +21,7 @@
 #include "systick.h"
 #include "k_terminal.h"
 
-pcb_t *running, *term_in, *term_out, *idle;
+pcb_t *running;
 uart_descriptor_t uart;
 
 void p_KernelCall_handler(k_call_t* call);
@@ -57,7 +57,7 @@ void kernel_init()
     k_MsgBoxBind(0, running);
 
 	// register the server processes
-    pcreate(0, 0, &term_out);
+    pcreate(0, 0, &output_manager);
 }
 
 /**
@@ -143,117 +143,6 @@ void SVC_handler()
     SysTick_Start();
 
     RestoreTrapReturn();
-}
-
-void k_KernelCall_handler(k_code_t call)
-{
-    switch(call->code) {
-        case STARTUP: {
-                /*
-                 * This block of code is here to counter-act what PendSV would do to a
-                 * Non-initialized process.
-                 * While admittedly a bit ugly,
-                 * it does allow for both PendSV and this Call handler
-                 * to be as efficient as possible at "steady-state" operation.
-                 * Here we're making the assumption
-                 * that running is set to be the idle process.
-                 */
-
-                // Initializes the process stack pointer to the idle process stack
-                SetPSP((uint32_t)running->sp);
-
-                /*
-                 * This essentially removes the initial "non-essential"
-                 * cpu context in the process' stack, which is necessary since
-                 * PendSV will save the current "non-essential" cpu context
-                 * onto the process stack at the beginning of its handler.
-                 */
-                RestoreProcessContext();
-
-                PendSV();
-        } break;
-
-        case TERM_WAKEUP: {
-            if (term_in_proc->priority != 0) {
-                LinkPCB(&term_in_proc, 0);
-                PendSV();
-            }
-        } break;
-    }
-}
-
-void k_KernelCall_handler(k_call_t* call)
-{
-    switch(call->code) {
-        case PCREATE: {
-            call->retval = k_pcreate((pcreate_args_t*)call->arg);
-        } break;
-
-        case STARTUP: {
-            /*
-             * This block of code is here to counter-act what PendSV would do to a
-             * Non-initialized process.
-             * While admittedly a bit ugly,
-             * it does allow for both PendSV and this Call handler
-             * to be as efficient as possible at "steady-state" operation.
-             * Here we're making the assumption
-             * that running is set to be the idle process.
-             */
-
-            // Initializes the process stack pointer to the idle process stack
-            SetPSP((uint32_t)running->sp);
-
-            /*
-             * This essentially removes the initial "non-essential"
-             * cpu context in the process' stack, which is necessary since
-             * PendSV will save the current "non-essential" cpu context
-             * onto the process stack at the beginning of its handler.
-             */
-            RestoreProcessContext();
-
-            PendSV();
-        } break;
-
-        case GETPID: {
-            call->retval = (int32_t)running->id;
-        } break;
-
-        case NICE: {
-            call->retval = LinkPCB(running, (priority_t)call->arg[0]);
-            PendSV();
-        } break;
-
-        case BIND: {
-            call->retval = k_MsgBoxBind((pmbox_t)call->arg[0], running);
-        } break;
-
-        case UNBIND: {
-            call->retval = k_MsgBoxUnbind((pmbox_t)call->arg[0], running);
-        } break;
-
-        case SEND: {
-            call->retval = k_MsgSend((pmsg_t*)call->arg, running);
-        } break;
-
-        case RECV: {
-            if (!k_MsgRecv((pmsg_t*)call->arg, running)) {
-                UnlinkPCB(running);
-                PendSV();
-            }
-            // "Message size" retval is taken care by the call function.
-            // b/c this call may not have the desired retval when its called
-            // i.e. when there is no message to receive
-            call->retval = 0;
-        } break;
-
-        case TERMINATE: {
-            k_Terminate();
-        } break;
-
-        default: {
-
-        } break;
-    }
 }
 
 /**
@@ -376,13 +265,8 @@ void k_Terminate()
     // 1. Unlink process from its process queue
     UnlinkPCB(running);
 
-    pmsgbox_t* box;
     // 2. Unbind all message boxes from process
-    while (running->msgbox != NULL) {
-        box = running->msgbox;
-        running->msgbox = running->msgbox->next;
-        k_MsgBoxUnbind(box->ID, running);
-    }
+    k_MsgBoxUnbindAll(running);
 
     // 3. Erase PCB
     k_DeallocatePCB(running->id);

@@ -32,7 +32,6 @@ typedef struct pmsg_ {
 
     pmbox_t     src;
     pmbox_t     dst;
-    proc_t      owner;
     size_t      size;
     uint8_t*    data;
 } pmsg_t;
@@ -50,6 +49,7 @@ typedef struct pmsgbox_ {
     struct pcb_*    owner;
     pmsg_t*         front_msg;
     pmsg_t*         wait_msg;
+    uint8_t         OnHold_bitmap[SYS_MSGBOXES/8];
     pmbox_t         ID;
 } pmsgbox_t;
 
@@ -71,7 +71,7 @@ typedef struct pcb_ {
     uint32_t*   sp_top;
     uint32_t*   sp;
     uint32_t    timer;
-    pmsgbox_t*  msgbox;
+    uint8_t     box_bitmap[SYS_MSGBOXES/8];
 } pcb_t;
 
 typedef uint32_t*   k_arg_t;    /// Kernel call argument type alias

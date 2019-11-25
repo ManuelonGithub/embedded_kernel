@@ -14,9 +14,10 @@
 #include "k_scheduler.h"
 #include "dlist.h"
 #include "k_cpu.h"
+#include "bitmap.h"
 
-pmsgbox_t* free_box;
 pmsgbox_t mbox[SYS_MSGBOXES];
+uint8_t box_bitmap[SYS_MSGBOXES/8];
 
 /**
  * @brief   Initalizes the Messaging Module.
@@ -24,53 +25,30 @@ pmsgbox_t mbox[SYS_MSGBOXES];
  */
 void k_MsgInit()
 {
-    int i;
-
-    free_box = &mbox[0];
-    mbox[0].ID = 0;
-
-    for (i = 1; i < SYS_MSGBOXES; i++) {
-        mbox[i].ID = i;
-        mbox[i-1].next = &mbox[i];
-        mbox[i].prev = &mbox[i-1];
-    }
+    return;
 }
 
 /**
  * @brief   Binds a message box to a process.
  * @param   [in] id: Box ID of the box to be bound to the process. (*)
- * @param   [in,out] proc: Pointer to process to have a box bound to.
+ * @param   [in,out] owner: Pointer to process to have a box bound to.
  * @return  Box ID that was bound to the process.
  *          0 if it wasn't possible to bind a box to the process.
  * @details If box ID is 0, then the next available box is bound to the process.
  */
-pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* proc)
+pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
 {
-    pmsgbox_t* box;
+    if (id == 0)    id = FindClear(box_bitmap, 0, SYS_MSGBOXES);
 
-    if (id == 0 && free_box != NULL ) {
-        box = free_box;
-        free_box = free_box->next;
+    if (id < SYS_MSGBOXES && mbox[id].owner == NULL) {
+        // Set the box's owner
+        mbox[id].owner = owner;
+
+        SetBit(box_bitmap, id);
+        SetBit(owner->box_bitmap, id);
     }
-    else if (id < SYS_MSGBOXES && mbox[id].owner == NULL) {
-        box = &mbox[id];
 
-        // Move free list pointer if it pointed to msgbox
-        if (&mbox[id] == free_box)    free_box = free_box->next;
-    }
-    else    return 0;   // Wasn't able to bind mailbox, return 0
-
-    // Unlink box from its current place
-    dUnlink((node_t*)box);
-
-    // Set the box's owner
-    box->owner = proc;
-
-    // Link box onto the owner PCB
-    if (proc->msgbox == NULL)  proc->msgbox = box;
-    dLink(&box->list, &proc->msgbox->list);
-
-    return box->ID;
+    return id;
 }
 
 /**
@@ -85,48 +63,31 @@ pmbox_t k_MsgBoxUnbind(pmbox_t id, pcb_t* proc)
     pmsgbox_t* box = &mbox[id];
 
     if (id < SYS_MSGBOXES && box->owner == proc) {
-        // Unlink box from owner
-        if (proc->msgbox == box) {
-            proc->msgbox = NULL;
-        }
-        else {
-            dUnlink(&box->list);
-        }
-
-        pmsg_t* msg;
+        k_MsgClearAll(box);
 
         // Clear all pending messages
-        while (box->front_msg != NULL) {
-            msg = box->front_msg;
-            box->front_msg = box->front_msg->next;
-
-            if (msg == box->front_msg)  box->front_msg = NULL;
-
-            k_pMsgDeallocate(&msg);
-        }
 
         // Reset the box's ownership
         box->owner = NULL;
 
-        // Link box back to the free list
-        if (free_box == NULL) {
-            mbox[id].next = NULL;
-            mbox[id].prev = NULL;
-            free_box = &mbox[id];
-        }
-        else {
-            dLink(&mbox[id].list, &free_box->list);
-        }
-
-        // the free_box list is a FIFO,
-        // so the "newest" available box is at the front of the list
-        free_box = &mbox[id];
+        ClearBit(box_bitmap, id);
+        ClearBit(proc->box_bitmap, id);
 
         // Reset the return box ID
         id = 0;
     }
 
     return id;
+}
+
+void k_MsgBoxUnbindAll(pcb_t* proc)
+{
+    uint32_t min = FindSet(proc->box_bitmap, 0, SYS_MSGBOXES);
+
+    while (min != SYS_MSGBOXES) {
+        k_MsgBoxUnbind(min, proc);
+        min = FindSet(proc->box_bitmap, min, SYS_MSGBOXES);
+    }
 }
 
 /**
@@ -190,6 +151,9 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
             mbox[msg->dst].wait_msg->size = retval;
 
             LinkPCB(mbox[msg->dst].owner, mbox[msg->dst].owner->priority);
+
+            ClearBit(mbox[msg->src].OnHold_bitmap, msg->dst);
+
             PendSV();
         }
         else {
@@ -227,12 +191,16 @@ bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc)
 {
     // Initialized will all possible error conditions checked
     bool retval = (dst_msg == NULL || dst_msg->dst >= SYS_MSGBOXES ||
-                   mbox[dst_msg->dst].owner != proc);
+                   mbox[dst_msg->dst].owner != proc ||
+                   mbox[dst_msg->src].owner == NULL);
 
     // If no errors were found
     if (!retval) {
         if (mbox[dst_msg->dst].front_msg == NULL) {
             mbox[dst_msg->dst].wait_msg = dst_msg;
+
+            SetBit(mbox[dst_msg->src].OnHold_bitmap, dst_msg->dst);
+
             retval = false;
         }
         else {
@@ -260,6 +228,32 @@ bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc)
 }
 
 /**
+ * @brief   Gets message box ID that is awaiting a message from the source box.
+ * @param   [in] src_box: Box to search on-hold messages.
+ * @param   [in] search_box: Box ID to look for. (*)
+ * @return  search_box if the search box is awaiting a message.
+ *          A valid box ID if a message box is awaiting a message and no
+ *          valid search_box was submitted.
+ *          An invalid box ID (255) if no message boxes are awaiting messages.
+ * @details If search_box is set to 0, then the function will instead
+ *          look through the on-hold bitmap for the first instance of a
+ *          message box awaiting a message.
+ */
+pmbox_t GetOnHold(pmbox_t src_box, pmbox_t search_box)
+{
+    if (search_box != 0 && seach_box < SYS_MSGBOXES) {
+        if (!GetBit(mbox[src_box].OnHold_bitmap, search_box)) {
+            search_box = SYS_MSGBOXES;
+        }
+    }
+    else {
+        search_box = FindSet(mbox[src_box].OnHold_bitmap, 0, SYS_MSGBOXES);
+    }
+
+    return search_box;
+}
+
+/**
  * @brief   Transfers a message to another.
  * @param   [in,out] dst: Pointer to message that will be overwritten
  * @param   [in] src: Pointer to src message whose contents will be copied.
@@ -272,6 +266,24 @@ inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src)
 
     memcpy(dst->data, src->data, dst->size);
     return dst->size;
+}
+
+/**
+ * @brief   Clears all Messages currently in the message box.
+ * @param   [in,out] box: Message box to clear messages from.
+ */
+void k_MsgClearAll(pmsgbox_t* box)
+{
+    pmsg_t* msg;
+
+    while (box->front_msg != NULL) {
+        msg = box->front_msg;
+        box->front_msg = box->front_msg->next;
+
+        if (msg == box->front_msg)  box->front_msg = NULL;
+
+        k_pMsgDeallocate(&msg);
+    }
 }
 
 inline pid_t OwnerID(pmbox_t boxID)

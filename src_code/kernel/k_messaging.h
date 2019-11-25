@@ -28,9 +28,9 @@ bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc);
 
 inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src);
 
-void k_MsgClearAll(pmbox_t id);
+void k_MsgClearAll(pmsgbox_t* box);
 
-inline pid_t OwnerID(pmbox_t boxID);
+inline pid_t OwnerPID(pmbox_t boxID);
 
 #endif // K_MESSAGING_H
 
