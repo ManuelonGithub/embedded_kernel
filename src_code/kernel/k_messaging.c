@@ -285,7 +285,7 @@ void k_MsgClearAll(pmsgbox_t* box)
     }
 }
 
-inline pid_t OwnerID(pmbox_t boxID)
+inline pid_t OwnerPID(pmbox_t boxID)
 {
     return mbox[boxID].owner->id;
 }

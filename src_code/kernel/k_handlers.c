@@ -32,13 +32,7 @@ void p_KernelCall_handler(k_call_t* call);
  */
 void idle()
 {
-    uint8_t in_char;
-
-    while (1) {
-        if (UART_getc((char*)&in_char)) {
-            send(OUT_BOX, 0, &in_char, 1);
-        }
-    }
+    while (1) {}
 }
 
 /**
@@ -65,7 +59,7 @@ void kernel_init()
     running = Schedule();
     k_MsgBoxBind(0, running);
 
-//    pcreate(0, 0, &terminal);
+    pcreate(0, 0, &terminal);
 
 	// register the server processes
     pcreate(0, 0, &output_manager);
@@ -124,8 +118,6 @@ void PendSV_handler(void)
     SysTick_Reset();
     SysTick_Start();
     ENABLE_IRQ();
-
-    StartProcess();
 }
 
 /**
@@ -173,7 +165,7 @@ void k_KernelCall_handler(k_code_t code)
 
             // Initializes the process stack pointer to the idle process stack
             SetPSP((uint32_t)running->sp);
-
+//            RestoreContext();
             /*
              * This essentially removes the initial "non-essential"
              * cpu context in the process' stack, which is necessary since
@@ -212,16 +204,7 @@ void p_KernelCall_handler(k_call_t* call)
         } break;
 
         case STARTUP: {
-            /*
-             * This block of code is here to counter-act what PendSV would do to a
-             * Non-initialized process.
-             * While admittedly a bit ugly,
-             * it does allow for both PendSV and this Call handler
-             * to be as efficient as possible at "steady-state" operation.
-             * Here we're making the assumption
-             * that running is set to be the idle process.
-             */
-
+            running = Schedule();
             // Initializes the process stack pointer to the idle process stack
             SetPSP((uint32_t)running->sp);
 
@@ -233,7 +216,13 @@ void p_KernelCall_handler(k_call_t* call)
              */
             RestoreProcessContext();
 
-            PendSV();
+            running->timer = PROC_RUNTIME;
+
+            // Reset the System timer
+            SysTick_Reset();
+            SysTick_Start();
+
+            StartProcess();
         } break;
 
         case GETPID: {

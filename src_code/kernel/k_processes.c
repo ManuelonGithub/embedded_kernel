@@ -14,17 +14,23 @@
 #include "bitmap.h"
 
 uint8_t pid_bitmap[PID_MAX/8];
+
+#ifdef RTS_PROCESSES
+
+pcb_t   proc_table[PID_MAX];
+
+#else
+
 pcb_t*  proc_table[PID_MAX];
+
+#endif
 
 void process_init()
 {
-    int i = 0;
+    int i;
+
     for (i = 0; i < PID_MAX; i++) {
-#ifdef  RTS_PROCESSES
-        proc_table[i] = k_CreatePCB(i);
-#else
-        proc_table[i] = NULL;
-#endif
+        k_CreatePCB(i);
     }
 
     for(i = 0; i < PID_MAX/8; i++) {
@@ -47,16 +53,8 @@ pcb_t* k_AllocatePCB(pid_t id)
     if (id == 0) id = FindClear(pid_bitmap, 0, PID_MAX);
 
     if (id < PID_MAX && ~GetBit(pid_bitmap, id)) {
-#ifdef  RTS_PROCESSES
         SetBit(pid_bitmap, id);
-        pcb = proc_table[id];
-#else
-        pcb = k_CreatePCB(id);
-        if (pcb != NULL) {
-            SetPIDbit(id);
-            proc_table[id] = pcb;
-        }
-#endif
+        pcb = &proc_table[id];
     }
 
     return pcb;
@@ -69,13 +67,6 @@ pcb_t* k_AllocatePCB(pid_t id)
 inline void k_DeallocatePCB(pid_t id)
 {
     ClearBit(pid_bitmap, id);
-
-#ifndef RTS_PROCESSES
-    pcb_t* pcb = proc_table[id];
-
-    free(pcb->sp_top);
-    free(pcb);
-#endif
 }
 
 /**
@@ -88,6 +79,12 @@ pcb_t* k_CreatePCB(pid_t id)
 {
     pcb_t* pcb = NULL;
 
+#ifdef  RTS_PROCESSES
+
+    pcb = &proc_table[id];
+
+#else
+
     pcb = (pcb_t*)malloc(sizeof(pcb_t));
     if (pcb == NULL) return NULL;
 
@@ -97,6 +94,10 @@ pcb_t* k_CreatePCB(pid_t id)
         return NULL;
     }
 
+    proc_table[id] = pcb;
+
+#endif
+
     pcb->id = id;
 
     pcb->sp = pcb->sp_top+STACKSIZE;
@@ -104,8 +105,8 @@ pcb_t* k_CreatePCB(pid_t id)
     pcb->next = NULL;
     pcb->prev = NULL;
 
-    int i = 0;
-    for (; i < SYS_MSGBOXES/8; i++) {
+    int i;
+    for (i = 0; i < SYS_MSGBOXES/8; i++) {
         pcb->box_bitmap[i] = 0;
     }
 
@@ -115,7 +116,7 @@ pcb_t* k_CreatePCB(pid_t id)
 pcb_t* GetPCB(pid_t id)
 {
     if (id < PID_MAX) {
-        return proc_table[id];
+        return &proc_table[id];
     }
     return NULL;
 }

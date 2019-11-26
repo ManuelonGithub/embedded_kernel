@@ -48,6 +48,10 @@ void init_term(home_data_t* home)
     UART0_puts(CURSOR_HOME);
     UART0_puts(TERM_COLOURS);
     UART0_puts("\n\n");
+
+    for (i = 0; i < SYS_MSGBOXES/8; i++) {
+        active_msgbox[i] = 0xFF;
+    }
 }
 
 void send_home(home_data_t* home)
@@ -81,6 +85,12 @@ void output_manager()
         .data = (uint8_t*)buffer.data,
         .size = CIRCULAR_BUFFER_SIZE
     };
+
+    home_data_t home;
+
+    init_term(&home);
+
+    send_home(&home);
 
     while(1) {
         buffer.wr_ptr = recv_msg(&proc_rx);
@@ -130,8 +140,9 @@ void terminal()
 //    bool proc_input_en = false;
 
     while (1) {
-        recv(box, 0, (uint8_t*)&in_char, 1);
-        send(OUT_BOX, box, (uint8_t*)&in_char, 1);
+        if (UART_getc(&in_char)) {
+            UART0_put(&in_char, 1);
+        }
     }
 }
 

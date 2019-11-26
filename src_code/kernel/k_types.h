@@ -68,7 +68,7 @@ typedef struct pcb_ {
 
     pid_t       id;
     priority_t  priority;
-    uint32_t*   sp_top;
+    uint32_t    sp_top[STACKSIZE/4];
     uint32_t*   sp;
     uint32_t    timer;
     uint8_t     box_bitmap[SYS_MSGBOXES/8];

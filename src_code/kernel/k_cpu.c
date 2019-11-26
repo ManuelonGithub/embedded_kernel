@@ -101,7 +101,7 @@ inline k_call_t* GetProcessCall(uint32_t* psp) {
  */
 inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)())
 {
-    *sp -= sizeof(cpu_context_t);
+    *sp -= (sizeof(cpu_context_t)/4 -1);
 
     cpu_context_t* cpu = (cpu_context_t*)(*sp);
 
