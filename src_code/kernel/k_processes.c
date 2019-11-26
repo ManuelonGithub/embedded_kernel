@@ -46,7 +46,7 @@ pcb_t* k_AllocatePCB(pid_t id)
 
     if (id == 0) id = FindClear(pid_bitmap, 0, PID_MAX);
 
-    if (id < PID_MAX && GetBit(pid_bitmap, id)) {
+    if (id < PID_MAX && ~GetBit(pid_bitmap, id)) {
 #ifdef  RTS_PROCESSES
         SetBit(pid_bitmap, id);
         pcb = proc_table[id];

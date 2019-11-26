@@ -60,6 +60,9 @@
 	#define NVIC_EN0_R      (*((volatile unsigned long *)0xE000E100))   /// Interrupt 0-31 Set Enable Register
 	#define NVIC_EN1_R      (*((volatile unsigned long *)0xE000E104))   /// Interrupt 32-54 Set Enable Register
 
+    #define NVIC_SYS_PRI1_R (*((volatile unsigned long *)0xE000E404))
+    #define UART_PRIORITY_LVL   0x00004000
+
     #define UART0_ECHO_ON     true
     #define UART0_ECHO_OFF    false
 
@@ -89,5 +92,8 @@
 
     bool UART_getc(char* c);
     uint32_t UART0_gets(char* str, uint32_t MAX_BYTES);
+
+
+    void wakeup_terminal();
 
 #endif // UART_H

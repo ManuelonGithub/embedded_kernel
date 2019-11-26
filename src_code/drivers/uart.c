@@ -8,6 +8,7 @@
 
 #include <string.h>
 #include "uart.h"
+#include "k_cpu.h"
 
 static uart_descriptor_t* UART0;
 
@@ -49,6 +50,8 @@ void UART0_Init(uart_descriptor_t* descriptor)
 
     circular_buffer_init(&UART0->tx);
     circular_buffer_init(&UART0->rx);
+
+    NVIC_SYS_PRI1_R = (UART_PRIORITY_LVL);
 
     UART0_InterruptEnable(INT_VEC_UART0);       // Enable UART0 interrupts
     UART0_IntEnable(UART_INT_RX | UART_INT_TX); // Enable Receive and Transmit interrupts
@@ -98,6 +101,8 @@ void UART0_IntHandler(void)
         if (UART0->echo) {
             enqueuec(&UART0->tx, UART0_DR_R);
         }
+
+//        wakeup_terminal();
     }
 
     if (UART0_MIS_R & UART_INT_TX) {
@@ -216,3 +221,13 @@ uint32_t UART0_gets(char* str, uint32_t MAX_BYTES)
 
     return bytes_read;
 }
+
+void wakeup_terminal()
+{
+    k_call_t call;
+    call.code = WAKE_TERMINAL;
+
+    SetCallReg(&call);
+    SVC();
+}
+

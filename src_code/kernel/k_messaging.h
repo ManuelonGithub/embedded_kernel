@@ -26,6 +26,8 @@ inline void k_pMsgDeallocate(pmsg_t** msg);
 size_t k_MsgSend(pmsg_t* msg, pcb_t* proc);
 bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc);
 
+pmbox_t k_GetOnHoldMsg(pmbox_t src_box, pmbox_t search_box);
+
 inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src);
 
 void k_MsgClearAll(pmsgbox_t* box);

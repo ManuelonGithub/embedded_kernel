@@ -49,7 +49,8 @@
 /************************ Kernel Calls Related Definitions *************************/
 
 typedef enum KERNEL_CALL_CODES {
-    PCREATE, STARTUP, GETPID, NICE, BIND, UNBIND, SEND, RECV, TERMINATE
+    PCREATE, STARTUP, GETPID, NICE, BIND, UNBIND,
+    SEND, RECV, GETONHOLD, WAKE_TERMINAL, TERMINATE
 } k_code_t; /** Kernel Calls supported */
 
 #endif // K_DEFINITIONS_H

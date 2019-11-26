@@ -144,7 +144,6 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
 
     if (!err) {
         if (mbox[msg->dst].wait_msg != NULL) {
-            // todo: check if wait msg's src is the dst's mailbox
             retval = k_pMsgTransfer(mbox[msg->dst].wait_msg, msg);
 
             mbox[msg->dst].wait_msg->src = msg->src;
@@ -239,9 +238,9 @@ bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc)
  *          look through the on-hold bitmap for the first instance of a
  *          message box awaiting a message.
  */
-pmbox_t GetOnHold(pmbox_t src_box, pmbox_t search_box)
+pmbox_t k_GetOnHoldMsg(pmbox_t src_box, pmbox_t search_box)
 {
-    if (search_box != 0 && seach_box < SYS_MSGBOXES) {
+    if (search_box != 0 && search_box < SYS_MSGBOXES) {
         if (!GetBit(mbox[src_box].OnHold_bitmap, search_box)) {
             search_box = SYS_MSGBOXES;
         }

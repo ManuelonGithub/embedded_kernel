@@ -21,9 +21,10 @@
 #include "systick.h"
 #include "k_terminal.h"
 
-pcb_t *running;
+pcb_t *running, *pTerminal;
 uart_descriptor_t uart;
 
+void k_KernelCall_handler(k_code_t code);
 void p_KernelCall_handler(k_call_t* call);
 
 /**
@@ -31,7 +32,13 @@ void p_KernelCall_handler(k_call_t* call);
  */
 void idle()
 {
-    while (1) {}
+    uint8_t in_char;
+
+    while (1) {
+        if (UART_getc((char*)&in_char)) {
+            send(OUT_BOX, 0, &in_char, 1);
+        }
+    }
 }
 
 /**
@@ -47,6 +54,8 @@ void kernel_init()
     SysTick_Init(1000);  // 1000 Hz rate -> system tick triggers every milisecond
 
     uart.echo = false;
+
+    //todo: Make UART a higher priority than SVC
     UART0_Init(&uart);
 
     pcreate(0, IDLE_LEVEL, &idle);
@@ -55,6 +64,8 @@ void kernel_init()
     // As it'll always be associated with a process.
     running = Schedule();
     k_MsgBoxBind(0, running);
+
+//    pcreate(0, 0, &terminal);
 
 	// register the server processes
     pcreate(0, 0, &output_manager);
@@ -66,9 +77,10 @@ void kernel_init()
  */
 inline void kernel_start()
 {
-    k_code_t code = STARTUP;
-    SetCallReg((k_call_t*)&code);
+    k_call_t call;
+    call.code = STARTUP;
 
+    SetCallReg(&call);
     SVC();
 }
 
@@ -83,7 +95,6 @@ void SystemTick_handler(void)
     running->timer--;
     if (running->timer == 0) {
         PendSV();
-        // Call the process clean function
     }
 
     // Do time queue thing
@@ -143,6 +154,46 @@ void SVC_handler()
     SysTick_Start();
 
     RestoreTrapReturn();
+}
+
+
+void k_KernelCall_handler(k_code_t code)
+{
+    switch(code) {
+        case STARTUP: {
+            /*
+             * This block of code is here to counter-act what PendSV would do to a
+             * Non-initialized process.
+             * While admittedly a bit ugly,
+             * it does allow for both PendSV and this Call handler
+             * to be as efficient as possible at "steady-state" operation.
+             * Here we're making the assumption
+             * that running is set to be the idle process.
+             */
+
+            // Initializes the process stack pointer to the idle process stack
+            SetPSP((uint32_t)running->sp);
+
+            /*
+             * This essentially removes the initial "non-essential"
+             * cpu context in the process' stack, which is necessary since
+             * PendSV will save the current "non-essential" cpu context
+             * onto the process stack at the beginning of its handler.
+             */
+            RestoreProcessContext();
+
+            PendSV();
+        } break;
+
+        case WAKE_TERMINAL: {
+            LinkPCB(pTerminal, 0);
+            PendSV();
+        } break;
+
+        default: {
+
+        } break;
+    }
 }
 
 /**
@@ -216,9 +267,18 @@ void p_KernelCall_handler(k_call_t* call)
             // i.e. when there is no message to receive
             call->retval = 0;
         } break;
+        case GETONHOLD: {
+            call->retval =
+                    k_GetOnHoldMsg((pmbox_t)call->arg[0], (pmbox_t)call->arg[1]);
+        }
 
         case TERMINATE: {
             k_Terminate();
+        } break;
+
+        case WAKE_TERMINAL: {
+            LinkPCB(pTerminal, 0);
+            PendSV();
         } break;
 
         default: {
@@ -244,6 +304,8 @@ proc_t k_pcreate(pcreate_args_t* args)
     if (pcb != NULL) {             // PCB was successfully allocated
         InitProcessContext(&pcb->sp, args->proc_program, &terminate);
 
+        // No process can be created and linked into the 0th priority
+        // if priority is set to 0, place it in priority 4
         if (LinkPCB(pcb, args->prio)) {
             // PCB was successfully linked into its queue
             retval = pcb->id;  // set return value to ID

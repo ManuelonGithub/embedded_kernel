@@ -64,9 +64,9 @@ int main(void)
     /* Place Process Create requests here */
     int i = 0;
 
-    for (i = 0; i < 11; i++) {
-        pcreate(0, 1, &output_test);
-    }
+//    for (i = 0; i < 11; i++) {
+//        pcreate(0, 1, &output_test);
+//    }
 
     kernel_start();
 

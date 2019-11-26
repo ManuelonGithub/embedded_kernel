@@ -130,3 +130,24 @@ size_t recv_msg(pmsg_t* rx_msg)
     // retval for this call is irrelevant b/c msg may not be receive at "call" time.
     return (size_t)rx_msg->size;
 }
+
+/**
+ * @brief   Checks if a process is on hold for a message from the process.
+ * @param   [in] src: source message box to check any on-hold messages.
+ * @param   [in] search: Any specific message box ID wanting to search. (*)
+ * @return  Three possible values:
+ *          'search' if the box ID supplied is on-hold for a message.
+ *          a valid box ID if a "any" search has found a box on-hold for a message.
+ *          an invalid box ID if no boxes are on-hold for a message.
+ * @details the search parameter can be set to 0 to search for 'any' box on-hold
+ *          for a message.
+ */
+pmbox_t GetOnHold(pmbox_t src, pmbox_t search)
+{
+    uint32_t args[] = {src, search};
+
+    return kcall(GETONHOLD, (k_arg_t)args);
+}
+
+
+

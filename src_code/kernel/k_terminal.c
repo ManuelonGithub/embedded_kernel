@@ -18,7 +18,7 @@ uint8_t active_msgbox[SYS_MSGBOXES/8];
 
 void init_term(home_data_t* home)
 {
-    term_state = PROCESS_STREAM;
+    term_state = USER;
     term_size = 40;
 
     strcpy(home->idle, "=");
@@ -75,18 +75,12 @@ void output_manager()
     circular_buffer_t buffer;
     circular_buffer_init(&buffer);
 
-    home_data_t home;
-
-    init_term(&home);
-
     pmsg_t proc_rx = {
         .dst = box,
         .src = 0,
         .data = (uint8_t*)buffer.data,
         .size = CIRCULAR_BUFFER_SIZE
     };
-
-    send_home(&home);
 
     while(1) {
         buffer.wr_ptr = recv_msg(&proc_rx);
@@ -114,48 +108,30 @@ void terminal()
 
     term_state = USER;
 
-    pmsg_t proc_tx = {
-        .dst = box,
-        .src = 0,
-        .data = (uint8_t*)buffer.data,
-        .size = CIRCULAR_BUFFER_SIZE
-    };
+//    pmsg_t proc_tx = {
+//        .dst = box,
+//        .src = 0,
+//        .data = (uint8_t*)buffer.data,
+//        .size = CIRCULAR_BUFFER_SIZE
+//    };
+
+    home_data_t home;
+
+    init_term(&home);
+
+    int i = 0;
+
+    for (i = 0; i < SYS_MSGBOXES/8; i++) {
+        active_msgbox[i] = 0xFF;
+    }
 
     char in_char;
-
-    bool proc_input_en = false;
+//
+//    bool proc_input_en = false;
 
     while (1) {
-        // if in Process focus mode & process input enable is false
-        // check if process is looking for input
-
-        if (UART_getc(&in_char)) {
-            if (in_char == TERM_ESC) {
-                term_state = USER;
-                circular_buffer_init(&buffer);
-                // Send Home line to terminal
-            }
-            else {
-                switch (term_state) {
-                    case USER: {
-                        send(OUT_BOX, box, (uint8_t*)&in_char, 1);
-
-                    } break;
-
-                    case PROCESS_FOCUS: {
-                        // If process is looking for input
-                        // Buffer character
-                        // Else ignore it
-                    } break;
-
-                    default:
-                    break;
-                }
-            }
-        }
-//        else {
-//            SEND(OUT_BOX, box, idling, sizeof(idling));
-//        }
+        recv(box, 0, (uint8_t*)&in_char, 1);
+        send(OUT_BOX, box, (uint8_t*)&in_char, 1);
     }
 }
 

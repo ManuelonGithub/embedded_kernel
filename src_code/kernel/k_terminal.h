@@ -43,6 +43,8 @@ void send_home(home_data_t* home);
 
 void output_manager();
 
+void terminal();
+
 #endif // K_TERMINAL_H
 
 
