@@ -10,6 +10,7 @@
 #ifndef K_DEFINITIONS_H
 #define K_DEFINITIONS_H
 
+#include "bitmap.h"
 
 /************************** Scheduler Related Definitions **************************/
 
@@ -24,16 +25,15 @@
  */
 #define PROCESS_QUEUES  PRIORITY_LEVELS+1
 
-
 /*************************** Process Related Definitions ***************************/
 
-#define STACKSIZE 2048      /// Stack size allocated for the processes.
+#define STACKSIZE       2048    /// Stack size allocated for the processes.
 
-#define PROC_RUNTIME 100    /// Time quantum of a process in ms
+#define PROC_RUNTIME    100     /// Time quantum of a process in ms
 
-#define PID_MAX 8           /// Maximum Processes supported.
+#define PID_MAX         16      /// Maximum Processes supported.
 
-#define RTS_PROCESSES       /// Enables "Real Time Systems" process management
+#define RTS_PROCESSES           /// Enables "Real Time Systems" process management
 
 typedef enum PROC_STATE {
     UNALLOCATED, WAITING_TO_RUN, RUNNING, BLOCKED, TERMINATED
@@ -41,7 +41,7 @@ typedef enum PROC_STATE {
 
 /***************************** IPC Related Definitions *****************************/
 
-#define SYS_MSGBOXES 16     /// Amount of Message boxes supported by the kernel
+#define BOXID_MAX   16     /// Amount of Message boxes supported by the kernel
 
 #define IDLE_BOX    0
 

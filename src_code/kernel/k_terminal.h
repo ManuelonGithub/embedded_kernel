@@ -23,27 +23,18 @@
 #define TERM_ESC        '\x03'
 
 typedef enum TERMINAL_MODES {
-    USER,
-    PROCESS_FOCUS,
-    PROCESS_STREAM,
-    BACKGROUND
+    COMMAND_HANDLER,
+    PROCESS_INPUT_CAPTURE
 } term_mode_t;
 
 #define HOME_HEADER "==="
 #define HOME_TEXT   "M'uh Kernel v0.2"
 
-/**
- * @brief   User Command buffer structure.
- * @details It is simply a circular buffer with an extra variable that is used
-            to keep track of the length of the entry
-            as characters are inputted to the monitor.
-            (the write pointer of the circular buffer is the "cursor",
-            so it can be moved while there's vald ata in front of it)
- */
-typedef struct command_buffer_ {
-    circular_buffer_t buffer;
-    uint32_t entry_ptr;
-} commbuffer_t;
+typedef struct active_IO_ {
+    bitmap_t    active_pid[PID_BITMAP_SIZE];
+    bitmap_t    active_box[MSGBOX_BITMAP_SIZE];
+    bitmap_t*   OnHold;
+} active_IO_t;
 
 typedef struct terminal_ {
     circular_buffer_t   in_buf;
@@ -55,9 +46,7 @@ typedef struct terminal_ {
 
     term_mode_t mode;
 
-    pmbox_t proc_box;
-    pmsg_t  proc_msg;
-    bool    proc_in;
+    pmbox_t proc_outbox;
 } terminal_t;
 
 void output_manager();
@@ -68,12 +57,16 @@ void init_term(terminal_t* term);
 void create_home_line(char* home, uint32_t term_size);
 void send_home(char* home);
 
-void user_command_analysis(char c, terminal_t* term);
+void TerminalInputHandler(char c, terminal_t* term);
 
-bool CommandCheck(char* comm, uint32_t size);
+void CommandHandler(char c, terminal_t* term);
 
-bool SystemView(char* attr_str);
-bool SetProcessFocus(char* attr_str);
+void InputCaptureHandler(char c, terminal_t* term);
+
+bool CommandCheck(terminal_t* term);
+
+bool SystemView(char* attr_str, terminal_t* term);
+bool SetProcessFocus(char* attr_str, terminal_t* term);
 
 #endif // K_TERMINAL_H
 

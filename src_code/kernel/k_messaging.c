@@ -16,8 +16,8 @@
 #include "k_cpu.h"
 #include "bitmap.h"
 
-pmsgbox_t mbox[SYS_MSGBOXES];
-uint8_t box_bitmap[SYS_MSGBOXES/8];
+pmsgbox_t msgbox[BOXID_MAX];
+bitmap_t available_box[MSGBOX_BITMAP_SIZE];
 
 /**
  * @brief   Initalizes the Messaging Module.
@@ -38,14 +38,14 @@ void k_MsgInit()
  */
 pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
 {
-    if (id == 0)    id = FindClear(box_bitmap, 0, SYS_MSGBOXES);
+    if (id == 0)    id = FindClear(available_box, 0, BOXID_MAX);
 
-    if (id < SYS_MSGBOXES && mbox[id].owner == NULL) {
+    if (id < BOXID_MAX && msgbox[id].owner == NULL) {
         // Set the box's owner
-        mbox[id].owner = owner;
+        msgbox[id].owner = owner;
 
-        SetBit(box_bitmap, id);
-        SetBit(owner->box_bitmap, id);
+        SetBit(available_box, id);
+        SetBit(owner->owned_box, id);
     }
 
     return id;
@@ -60,9 +60,9 @@ pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
  */
 pmbox_t k_MsgBoxUnbind(pmbox_t id, pcb_t* proc)
 {
-    pmsgbox_t* box = &mbox[id];
+    pmsgbox_t* box = &msgbox[id];
 
-    if (id < SYS_MSGBOXES && box->owner == proc) {
+    if (id < BOXID_MAX && box->owner == proc) {
         k_MsgClearAll(box);
 
         // Clear all pending messages
@@ -70,8 +70,8 @@ pmbox_t k_MsgBoxUnbind(pmbox_t id, pcb_t* proc)
         // Reset the box's ownership
         box->owner = NULL;
 
-        ClearBit(box_bitmap, id);
-        ClearBit(proc->box_bitmap, id);
+        ClearBit(available_box, id);
+        ClearBit(proc->owned_box, id);
 
         // Reset the return box ID
         id = 0;
@@ -82,11 +82,11 @@ pmbox_t k_MsgBoxUnbind(pmbox_t id, pcb_t* proc)
 
 void k_MsgBoxUnbindAll(pcb_t* proc)
 {
-    uint32_t min = FindSet(proc->box_bitmap, 0, SYS_MSGBOXES);
+    uint32_t min = FindSet(proc->owned_box, 0, BOXID_MAX);
 
-    while (min != SYS_MSGBOXES) {
+    while (min != BOXID_MAX) {
         k_MsgBoxUnbind(min, proc);
-        min = FindSet(proc->box_bitmap, min, SYS_MSGBOXES);
+        min = FindSet(proc->owned_box, min, BOXID_MAX);
     }
 }
 
@@ -137,37 +137,50 @@ inline void k_pMsgDeallocate(pmsg_t** msg)
  */
 size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
 {
-    bool err = (msg->dst >= SYS_MSGBOXES     || msg->src >= SYS_MSGBOXES  ||
-                mbox[msg->dst].owner == NULL || mbox[msg->src].owner != proc);
+    bool err = (msg->dst >= BOXID_MAX     || msg->src >= BOXID_MAX  ||
+                msgbox[msg->dst].owner == NULL || msgbox[msg->src].owner != proc);
 
     size_t retval = 0;
 
+    pmsg_t* msg_out;
+
     if (!err) {
-        if (mbox[msg->dst].wait_msg != NULL) {
-            retval = k_pMsgTransfer(mbox[msg->dst].wait_msg, msg);
+        if (msgbox[msg->dst].waitany_msg != NULL) {
+            msgbox[msg->dst].send_msgq->size =
+                    k_pMsgTransfer(msgbox[msg->dst].send_msgq, msg);
 
-            mbox[msg->dst].wait_msg->src = msg->src;
-            mbox[msg->dst].wait_msg->size = retval;
+            msgbox[msg->dst].waitany_msg->src = msg->src;
 
-            LinkPCB(mbox[msg->dst].owner, mbox[msg->dst].owner->priority);
+            msgbox[msg->dst].waitany_msg = NULL;
 
-            ClearBit(mbox[msg->src].OnHold_bitmap, msg->dst);
+            LinkPCB(msgbox[msg->dst].owner, msgbox[msg->dst].owner->priority);
 
             PendSV();
+
+            return msgbox[msg->dst].send_msgq->size;
+        }
+
+        if (msgbox[msg->src].send_msgq != NULL) {
+            if (msgbox[msg->src].send_msgq->src == msg.dst) {
+                // receiver msg found
+                // transfer
+                // unlink msg
+                //
+            }
         }
         else {
             // Allocate Message
-            pmsg_t* msg_out = k_pMsgAllocate(msg->data, msg->size);
+            msg_out = k_pMsgAllocate(msg->data, msg->size);
             msg_out->dst = msg->dst;
             msg_out->src = msg->src;
 
             // Send if message allocation was successful
             if (msg_out != NULL) {
-                if (mbox[msg->dst].front_msg == NULL) {
-                    mbox[msg->dst].front_msg = msg;
+                if (msgbox[msg->dst].recv_msgq == NULL) {
+                    msgbox[msg->dst].recv_msgq = msg;
                 }
 
-                dLink(&msg->list, &mbox[msg->dst].front_msg->list);
+                dLink(&msg->list, &msgbox[msg->dst].recv_msgq->list);
 
                 retval = msg->size;
             }
@@ -186,44 +199,68 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
  * @return  True if a message was received,
  *          False if not.
  */
-bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc)
+bool k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
 {
     // Initialized will all possible error conditions checked
-    bool retval = (dst_msg == NULL || dst_msg->dst >= SYS_MSGBOXES ||
-                   mbox[dst_msg->dst].owner != proc ||
-                   mbox[dst_msg->src].owner == NULL);
+    bool retval = false;
 
-    // If no errors were found
-    if (!retval) {
-        if (mbox[dst_msg->dst].front_msg == NULL) {
-            mbox[dst_msg->dst].wait_msg = dst_msg;
+    pmsgbox_t* box = &msgbox[msg->dst];
 
-            SetBit(mbox[dst_msg->src].OnHold_bitmap, dst_msg->dst);
+    pmsg_t* src_msg;
 
-            retval = false;
+    // No messages in the receive queue
+    if (box->recv_msgq == NULL) {
+        if (msg->src == 0) {
+            box->waitany_msg = msg;
         }
         else {
-            // todo: create a "specified source" check system
+            dLink(&msg->list, &msgbox[msg->src].send_msgq->list);
+        }
 
-            pmsg_t* src_msg = mbox[dst_msg->dst].front_msg;
+        return false;
+    }
 
-            mbox[dst_msg->dst].front_msg = mbox[dst_msg->dst].front_msg->next;
+    // Looking for any message or if front of queue is from specified source
+    if (msg->src == 0 || msg->src == box->recv_msgq->src) {
+        src_msg = box->recv_msgq;
+        box->recv_msgq = box->recv_msgq->next;
 
-            if (mbox[dst_msg->dst].front_msg == src_msg) {
-                mbox[dst_msg->dst].front_msg = NULL;
-            }
-            else {
-                dUnlink(&src_msg->list);
-            }
+        box->recv_msgq = box->recv_msgq->next;
 
-            k_pMsgTransfer(dst_msg, src_msg);
+        if (box->recv_msgq == src_msg) {
+            box->recv_msgq = NULL;
+        }
+        else {
+            dUnlink(&src_msg->list);
+        }
+
+        k_pMsgTransfer(msg, src_msg);
+        k_pMsgDeallocate(&src_msg);
+
+        return true;
+    }
+
+    // Looking for a specific message source
+    src_msg = box->recv_msgq->next;
+
+    while (src_msg != box->recv_msgq && !retval) {
+        if (msg->src == src_msg->src) {
+            // Message with specific source was found
+            dUnlink(&src_msg->list);
+            k_pMsgTransfer(msg, src_msg);
             k_pMsgDeallocate(&src_msg);
 
-            retval = true;
+            return true;
+        }
+        else {
+            src_msg = src_msg->next;
         }
     }
 
-    return retval;
+    // Message from specific source was not found
+    dLink(&msg->list, &msgbox[msg->src].send_msgq->list);
+
+    return false;
 }
 
 /**
@@ -238,18 +275,30 @@ bool k_MsgRecv(pmsg_t* dst_msg,  pcb_t* proc)
  *          look through the on-hold bitmap for the first instance of a
  *          message box awaiting a message.
  */
-pmbox_t k_GetOnHoldMsg(pmbox_t src_box, pmbox_t search_box)
+pmbox_t k_GetWaitingBox(pmbox_t src_box, pmbox_t search_box)
 {
-    if (search_box != 0 && search_box < SYS_MSGBOXES) {
-        if (!GetBit(mbox[src_box].OnHold_bitmap, search_box)) {
-            search_box = SYS_MSGBOXES;
-        }
-    }
-    else {
-        search_box = FindSet(mbox[src_box].OnHold_bitmap, 0, SYS_MSGBOXES);
+    pmsg_t* msg, *msgq = msgbox[src_box].send_msgq;
+
+    if (msgq == NULL) {
+        return  BOXID_MAX;
     }
 
-    return search_box;
+    if (search_box == 0 || msgq->src == search_box) {
+        return msgq->src;
+    }
+
+    msg = msgq->next;
+
+    while (msg != msgq) {
+        if (msg->src == search_box) {
+            return msg->src;
+        }
+        else {
+            msg = msg->next;
+        }
+    }
+
+    return BOXID_MAX;
 }
 
 /**
@@ -275,11 +324,11 @@ void k_MsgClearAll(pmsgbox_t* box)
 {
     pmsg_t* msg;
 
-    while (box->front_msg != NULL) {
-        msg = box->front_msg;
-        box->front_msg = box->front_msg->next;
+    while (box->recv_msgq != NULL) {
+        msg = box->recv_msgq;
+        box->recv_msgq = box->recv_msgq->next;
 
-        if (msg == box->front_msg)  box->front_msg = NULL;
+        if (msg == box->recv_msgq)  box->recv_msgq = NULL;
 
         k_pMsgDeallocate(&msg);
     }
@@ -287,5 +336,5 @@ void k_MsgClearAll(pmsgbox_t* box)
 
 inline pid_t OwnerPID(pmbox_t boxID)
 {
-    return mbox[boxID].owner->id;
+    return msgbox[boxID].owner->id;
 }

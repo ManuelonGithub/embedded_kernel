@@ -24,6 +24,20 @@
 pcb_t *running, *pTerminal;
 uart_descriptor_t uart;
 
+active_IO_t IO;
+
+#ifdef RTS_PROCESSES
+
+extern pcb_t   proc_table[PID_MAX];
+
+#else
+
+extern pcb_t*  proc_table[PID_MAX];
+
+#endif
+
+extern pmsgbox_t msgbox[BOXID_MAX];
+
 void k_KernelCall_handler(k_code_t code);
 void p_KernelCall_handler(k_call_t* call);
 
@@ -60,8 +74,10 @@ void kernel_init()
     k_MsgBoxBind(0, running);
 
     // Register the Terminal server process
-    pid_t term = pcreate(0, 0, &terminal);
-    pTerminal = GetPCB(term);
+    pTerminal = GetPCB(pcreate(0, 0, &terminal));
+    k_MsgBoxBind(IN_BOX, pTerminal);
+
+    IO.OnHold = &msgbox[IN_BOX].OnHold;
 
 	// Register the Process Output Manager process
     pcreate(0, 0, &output_manager);
@@ -267,7 +283,7 @@ void p_KernelCall_handler(k_call_t* call)
         } break;
         case GETONHOLD: {
             call->retval =
-                    k_GetOnHoldMsg((pmbox_t)call->arg[0], (pmbox_t)call->arg[1]);
+                    k_GetWaitingBox((pmbox_t)call->arg[0], (pmbox_t)call->arg[1]);
         }
 
         case TERMINATE: {

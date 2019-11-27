@@ -13,7 +13,7 @@
 #include "k_processes.h"
 #include "bitmap.h"
 
-uint8_t pid_bitmap[PID_MAX/8];
+bitmap_t available_pid[PID_BITMAP_SIZE];
 
 #ifdef RTS_PROCESSES
 
@@ -33,9 +33,7 @@ void process_init()
         k_CreatePCB(i);
     }
 
-    for(i = 0; i < PID_MAX/8; i++) {
-        pid_bitmap[i] = 0;
-    }
+    ClearBitRange(available_pid, 0, PID_MAX);
 }
 
 /**
@@ -50,10 +48,10 @@ pcb_t* k_AllocatePCB(pid_t id)
 {
     pcb_t* pcb = NULL;
 
-    if (id == 0) id = FindClear(pid_bitmap, 0, PID_MAX);
+    if (id == 0) id = FindClear(available_pid, 0, PID_MAX);
 
-    if (id < PID_MAX && ~GetBit(pid_bitmap, id)) {
-        SetBit(pid_bitmap, id);
+    if (id < PID_MAX && ~GetBit(available_pid, id)) {
+        SetBit(available_pid, id);
         pcb = &proc_table[id];
         pcb->state = WAITING_TO_RUN;
     }
@@ -67,7 +65,7 @@ pcb_t* k_AllocatePCB(pid_t id)
  */
 inline void k_DeallocatePCB(pid_t id)
 {
-    ClearBit(pid_bitmap, id);
+    ClearBit(available_pid, id);
     proc_table[id].state = TERMINATED;
 }
 
@@ -102,17 +100,14 @@ pcb_t* k_CreatePCB(pid_t id)
 
     pcb->id = id;
 
-    pcb->sp = pcb->sp_top+STACKSIZE;
+    pcb->sp = pcb->sp_top + (STACKSIZE/sizeof(uint32_t)) - 1;
 
     pcb->next = NULL;
     pcb->prev = NULL;
 
     pcb->state = UNALLOCATED;
 
-    int i;
-    for (i = 0; i < SYS_MSGBOXES/8; i++) {
-        pcb->box_bitmap[i] = 0;
-    }
+    ClearBitRange(pcb->owned_box, 0, BOXID_MAX);
 
     return pcb;
 }

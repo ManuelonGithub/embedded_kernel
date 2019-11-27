@@ -18,29 +18,25 @@ const char* const COMMAND[] =
     "SYS", "SETP"
 };
 
-bool (* const CommHandler[])(char*) =
+bool (* const CommHandler[])(char*, terminal_t*) =
 {
     SystemView,
     SetProcessFocus
 };
 
-uint8_t active_msgbox[SYS_MSGBOXES/8];
+extern active_IO_t IO;
 
 void init_term(terminal_t* term)
 {
-    term->mode = USER;
+    term->mode = COMMAND_HANDLER;
     term->line_size = 40;
 
-    int i;
-    for (i = 0; i < SYS_MSGBOXES/8; i++) {
-        active_msgbox[i] = 0;
-    }
+    ClearBitRange(IO.active_box, 0, BOXID_MAX);
+    ClearBitRange(IO.active_pid, 0, PID_MAX);
+
 
     term->buf_entry = 0;
     circular_buffer_init(&term->in_buf);
-
-    term->proc_in = false;
-    term->proc_box = bind(IN_BOX);
 
     create_home_line(term->home_line, term->line_size);
 }
@@ -97,7 +93,7 @@ void output_manager()
         buffer.wr_ptr = recv_msg(&proc_rx);
         proc_rx.size = CIRCULAR_BUFFER_SIZE;
 
-        if (GetBit(active_msgbox, proc_rx.src)) {
+        if (GetBit(IO.active_box, proc_rx.src)) {
             while (buffer.rd_ptr < buffer.wr_ptr) {
                 buffer.rd_ptr += UART0_put (
                         (buffer.data+buffer.rd_ptr), buffer_size(&buffer)
@@ -125,13 +121,10 @@ void terminal()
 
     init_term(&term);
 
-    int i = 0;
+//    SetBitRange(IO.active_box, 0, BOXID_MAX);
+//    SetBitRange(IO.active_pid, 0, PID_MAX);
 
-    for (i = 0; i < SYS_MSGBOXES/8; i++) {
-        active_msgbox[i] = 0xFF;
-    }
-
-    term.mode = PROCESS_STREAM;
+//    term.mode = PROCESS_INPUT_CAPTURE;
 
     char in_char;
 
@@ -143,22 +136,109 @@ void terminal()
             if (in_char == TERM_ESC) {
                 circular_buffer_init(&term.in_buf);
                 term.buf_entry = 0;
+
                 ResetTerminalScreen();
                 send_home(term.home_line);
-            }
-            else if (term.mode == USER) {
-                UART0_put(&in_char, 1);
-                user_command_analysis(in_char, &term);
-            }
 
+                ClearBitRange(IO.active_box, 0, BOXID_MAX);
+                ClearBitRange(IO.active_pid, 0, PID_MAX);
+
+                term.mode = COMMAND_HANDLER;
+            }
+            else if (term.mode == COMMAND_HANDLER) {
+                TerminalInputHandler(in_char, &term);
+            }
+            else if (term.mode == PROCESS_INPUT_CAPTURE){
+                if (term.proc_outbox == 0) {
+                    term.proc_outbox = FindSet(IO.OnHold, 0, BOXID_MAX);
+
+                    if (term.proc_outbox > BOXID_MAX) {
+                        term.proc_outbox = 0;
+                    }
+                    else {
+                        TerminalInputHandler(in_char, &term);
+                    }
+                }
+                else {
+                    TerminalInputHandler(in_char, &term);
+                }
+            }
         }
-        else if (term.mode != USER){
+        else if (term.mode != COMMAND_HANDLER){
             nice(LOWEST_PRIORITY);
         }
     }
 }
 
-void user_command_analysis(char c, terminal_t* term)
+void TerminalInputHandler(char c, terminal_t* term)
+{
+    UART0_put(&c, 1);
+
+    switch (c) {
+        case '\b':
+        case 0x7F: {
+            if (term->in_buf.wr_ptr > 0) {
+                term->in_buf.wr_ptr--;
+                term->buf_entry--;
+            }
+            else {
+                UART0_puts(" ");
+            }
+        } break;
+
+        case '\0':
+            UART0_puts("\n");
+        case '\r':
+        case '\n': {
+            if (term->mode == COMMAND_HANDLER) {
+                enqueuec_s(&term->in_buf, '\0', true);
+                if (!CommandCheck(term)) {
+                    UART0_puts("? \n");
+                }
+                else {
+                    UART0_puts("> ");
+                }
+            }
+            else {
+                send(
+                    term->proc_outbox,
+                    IN_BOX,
+                    (uint8_t*)term->in_buf.data,
+                    (size_t)term->in_buf.wr_ptr
+                );
+
+                term->proc_outbox = 0;
+            }
+
+            term->buf_entry = 0;
+            term->in_buf.wr_ptr = 0;
+        } break;
+
+//        case 0x1B: {
+//            CursorCodeCheck(rx_buf);
+//        } break;
+
+        default: {
+            // todo: User input size constraints would be applied here.
+            if (term->mode == COMMAND_HANDLER) {
+                if (!enqueuec_s(&term->in_buf, toupper(c), false)) {
+                    UART0_puts("\b");
+                }
+            }
+            else {
+                if (!enqueuec_s(&term->in_buf, c, false)) {
+                    UART0_puts("\b");
+                }
+            }
+
+            if (term->buf_entry < term->in_buf.wr_ptr) {
+                term->buf_entry = term->in_buf.wr_ptr;
+            }
+        } break;
+    }
+}
+
+void CommandHandler(char c, terminal_t* term)
 {
     switch (c) {
         case '\b':
@@ -175,7 +255,7 @@ void user_command_analysis(char c, terminal_t* term)
         case '\r':
         case '\n': {
             enqueuec_s(&term->in_buf, '\0', false);
-            if (!CommandCheck(term->in_buf.data, term->in_buf.wr_ptr)) {
+            if (!CommandCheck(term)) {
                 UART0_puts("? \n");
             }
 
@@ -199,16 +279,19 @@ void user_command_analysis(char c, terminal_t* term)
     }
 }
 
-bool CommandCheck(char* comm, uint32_t size)
+bool CommandCheck(terminal_t* term)
 {
     bool valid_command = false;
+
+    char* comm = term->in_buf.data;
+    uint32_t size = term->in_buf.wr_ptr;
 
     char* keyword;
     char* attr_data;
 
     int i = 0;
     // Find the begin of they query entry
-    while (i <= size && comm[i] == ' ') i++;
+    while (i < size && comm[i] == ' ') i++;
     keyword = comm + i;
 
     // Find the end of the query keyword
@@ -221,22 +304,22 @@ bool CommandCheck(char* comm, uint32_t size)
 
     for (i = 0; i < T_COMMAND_SIZE; i++) {
         if (strcmp(keyword, COMMAND[i]) == 0) {
-            valid_command = CommHandler[i](attr_data);
+            valid_command = CommHandler[i](attr_data, term);
         }
     }
 
     return valid_command;
 }
 
-bool SystemView(char* attr)
+bool SystemView(char* attr, terminal_t* term)
 {
-    int i = 0;
     pcb_t* pcb;
 
     char num_buf[INT_BUF];
 
+    int i;
     for(i = 0; i < PID_MAX; i++) {
-        pcb = GetPCB(i);
+        pcb = GetPCB((pid_t)i);
 
         if (pcb->state != UNALLOCATED) {
             UART0_puts("PID: ");
@@ -250,8 +333,41 @@ bool SystemView(char* attr)
     return true;
 }
 
-bool SetProcessFocus(char* attr)
+bool SetProcessFocus(char* attr, terminal_t* term)
 {
+    uint32_t start = 0, i = 0, end, j;
+    pid_t pid;
+    pcb_t* pcb;
+
+    if (attr == NULL) {
+        SetBitRange(IO.active_pid, 0, PID_MAX);
+        SetBitRange(IO.active_box, 0, BOXID_MAX);
+    }
+    else {
+        end = strlen(attr);
+
+        while (start != end) {
+            while (i <= end && attr[i] != ' ')  i++;
+            attr[i++] = '\0';
+
+            pid = strtoull(attr+start, NULL, 10);
+
+            if (pid == 0 && attr[start] != '0') return false;
+            else {
+                pcb = GetPCB(pid);
+
+                SetBit(IO.active_pid, pid);
+
+                for (j = 0; j < MSGBOX_BITMAP_SIZE; j++) {
+                    IO.active_box[j] |= pcb->owned_box[j];
+                }
+            }
+
+            start = i;
+        }
+    }
+
+    term->mode = PROCESS_INPUT_CAPTURE;
     return true;
 }
 

@@ -13,7 +13,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "dlist.h"
+#include "bitmap.h"
 #include "k_defs.h"
+
+#if (PID_MAX/BITMAP_WIDTH == 0)
+#define PID_BITMAP_SIZE  1
+#else
+    #define PID_BITMAP_SIZE  PID_MAX/BITMAP_WIDTH
+#endif
+
+#if (MSGBOXES_MAX/BITMAP_WIDTH == 0)
+#define MSGBOX_BITMAP_SIZE  1
+#else
+    #define MSGBOX_BITMAP_SIZE  BOXID_MAX/BITMAP_WIDTH
+#endif
 
 typedef uint32_t    id_t;       /// System ID type alias
 typedef id_t        pmbox_t;    /// Message Box ID type alias
@@ -38,18 +51,10 @@ typedef struct pmsg_ {
 
 /** @brief  Inter-process communication Message box structure */
 typedef struct pmsgbox_ {
-    union {
-        struct {
-            struct pmsgbox_*    next;
-            struct pmsgbox_*    prev;
-        };
-        node_t list;
-    };
-
     struct pcb_*    owner;
-    pmsg_t*         front_msg;
-    pmsg_t*         wait_msg;
-    uint8_t         OnHold_bitmap[SYS_MSGBOXES/8];
+    pmsg_t*         recv_msgq;  // Messages to be received
+    pmsg_t*         send_msgq;  // Messages waiting on a send
+    pmsg_t*         waitany_msg;    // Pointer to "rx any" message request
     pmbox_t         ID;
 } pmsgbox_t;
 
@@ -68,11 +73,21 @@ typedef struct pcb_ {
 
     pid_t       id;
     priority_t  priority;
-    uint32_t    sp_top[STACKSIZE/4];
+
+#ifdef  RTS_PROCESSES
+
+    uint32_t    sp_top[STACKSIZE/sizeof(uint32_t)];
+
+#else
+
+    uint32_t*   sp_top;
+
+#endif
+
     uint32_t*   sp;
     uint32_t    timer;
     proc_state  state;
-    uint8_t     box_bitmap[SYS_MSGBOXES/8];
+    bitmap_t    owned_box[MSGBOX_BITMAP_SIZE];
 } pcb_t;
 
 typedef uint32_t*   k_arg_t;    /// Kernel call argument type alias
