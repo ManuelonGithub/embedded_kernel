@@ -21,6 +21,12 @@ typedef struct pcreate_args_ {
     void        (*proc_program)();
 } pcreate_args_t;
 
+typedef struct active_IO_ {
+    uint8_t active_pid[PID_MAX/8];
+    uint8_t active_box[SYS_MSGBOXES/8];
+    uint8_t input_queue[SYS_MSGBOXES/8];
+} active_IO_t;
+
 void kernel_init();
 inline void kernel_start();
 

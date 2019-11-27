@@ -59,9 +59,11 @@ void kernel_init()
     running = Schedule();
     k_MsgBoxBind(0, running);
 
-    pcreate(0, 0, &terminal);
+    // Register the Terminal server process
+    pid_t term = pcreate(0, 0, &terminal);
+    pTerminal = GetPCB(term);
 
-	// register the server processes
+	// Register the Process Output Manager process
     pcreate(0, 0, &output_manager);
 }
 
@@ -108,7 +110,13 @@ void PendSV_handler(void)
     SaveProcessContext();
     running->sp = (uint32_t*)GetPSP();
 
+    if (!UART0_empty() && pTerminal->priority != 0) {
+        LinkPCB(pTerminal, 0);
+    }
+
+    if (running->state == RUNNING)  running->state = WAITING_TO_RUN;
     running = Schedule();
+    running->state = RUNNING;
 
     SetPSP((uint32_t)running->sp);
     RestoreProcessContext();
@@ -249,6 +257,7 @@ void p_KernelCall_handler(k_call_t* call)
         case RECV: {
             if (!k_MsgRecv((pmsg_t*)call->arg, running)) {
                 UnlinkPCB(running);
+                running->state = BLOCKED;
                 PendSV();
             }
             // "Message size" retval is taken care by the call function.

@@ -55,6 +55,7 @@ pcb_t* k_AllocatePCB(pid_t id)
     if (id < PID_MAX && ~GetBit(pid_bitmap, id)) {
         SetBit(pid_bitmap, id);
         pcb = &proc_table[id];
+        pcb->state = WAITING_TO_RUN;
     }
 
     return pcb;
@@ -67,6 +68,7 @@ pcb_t* k_AllocatePCB(pid_t id)
 inline void k_DeallocatePCB(pid_t id)
 {
     ClearBit(pid_bitmap, id);
+    proc_table[id].state = TERMINATED;
 }
 
 /**
@@ -104,6 +106,8 @@ pcb_t* k_CreatePCB(pid_t id)
 
     pcb->next = NULL;
     pcb->prev = NULL;
+
+    pcb->state = UNALLOCATED;
 
     int i;
     for (i = 0; i < SYS_MSGBOXES/8; i++) {

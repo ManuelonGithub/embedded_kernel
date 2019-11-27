@@ -102,7 +102,7 @@ void UART0_IntHandler(void)
             enqueuec(&UART0->tx, UART0_DR_R);
         }
 
-//        wakeup_terminal();
+        PendSV();
     }
 
     if (UART0_MIS_R & UART_INT_TX) {
@@ -176,7 +176,12 @@ uint32_t UART0_put(char* data, uint8_t length)
     return bytes_sent;
 }
 
-bool UART_getc(char* c)
+inline bool UART0_empty()
+{
+    return (buffer_size(&UART0->rx) == 0);
+}
+
+bool UART0_getc(char* c)
 {
     if (buffer_size(&UART0->rx) != BUFFER_EMPTY) {
         *c = dequeuec(&UART0->rx);

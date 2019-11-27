@@ -35,6 +35,9 @@
 
 #define RTS_PROCESSES       /// Enables "Real Time Systems" process management
 
+typedef enum PROC_STATE {
+    UNALLOCATED, WAITING_TO_RUN, RUNNING, BLOCKED, TERMINATED
+} proc_state;
 
 /***************************** IPC Related Definitions *****************************/
 

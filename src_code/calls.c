@@ -28,10 +28,10 @@ inline k_ret_t kcall(k_code_t code, k_arg_t arg)
 /**
  * @brief   Requests the creation and registration of a new process in kernel space.
  */
-proc_t pcreate(pid_t pid, priority_t priority, void (*proc_program)())
+pid_t pcreate(pid_t pid, priority_t priority, void (*proc_program)())
 {
     uint32_t args[] = {(uint32_t)pid, (uint32_t)priority, (uint32_t)(proc_program)};
-    return (proc_t)kcall(PCREATE, (k_arg_t)args);
+    return (pid_t)kcall(PCREATE, (k_arg_t)args);
 }
 
 /**

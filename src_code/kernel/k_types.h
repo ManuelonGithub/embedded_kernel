@@ -71,6 +71,7 @@ typedef struct pcb_ {
     uint32_t    sp_top[STACKSIZE/4];
     uint32_t*   sp;
     uint32_t    timer;
+    proc_state  state;
     uint8_t     box_bitmap[SYS_MSGBOXES/8];
 } pcb_t;
 
