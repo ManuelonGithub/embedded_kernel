@@ -30,16 +30,13 @@ extern active_IO_t IO;
 void init_term(terminal_t* term)
 {
     term->mode = COMMAND_HANDLER;
-    term->line_size = 40;
 
     ClearBitRange(IO.active_pid, 0, PID_MAX);
 
     term->buf_entry = 0;
     circular_buffer_init(&term->in_buf);
 
-    term->proc_outbox = 0;
-
-    create_home_line(term->home_line, term->line_size);
+    create_home_line(term->home_line, 64);
 }
 
 void create_home_line(char* home, uint32_t term_size)
@@ -113,8 +110,14 @@ void terminal()
                 TerminalInputHandler(in_char, &term);
             }
         }
-        else if (term.mode != COMMAND_HANDLER){
-            nice(LOWEST_PRIORITY);
+        else {
+//            UART0_puts(CURSOR_SAVE);
+//            UART0_puts(BLINK_TEXT);
+//            UART0_puts("_");
+//            UART0_puts(CURSOR_RESTORE);
+            if (term.mode != COMMAND_HANDLER){
+                nice(LOWEST_PRIORITY);
+            }
         }
     }
 }
@@ -188,6 +191,9 @@ void SendUserInput(terminal_t* term)
 
     pcb_t* proc = GetPCB(IO.in_proc);
     LinkPCB(proc, proc->priority);
+
+    IO.in_proc = 0;
+    IO.output_off = false;
 }
 
 bool CommandCheck(terminal_t* term)
@@ -239,8 +245,27 @@ bool SystemView(char* attr, terminal_t* term)
         if (pcb->state != UNASSIGNED) {
             UART0_puts("PID: ");
             UART0_puts(itoa((int)pcb->id, num_buf));
-            UART0_puts(" |\t state: ");
-            UART0_puts(itoa((int)pcb->state, num_buf));
+            UART0_puts("\n---- ");
+            UART0_puts("Name:  ");
+            UART0_puts(pcb->name);
+            UART0_puts("\n---- ");
+            UART0_puts("State: ");
+
+            switch (pcb->state) {
+                case WAITING_TO_RUN: UART0_puts("Waiting to run");
+                    break;
+                case RUNNING: UART0_puts("Running");
+                    break;
+                case BLOCKED: UART0_puts("Blocked");
+                    break;
+                case TERMINATED: UART0_puts("Terminated");
+                    break;
+            }
+
+            UART0_puts("\n---- ");
+            UART0_puts("Priority: ");
+            UART0_puts(itoa((int)pcb->priority, num_buf));
+
             UART0_puts("\n");
         }
     }
@@ -260,8 +285,8 @@ bool SetProcessFocus(char* attr, terminal_t* term)
     else {
         end = strlen(attr);
 
-        while (start != end) {
-            while (i <= end && attr[i] != ' ')  i++;
+        while (start < end) {
+            while (i < end && attr[i] != ' ')  i++;
             attr[i++] = '\0';
 
             pid = strtoull(attr+start, NULL, 10);
@@ -276,7 +301,8 @@ bool SetProcessFocus(char* attr, terminal_t* term)
     }
 
     term->mode = PROCESS_INPUT_CAPTURE;
-    term->proc_outbox = 0;
+    UART0_puts(CLEAR_SCREEN);
+    UART0_puts(CURSOR_HOME);
     return true;
 }
 

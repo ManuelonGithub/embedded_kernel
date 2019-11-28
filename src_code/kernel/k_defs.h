@@ -48,10 +48,10 @@ typedef enum PROC_STATE {
 
 #define BOXID_MAX   16     /// Amount of Message boxes supported by the kernel
 
-#define IDLE_BOX    0
-
 /** @brief Error value for when an interaction with processes goes wrong. */
 #define BOX_ERR     PROC_ERR
+
+#define ANY_BOX     BOXID_MAX
 
 typedef enum MSGBOX_MODES {RX_ONLY, TX_ONLY, RX_TX} msgbox_mode_t;
 
@@ -59,7 +59,7 @@ typedef enum MSGBOX_MODES {RX_ONLY, TX_ONLY, RX_TX} msgbox_mode_t;
 
 typedef enum KERNEL_CALL_CODES {
     PCREATE, STARTUP, GETPID, NICE, BIND, UNBIND,
-    SEND, RECV, SEND_USER, RECV_USER, GETONHOLD, TERMINATE
+    SEND, RECV, SEND_USER, RECV_USER, TERMINATE
 } k_code_t; /** Kernel Calls supported */
 
 #endif // K_DEFINITIONS_H

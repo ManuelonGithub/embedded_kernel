@@ -64,7 +64,6 @@ void kernel_init()
 
     uart.echo = false;
 
-    //todo: Make UART a higher priority than SVC
     UART0_Init(&uart);
 
     process_attr_t pattr = {
@@ -72,6 +71,7 @@ void kernel_init()
          .priority = 0,
          .name = "idle"
     };
+
     pIdle = GetPCB(k_pcreate(&pattr, &idle, &terminate));
     LinkPCB(pIdle, IDLE_LEVEL);
 
@@ -79,7 +79,7 @@ void kernel_init()
     strcpy(pattr.name, "terminal");
 
     pTerminal = GetPCB(k_pcreate(&pattr, &terminal, &terminate));
-    LinkPCB(pIdle, PRIV_PRIORITY);
+    LinkPCB(pTerminal, PRIV_PRIORITY);
 }
 
 /**
@@ -221,7 +221,7 @@ void p_KernelCall_handler(k_call_t* call)
         case PCREATE: {
             call->retval = k_pcreate(
                     (process_attr_t*)call->arg[0],
-                    (void (*)())call->arg[0],
+                    (void (*)())call->arg[1],
                     &terminate);
         } break;
 
@@ -269,28 +269,24 @@ void p_KernelCall_handler(k_call_t* call)
         } break;
 
         case RECV: {
-            if (!k_MsgRecv((pmsg_t*)call->arg, running)) {
+            k_MsgRecv((pmsg_t*)call->arg, running);
                 UnlinkPCB(running);
                 running->state = BLOCKED;
                 PendSV();
-            }
             // "Message size" retval is taken care by the call function.
             // b/c this call may not have the desired retval when its called
             // i.e. when there is no message to receive
             call->retval = 0;
         } break;
-        case GETONHOLD: {
-            call->retval =
-                    k_GetWaitingBox((pmbox_t)call->arg[0], (pmbox_t)call->arg[1]);
-        }
 
         case TERMINATE: {
             k_Terminate();
         } break;
 
         case SEND_USER: {
-            if (GetBit(IO.active_pid, running->id)) {
+            if (GetBit(IO.active_pid, running->id) && !IO.output_off) {
                 UART0_puts((char*)call->arg);
+                call->retval = strlen((char*)call->arg);
             }
         } break;
 
@@ -300,7 +296,7 @@ void p_KernelCall_handler(k_call_t* call)
                 IO.proc_inbuf = (char*)call->arg[0];
                 IO.inbuf_max = (size_t)call->arg[1];
                 IO.ret_size = (size_t*)&call->retval;
-                IO.inbuf_head = 0;
+                IO.output_off = true;
 
                 UnlinkPCB(running);
                 running->state = BLOCKED;
@@ -333,12 +329,15 @@ void k_Terminate()
     // 3. Erase PCB
     k_DeallocatePCB(running->id);
 
-    // 4. Schedule a new process
+    // 4. Remove it from IO active PID bitmap
+    ClearBit(IO.active_pid, running->id);
+
+    // 5. Schedule a new process
     running = Schedule();
     SetPSP((uint32_t)running->sp);
     running->timer = PROC_RUNTIME;
 
-    // 5. Reset the System timer
+    // 6. Reset the System timer
     SysTick_Reset();
 }
 

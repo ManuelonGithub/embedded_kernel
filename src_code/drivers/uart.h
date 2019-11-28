@@ -77,7 +77,6 @@
 		bool            echo;
 	} uart_descriptor_t;
 
-
 	void UART0_Init(uart_descriptor_t* descriptor);
 	void UART0_InterruptEnable(unsigned long InterruptIndex);
 	void UART0_IntEnable(unsigned long flags);

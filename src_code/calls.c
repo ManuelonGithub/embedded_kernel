@@ -100,7 +100,14 @@ pmbox_t unbind(pmbox_t box)
  */
 size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = false};
+
+    return (size_t)kcall(SEND, (k_arg_t)&msg);
+}
+
+size_t send_sync(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
+{
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = true};
 
     return (size_t)kcall(SEND, (k_arg_t)&msg);
 }
@@ -115,7 +122,7 @@ size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
  */
 size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = true};
 
     kcall(RECV, (k_arg_t)&msg);
 
@@ -123,42 +130,26 @@ size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
     return (size_t)msg.size;
 }
 
-void send_user(char* str)
+size_t recv_async(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    kcall(SEND_USER, (k_arg_t)str);
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = false};
+
+    kcall(RECV, (k_arg_t)&msg);
+
+    // retval for this call is irrelevant b/c msg may not be receive at "call" time.
+    return (size_t)msg.size;
+}
+
+size_t send_user(char* str)
+{
+    return (size_t)kcall(SEND_USER, (k_arg_t)str);
 }
 
 size_t recv_user(char* buf, uint32_t max_size)
 {
     uint32_t args[] = {(uint32_t)buf, max_size};
 
-    return kcall(RECV_USER, (k_arg_t)args);
-}
-
-size_t recv_msg(pmsg_t* rx_msg)
-{
-    kcall(RECV, (k_arg_t)rx_msg);
-
-    // retval for this call is irrelevant b/c msg may not be receive at "call" time.
-    return (size_t)rx_msg->size;
-}
-
-/**
- * @brief   Checks if a process is on hold for a message from the process.
- * @param   [in] src: source message box to check any on-hold messages.
- * @param   [in] search: Any specific message box ID wanting to search. (*)
- * @return  Three possible values:
- *          'search' if the box ID supplied is on-hold for a message.
- *          a valid box ID if a "any" search has found a box on-hold for a message.
- *          an invalid box ID if no boxes are on-hold for a message.
- * @details the search parameter can be set to 0 to search for 'any' box on-hold
- *          for a message.
- */
-pmbox_t GetOnHold(pmbox_t src, pmbox_t search)
-{
-    uint32_t args[] = {src, search};
-
-    return kcall(GETONHOLD, (k_arg_t)args);
+    return (size_t)kcall(RECV_USER, (k_arg_t)args);
 }
 
 

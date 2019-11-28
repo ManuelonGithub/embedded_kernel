@@ -33,7 +33,7 @@ void k_MsgInit()
  * @param   [in] id: Box ID of the box to be bound to the process. (*)
  * @param   [in,out] owner: Pointer to process to have a box bound to.
  * @return  Box ID that was bound to the process.
- *          0 if it wasn't possible to bind a box to the process.
+ *          BOX_ERR if it wasn't possible to bind a box to the process.
  * @details If box ID is 0, then the next available box is bound to the process.
  */
 pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
@@ -46,6 +46,9 @@ pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
 
         SetBit(available_box, id);
         SetBit(owner->owned_box, id);
+    }
+    else {
+        id = (pmbox_t)BOX_ERR;
     }
 
     return id;
@@ -144,24 +147,15 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
 
     pmsg_t* msg_out;
 
-    pmsgbox_t* dst_box = &msgbox[msg->dst], *src_box = &msgbox[msg->src];
+    pmsgbox_t* dst_box = &msgbox[msg->dst];
 
     if (!err) {
-        if (dst_box->wait_msg != NULL &&
-            (dst_box->wait_msg->src == 0 || dst_box->wait_msg->src == msg->src)) {
+        bool wait_msg_good =
+                dst_box->wait_msg != NULL && (dst_box->wait_msg->src == ANY_BOX ||
+                        dst_box->wait_msg->src == msg->src);
+
+        if (wait_msg_good) {
             retval = k_pMsgTransfer(dst_box->wait_msg, msg);
-
-            // Remove box link from Sender's queue
-            if (src_box->send_msgq == dst_box->wait_msg) {
-                // If it was in front of the queue
-                src_box->send_msgq = src_box->send_msgq->next;
-
-                if (src_box->send_msgq == dst_box->wait_msg) {
-                    // If it was the only message in the queue
-                    src_box->send_msgq = NULL;
-                }
-            }
-            dUnlink(&dst_box->wait_msg->list);
 
             // Remove link from the Receiver's box
             dst_box->wait_msg = NULL;
@@ -201,33 +195,32 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
  * @return  True if a message was received,
  *          False if not.
  */
-bool k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
+size_t k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
 {
     // Initialized will all possible error conditions checked
-    bool retval = (msg == NULL || msg->dst >= BOXID_MAX ||
+    bool retval = (msg == NULL || msg->dst >= BOXID_MAX || msg->src > BOXID_MAX ||
                    msgbox[msg->dst].owner != proc);
 
-    pmsgbox_t *dst_box = &msgbox[msg->dst], *src_box = &msgbox[msg->src];
+    pmsgbox_t* dst_box = NULL;
+
     pmsg_t* src_msg = NULL;
 
     // If no errors were found
     if (!retval) {
+        dst_box = &msgbox[msg->dst];
+
         if (dst_box->recv_msgq == NULL) {
             // No messages to receive at the time.
-
-            // Link Rx message onto message box
-            dst_box->wait_msg = msg;
-
-            // Link message to Sender's message box as well
-            if (src_box->send_msgq == NULL) {
-                src_box->send_msgq = msg;
+            if (msg->blocking) {
+                // Link Rx message onto message box
+                dst_box->wait_msg = msg;
+                UnlinkPCB(proc);
+                proc->state = BLOCKED;
+                PendSV();
             }
-
-            dLink(&msg->list, &src_box->send_msgq->list);
-
-            retval = false;
+            retval = 0;
         }
-        else if (msg->src == 0 || dst_box->recv_msgq->src == msg->src){
+        else if (msg->src == ANY_BOX || dst_box->recv_msgq->src == msg->src){
             src_msg = dst_box->recv_msgq;
 
             dst_box->recv_msgq = dst_box->recv_msgq->next;
@@ -238,10 +231,8 @@ bool k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
 
             dUnlink(&src_msg->list);
 
-            k_pMsgTransfer(msg, src_msg);
+            retval = k_pMsgTransfer(msg, src_msg);
             k_pMsgDeallocate(&src_msg);
-
-            retval = true;
         }
         else {
             // Search Recv queue for specific message box source
@@ -250,16 +241,14 @@ bool k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
             if (src_msg == NULL) {
                 // If message was not found
                 // Link Rx message onto message box
-                dst_box->wait_msg = msg;
-
-                // Link message to Sender's message box as well
-                if (src_box->send_msgq == NULL) {
-                    src_box->send_msgq = msg;
+                if (msg->blocking) {
+                    // Link Rx message onto message box
+                    dst_box->wait_msg = msg;
+                    UnlinkPCB(proc);
+                    proc->state = BLOCKED;
+                    PendSV();
                 }
-
-                dLink(&msg->list, &src_box->send_msgq->list);
-
-                retval = false;
+                retval = 0;
             }
             else {
                 // Message was found
@@ -267,40 +256,13 @@ bool k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
                 dUnlink(&src_msg->list);
 
                 // Transfer message
-                k_pMsgTransfer(msg, src_msg);
+                retval = k_pMsgTransfer(msg, src_msg);
                 k_pMsgDeallocate(&src_msg);
-
-                retval = true;
             }
         }
     }
 
     return retval;
-}
-
-/**
- * @brief   Gets message box ID that is awaiting a message from the source box.
- * @param   [in] src_box: Box to search on-hold messages.
- * @param   [in] search_box: Box ID to look for. (*)
- * @return  search_box if the search box is awaiting a message.
- *          A valid box ID if a message box is awaiting a message and no
- *          valid search_box was submitted.
- *          An invalid box ID (255) if no message boxes are awaiting messages.
- * @details If search_box is set to 0, then the function will instead
- *          look through the on-hold bitmap for the first instance of a
- *          message box awaiting a message.
- */
-pmbox_t k_GetWaitingBox(pmbox_t src_box, pmbox_t search_box)
-{
-    pmsg_t* msg, *msgq = msgbox[src_box].send_msgq;
-
-    if (msgq == NULL)       return  BOXID_MAX;
-    if (search_box == 0)    return msgq->src;
-
-    msg = k_SearchMessageQueue(msgq, search_box);
-
-    if (msg != NULL)        return msg->src;
-    return BOXID_MAX;
 }
 
 /**

@@ -20,6 +20,7 @@
 #define CURSOR_UP       "\x1b[A"
 #define CURSOR_DOWN     "\x1b[B"
 
+#define BLINK_TEXT      "\x1b[5m"
 #define TERM_ESC        '\x03'
 
 typedef enum TERMINAL_MODES {
@@ -28,12 +29,12 @@ typedef enum TERMINAL_MODES {
 } term_mode_t;
 
 #define HOME_HEADER "==="
-#define HOME_TEXT   "M'uh Kernel v0.2"
+#define HOME_TEXT   "M'uh Kernel v0.3"
 
 typedef struct active_IO_ {
     bitmap_t    active_pid[PID_BITMAP_SIZE];
+    bool        output_off;
     char*       proc_inbuf;
-    uint32_t    inbuf_head;
     uint32_t    inbuf_max;
     pid_t       in_proc;
     size_t*     ret_size;
@@ -42,14 +43,8 @@ typedef struct active_IO_ {
 typedef struct terminal_ {
     circular_buffer_t   in_buf;
     uint32_t            buf_entry;
-
     char        home_line[128];
-    char        idle_line[32];
-    uint32_t    line_size;
-
     term_mode_t mode;
-
-    pmbox_t proc_outbox;
 } terminal_t;
 
 void output_manager();

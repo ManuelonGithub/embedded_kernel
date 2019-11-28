@@ -53,22 +53,35 @@ void output_test()
 void inout_test()
 {
     pid_t id = getpid();
-    pmbox_t box = bind(4);
+    pmbox_t box = bind(0);
 
     char text[128], name[64];
 
     sprintf(text, "Hello from process %u!\nWhat is your name? ", id);
 
-    send_user(text);
+    while (send_user(text) == 0);
 
-    size_t test = recv_user(name, 64);
+    while (recv_user(name, 64) == 0);
+//
+//    sprintf(text, "Your name is %s. Nice to meet you!\n", name);
+//
+//    while (send_user(text) == 0);
 
-    sprintf(text, "Your name is %s. Nice to meet you!\n", name);
+    send(10, box, (uint8_t*)name, strlen(name)+1);
+}
 
-    send_user(text);
+void ipc_test()
+{
+    pmbox_t box = bind(10);
+    char text[128], name[64];
 
-//    send(OUT_BOX, box, (uint8_t*)text, strlen(text));
-//    send(5, box, (uint8_t*)name, strlen(name));
+    int i;
+    for (i = 0; i < 3; i++) {
+        recv(box, ANY_BOX, (uint8_t*)name, 64);
+        sprintf(text, "Name %d: %s\n", i, name);
+
+        while (send_user(text) == 0);
+    }
 }
 
 /**
@@ -82,14 +95,10 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-//    pcreate(0, 1, &inout_test3);
+    pcreate(NULL, &ipc_test);
     pcreate(NULL, &inout_test);
-//    pcreate(0, 1, &inout_test2);
-//    int i = 0;
-//
-//    for (i = 0; i < 4; i++) {
-//        pcreate(0, 1, &output_test);
-//    }
+    pcreate(NULL, &inout_test);
+    pcreate(NULL, &inout_test);
 
     kernel_start();
 

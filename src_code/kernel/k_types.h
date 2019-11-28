@@ -46,6 +46,7 @@ typedef struct pmsg_ {
     pmbox_t     dst;
     size_t      size;
     uint8_t*    data;
+    bool        blocking;
 } pmsg_t;
 
 typedef struct msgbox_attr_ {
@@ -57,8 +58,7 @@ typedef struct msgbox_attr_ {
 typedef struct pmsgbox_ {
     struct pcb_*    owner;
     pmsg_t*         recv_msgq;  // Messages to be received
-    pmsg_t*         send_msgq;  // Messages waiting on a send
-    pmsg_t*         wait_msg;   // Pointer to "rx any" message request
+    pmsg_t*         wait_msg;   // Pointer to a pending RECV message
     pmbox_t         id;
     msgbox_mode_t   mode;
 } pmsgbox_t;

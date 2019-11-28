@@ -82,7 +82,7 @@ pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
             strcpy(pcb->name, attr->name);
         }
         else {
-            strcpy(pcb->name, "no name");
+            strcpy(pcb->name, "N/A");
         }
 
         InitProcessContext(&pcb->sp, program, terminate);
