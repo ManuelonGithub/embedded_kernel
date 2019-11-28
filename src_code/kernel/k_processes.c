@@ -10,7 +10,10 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "k_processes.h"
+#include "k_scheduler.h"
+#include "k_cpu.h"
 #include "bitmap.h"
 
 bitmap_t available_pid[PID_BITMAP_SIZE];
@@ -28,64 +31,86 @@ pcb_t*  proc_table[PID_MAX];
 void process_init()
 {
     int i;
-
     for (i = 0; i < PID_MAX; i++) {
-        k_CreatePCB(i);
+#ifdef RTS_PROCESSES
+
+        proc_table[i].id = i;
+
+        proc_table[i].sp = proc_table[i].sp_top + (STACKSIZE/sizeof(uint32_t)) - 1;
+
+        proc_table[i].next = NULL;
+        proc_table[i].prev = NULL;
+
+        proc_table[i].state = UNASSIGNED;
+
+        ClearBitRange(proc_table[i].owned_box, 0, BOXID_MAX);
+
+#else
+        proc_table[i] = NULL;
+#endif
     }
 
     ClearBitRange(available_pid, 0, PID_MAX);
 }
 
 /**
- * @brief   Allocates and initializes a new PCB.
- * @param   [in] id: ID of the PCB. (*)
+ * @brief   Creates a process and registers it in kernel space.
+ * @param   [in] pid: Unique process identifier value.
+ * @param   [in] priortity: Priority level that the process will run in.
+ * @param   [in] proc_program:
+ *              Pointer to start of the program the process will execute.
+ * @retval  Returns the process ID that was created.
+ *          0 if a process wasn't able to be created.
+ */
+pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
+{
+    pcb_t* pcb = NULL;
+
+    pid_t id = (attr == NULL || attr->id == 0) ?
+            FindClear(available_pid, 0, PID_MAX) : attr->id;
+
+    priority_t priority = (attr == NULL || attr->priority == 0) ?
+            DEF_PRIORITY : attr->priority;
+
+    bool err = (id > PID_MAX || GetBit(available_pid, id) || priority > PRIORITY_LEVELS);
+
+    if (!err) {
+        pcb = k_AllocatePCB(id);
+        pcb->state = WAITING_TO_RUN;
+
+        if (attr != NULL && strlen(attr->name) != 0) {
+            strcpy(pcb->name, attr->name);
+        }
+        else {
+            strcpy(pcb->name, "no name");
+        }
+
+        InitProcessContext(&pcb->sp, program, terminate);
+        LinkPCB(pcb, priority);
+    }
+    else {
+        id = (pid_t)PROC_ERR;
+    }
+
+    return id;
+}
+
+/**
+ * @brief   Allocates a new PCB.
+ * @param   [in] id: ID of the PCB.
  * @return  Pointer to allocated PCB.
  *          NULL if PCB allocation failed.
- * @details (*) If the ID is 0, then the next available ID is used
- *          to allocate the PCB.
  */
 pcb_t* k_AllocatePCB(pid_t id)
 {
-    pcb_t* pcb = NULL;
+#ifdef RTS_PROCESSES
 
-    if (id == 0) id = FindClear(available_pid, 0, PID_MAX);
-
-    if (id < PID_MAX && ~GetBit(available_pid, id)) {
-        SetBit(available_pid, id);
-        pcb = &proc_table[id];
-        pcb->state = WAITING_TO_RUN;
-    }
-
-    return pcb;
-}
-
-/**
- * @brief   De-allocates a PCB.
- * @param   [in] id: Process ID to be de-allocated.
- */
-inline void k_DeallocatePCB(pid_t id)
-{
-    ClearBit(available_pid, id);
-    proc_table[id].state = TERMINATED;
-}
-
-/**
- * @brief   Creates a Process Control block in Heap Memory.
- * @param   [in] id: Process ID to set PCB to.
- * @return  NULL if a process was unable to be created.
- *          pointer to created PCB if creation was successful.
- */
-pcb_t* k_CreatePCB(pid_t id)
-{
-    pcb_t* pcb = NULL;
-
-#ifdef  RTS_PROCESSES
-
-    pcb = &proc_table[id];
+    SetBit(available_pid, id);
+    return &proc_table[id];
 
 #else
 
-    pcb = (pcb_t*)malloc(sizeof(pcb_t));
+    pcb_t* pcb = (pcb_t*)malloc(sizeof(pcb_t));
     if (pcb == NULL) return NULL;
 
     pcb->sp_top = (uint32_t*)malloc(STACKSIZE);
@@ -96,8 +121,6 @@ pcb_t* k_CreatePCB(pid_t id)
 
     proc_table[id] = pcb;
 
-#endif
-
     pcb->id = id;
 
     pcb->sp = pcb->sp_top + (STACKSIZE/sizeof(uint32_t)) - 1;
@@ -105,11 +128,24 @@ pcb_t* k_CreatePCB(pid_t id)
     pcb->next = NULL;
     pcb->prev = NULL;
 
-    pcb->state = UNALLOCATED;
+    pcb->state = UNASSIGNED;
 
     ClearBitRange(pcb->owned_box, 0, BOXID_MAX);
 
+    SetBit(available_pid, id);
+
     return pcb;
+#endif
+}
+
+/**
+ * @brief   De-allocates a PCB.
+ * @param   [in] id: Process ID to be de-allocated.
+ */
+inline void k_DeallocatePCB(pid_t id)
+{
+    ClearBit(available_pid, id);
+    proc_table[id].state = TERMINATED;
 }
 
 pcb_t* GetPCB(pid_t id)

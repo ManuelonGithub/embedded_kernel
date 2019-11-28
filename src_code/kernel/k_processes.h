@@ -15,10 +15,9 @@
 
 void process_init();
 
+pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)());
 pcb_t* k_AllocatePCB(pid_t id);
 inline void k_DeallocatePCB(pid_t id);
-
-pcb_t* k_CreatePCB(pid_t id);
 
 pcb_t* GetPCB(pid_t id);
 

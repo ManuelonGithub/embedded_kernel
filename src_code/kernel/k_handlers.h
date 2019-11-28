@@ -24,7 +24,6 @@ typedef struct pcreate_args_ {
 void kernel_init();
 inline void kernel_start();
 
-proc_t k_pcreate(pcreate_args_t* args);
 void k_Terminate();
 
 #endif  //	K_HANDLERS_H

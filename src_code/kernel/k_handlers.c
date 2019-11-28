@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "k_handlers.h"
 #include "k_scheduler.h"
 #include "k_processes.h"
@@ -21,7 +22,7 @@
 #include "systick.h"
 #include "k_terminal.h"
 
-pcb_t *running, *pTerminal;
+pcb_t *running, *pTerminal, *pIdle;
 uart_descriptor_t uart;
 
 active_IO_t IO;
@@ -66,16 +67,19 @@ void kernel_init()
     //todo: Make UART a higher priority than SVC
     UART0_Init(&uart);
 
-    pcreate(0, IDLE_LEVEL, &idle);
-    // Set the initial running process to be running
-    // This avoids any "NULL" checks of the running process,
-    // As it'll always be associated with a process.
-    running = Schedule();
-    k_MsgBoxBind(0, running);
+    process_attr_t pattr = {
+         .id = 0,
+         .priority = 0,
+         .name = "idle"
+    };
+    pIdle = GetPCB(k_pcreate(&pattr, &idle, &terminate));
+    LinkPCB(pIdle, IDLE_LEVEL);
 
     // Register the Terminal server process
-    pTerminal = GetPCB(pcreate(0, 0, &terminal));
-    k_MsgBoxBind(IN_BOX, pTerminal);
+    strcpy(pattr.name, "terminal");
+
+    pTerminal = GetPCB(k_pcreate(&pattr, &terminal, &terminate));
+    LinkPCB(pIdle, PRIV_PRIORITY);
 }
 
 /**
@@ -215,7 +219,10 @@ void p_KernelCall_handler(k_call_t* call)
 {
     switch(call->code) {
         case PCREATE: {
-            call->retval = k_pcreate((pcreate_args_t*)call->arg);
+            call->retval = k_pcreate(
+                    (process_attr_t*)call->arg[0],
+                    (void (*)())call->arg[0],
+                    &terminate);
         } break;
 
         case STARTUP: {
@@ -310,36 +317,6 @@ void p_KernelCall_handler(k_call_t* call)
     }
 }
 
-/**
- * @brief   Creates a process and registers it in kernel space.
- * @param   [in] pid: Unique process identifier value.
- * @param   [in] priortity: Priority level that the process will run in.
- * @param   [in] proc_program:
- *              Pointer to start of the program the process will execute.
- * @retval  Returns the process ID that was created.
- *          0 if a process wasn't able to be created.
- */
-proc_t k_pcreate(pcreate_args_t* args)
-{
-    pcb_t* pcb = k_AllocatePCB(args->id);
-    proc_t retval = 0;
-
-    if (pcb != NULL) {             // PCB was successfully allocated
-        InitProcessContext(&pcb->sp, args->proc_program, &terminate);
-
-        // No process can be created and linked into the 0th priority
-        // if priority is set to 0, place it in priority 4
-        if (LinkPCB(pcb, args->prio)) {
-            // PCB was successfully linked into its queue
-            retval = pcb->id;  // set return value to ID
-        }
-        else {
-            k_DeallocatePCB(pcb->id);
-        }
-    }
-
-    return retval;
-}
 
 /**
  * @brief   Terminates the running process.

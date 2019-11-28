@@ -22,15 +22,15 @@ inline k_ret_t kcall(k_code_t code, k_arg_t arg)
     k_call_t call = {.code = code, .arg = arg};
     SetCallReg(&call);
     SVC();
-    return (proc_t)call.retval;
+    return call.retval;
 }
 
 /**
  * @brief   Requests the creation and registration of a new process in kernel space.
  */
-pid_t pcreate(pid_t pid, priority_t priority, void (*proc_program)())
+pid_t pcreate(process_attr_t* attr, void (*proc_program)())
 {
-    uint32_t args[] = {(uint32_t)pid, (uint32_t)priority, (uint32_t)(proc_program)};
+    uint32_t args[] = {(uint32_t)attr, (uint32_t)(proc_program)};
     return (pid_t)kcall(PCREATE, (k_arg_t)args);
 }
 

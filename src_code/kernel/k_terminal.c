@@ -236,7 +236,7 @@ bool SystemView(char* attr, terminal_t* term)
     for(i = 0; i < PID_MAX; i++) {
         pcb = GetPCB((pid_t)i);
 
-        if (pcb->state != UNALLOCATED) {
+        if (pcb->state != UNASSIGNED) {
             UART0_puts("PID: ");
             UART0_puts(itoa((int)pcb->id, num_buf));
             UART0_puts(" |\t state: ");

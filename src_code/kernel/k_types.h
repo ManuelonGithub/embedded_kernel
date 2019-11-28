@@ -30,7 +30,6 @@
 
 typedef uint32_t    id_t;       /// System ID type alias
 typedef id_t        pmbox_t;    /// Message Box ID type alias
-typedef id_t        proc_t;     /// Process type alias
 
 /** @brief Inter-process message structure */
 typedef struct pmsg_ {
@@ -49,17 +48,29 @@ typedef struct pmsg_ {
     uint8_t*    data;
 } pmsg_t;
 
+typedef struct msgbox_attr_ {
+    pmbox_t id;
+    msgbox_mode_t mode;
+} msgbox_attr_t;
+
 /** @brief  Inter-process communication Message box structure */
 typedef struct pmsgbox_ {
     struct pcb_*    owner;
     pmsg_t*         recv_msgq;  // Messages to be received
     pmsg_t*         send_msgq;  // Messages waiting on a send
     pmsg_t*         wait_msg;   // Pointer to "rx any" message request
-    pmbox_t         ID;
+    pmbox_t         id;
+    msgbox_mode_t   mode;
 } pmsgbox_t;
 
-typedef id_t        pid_t;      /// Process ID type alias
+typedef id_t        pid_t;      /// Process id type alias
 typedef uint32_t    priority_t; /// Process priority type alias
+
+typedef struct process_attr_ {
+    pid_t       id;
+    priority_t  priority;
+    char        name[32];
+} process_attr_t;
 
 /** @brief  Process control block structure */
 typedef struct pcb_ {
@@ -73,6 +84,7 @@ typedef struct pcb_ {
 
     pid_t       id;
     priority_t  priority;
+    char        name[32];
 
 #ifdef  RTS_PROCESSES
 

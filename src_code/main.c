@@ -71,36 +71,6 @@ void inout_test()
 //    send(5, box, (uint8_t*)name, strlen(name));
 }
 
-void inout_test2()
-{
-    pid_t id = getpid();
-    pmbox_t box = bind(5);
-
-    char text[128], name[64];
-
-    sprintf(text, "Hello from process %u!\n Hacking your name . . .", id);
-
-    send(OUT_BOX, box, (uint8_t*)text, strlen(text));
-
-    recv(box, 4, (uint8_t*)name, 64);
-
-    sprintf(text, "Your name is %s. You've been H@kd!\n", name);
-
-    send(OUT_BOX, box, (uint8_t*)text, strlen(text));
-}
-
-void inout_test3()
-{
-    pid_t id = getpid();
-    pmbox_t box = bind(9);
-
-    char text[128];
-
-    sprintf(text, "Hello from process %u!\n", id);
-
-    send(5, box, (uint8_t*)text, strlen(text));
-}
-
 /**
  * @brief   main.c
  * @details Initializes the kernel and all processes to run in the system.
@@ -113,7 +83,7 @@ int main(void)
 
     /* Place Process Create requests here */
 //    pcreate(0, 1, &inout_test3);
-    pcreate(0, 1, &inout_test);
+    pcreate(NULL, &inout_test);
 //    pcreate(0, 1, &inout_test2);
 //    int i = 0;
 //
