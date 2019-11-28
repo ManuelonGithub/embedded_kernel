@@ -137,36 +137,38 @@ inline void k_pMsgDeallocate(pmsg_t** msg)
  */
 size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
 {
-    bool err = (msg->dst >= BOXID_MAX     || msg->src >= BOXID_MAX  ||
-                msgbox[msg->dst].owner == NULL || msgbox[msg->src].owner != proc);
+    bool err = (msg->dst >= BOXID_MAX || msg->src >= BOXID_MAX ||
+                msgbox[msg->src].owner != proc);
 
     size_t retval = 0;
 
     pmsg_t* msg_out;
 
+    pmsgbox_t* dst_box = &msgbox[msg->dst], *src_box = &msgbox[msg->src];
+
     if (!err) {
-        if (msgbox[msg->dst].waitany_msg != NULL) {
-            msgbox[msg->dst].send_msgq->size =
-                    k_pMsgTransfer(msgbox[msg->dst].send_msgq, msg);
+        if (dst_box->wait_msg != NULL &&
+            (dst_box->wait_msg->src == 0 || dst_box->wait_msg->src == msg->src)) {
+            retval = k_pMsgTransfer(dst_box->wait_msg, msg);
 
-            msgbox[msg->dst].waitany_msg->src = msg->src;
+            // Remove box link from Sender's queue
+            if (src_box->send_msgq == dst_box->wait_msg) {
+                // If it was in front of the queue
+                src_box->send_msgq = src_box->send_msgq->next;
 
-            msgbox[msg->dst].waitany_msg = NULL;
+                if (src_box->send_msgq == dst_box->wait_msg) {
+                    // If it was the only message in the queue
+                    src_box->send_msgq = NULL;
+                }
+            }
+            dUnlink(&dst_box->wait_msg->list);
 
-            LinkPCB(msgbox[msg->dst].owner, msgbox[msg->dst].owner->priority);
+            // Remove link from the Receiver's box
+            dst_box->wait_msg = NULL;
+
+            LinkPCB(dst_box->owner, dst_box->owner->priority);
 
             PendSV();
-
-            return msgbox[msg->dst].send_msgq->size;
-        }
-
-        if (msgbox[msg->src].send_msgq != NULL) {
-            if (msgbox[msg->src].send_msgq->src == msg.dst) {
-                // receiver msg found
-                // transfer
-                // unlink msg
-                //
-            }
         }
         else {
             // Allocate Message
@@ -177,12 +179,12 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
             // Send if message allocation was successful
             if (msg_out != NULL) {
                 if (msgbox[msg->dst].recv_msgq == NULL) {
-                    msgbox[msg->dst].recv_msgq = msg;
+                    msgbox[msg->dst].recv_msgq = msg_out;
                 }
 
-                dLink(&msg->list, &msgbox[msg->dst].recv_msgq->list);
+                dLink(&msg_out->list, &msgbox[msg->dst].recv_msgq->list);
 
-                retval = msg->size;
+                retval = msg_out->size;
             }
         }
     }
@@ -202,65 +204,78 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
 bool k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
 {
     // Initialized will all possible error conditions checked
-    bool retval = false;
+    bool retval = (msg == NULL || msg->dst >= BOXID_MAX ||
+                   msgbox[msg->dst].owner != proc);
 
-    pmsgbox_t* box = &msgbox[msg->dst];
+    pmsgbox_t *dst_box = &msgbox[msg->dst], *src_box = &msgbox[msg->src];
+    pmsg_t* src_msg = NULL;
 
-    pmsg_t* src_msg;
+    // If no errors were found
+    if (!retval) {
+        if (dst_box->recv_msgq == NULL) {
+            // No messages to receive at the time.
 
-    // No messages in the receive queue
-    if (box->recv_msgq == NULL) {
-        if (msg->src == 0) {
-            box->waitany_msg = msg;
+            // Link Rx message onto message box
+            dst_box->wait_msg = msg;
+
+            // Link message to Sender's message box as well
+            if (src_box->send_msgq == NULL) {
+                src_box->send_msgq = msg;
+            }
+
+            dLink(&msg->list, &src_box->send_msgq->list);
+
+            retval = false;
         }
-        else {
-            dLink(&msg->list, &msgbox[msg->src].send_msgq->list);
-        }
+        else if (msg->src == 0 || dst_box->recv_msgq->src == msg->src){
+            src_msg = dst_box->recv_msgq;
 
-        return false;
-    }
+            dst_box->recv_msgq = dst_box->recv_msgq->next;
 
-    // Looking for any message or if front of queue is from specified source
-    if (msg->src == 0 || msg->src == box->recv_msgq->src) {
-        src_msg = box->recv_msgq;
-        box->recv_msgq = box->recv_msgq->next;
+            if (dst_box->recv_msgq == src_msg) {
+                dst_box->recv_msgq = NULL;
+            }
 
-        box->recv_msgq = box->recv_msgq->next;
-
-        if (box->recv_msgq == src_msg) {
-            box->recv_msgq = NULL;
-        }
-        else {
             dUnlink(&src_msg->list);
-        }
 
-        k_pMsgTransfer(msg, src_msg);
-        k_pMsgDeallocate(&src_msg);
-
-        return true;
-    }
-
-    // Looking for a specific message source
-    src_msg = box->recv_msgq->next;
-
-    while (src_msg != box->recv_msgq && !retval) {
-        if (msg->src == src_msg->src) {
-            // Message with specific source was found
-            dUnlink(&src_msg->list);
             k_pMsgTransfer(msg, src_msg);
             k_pMsgDeallocate(&src_msg);
 
-            return true;
+            retval = true;
         }
         else {
-            src_msg = src_msg->next;
+            // Search Recv queue for specific message box source
+            src_msg = k_SearchMessageQueue(dst_box->recv_msgq, msg->src);
+
+            if (src_msg == NULL) {
+                // If message was not found
+                // Link Rx message onto message box
+                dst_box->wait_msg = msg;
+
+                // Link message to Sender's message box as well
+                if (src_box->send_msgq == NULL) {
+                    src_box->send_msgq = msg;
+                }
+
+                dLink(&msg->list, &src_box->send_msgq->list);
+
+                retval = false;
+            }
+            else {
+                // Message was found
+                // Unlink it from Recv queue
+                dUnlink(&src_msg->list);
+
+                // Transfer message
+                k_pMsgTransfer(msg, src_msg);
+                k_pMsgDeallocate(&src_msg);
+
+                retval = true;
+            }
         }
     }
 
-    // Message from specific source was not found
-    dLink(&msg->list, &msgbox[msg->src].send_msgq->list);
-
-    return false;
+    return retval;
 }
 
 /**
@@ -279,25 +294,12 @@ pmbox_t k_GetWaitingBox(pmbox_t src_box, pmbox_t search_box)
 {
     pmsg_t* msg, *msgq = msgbox[src_box].send_msgq;
 
-    if (msgq == NULL) {
-        return  BOXID_MAX;
-    }
+    if (msgq == NULL)       return  BOXID_MAX;
+    if (search_box == 0)    return msgq->src;
 
-    if (search_box == 0 || msgq->src == search_box) {
-        return msgq->src;
-    }
+    msg = k_SearchMessageQueue(msgq, search_box);
 
-    msg = msgq->next;
-
-    while (msg != msgq) {
-        if (msg->src == search_box) {
-            return msg->src;
-        }
-        else {
-            msg = msg->next;
-        }
-    }
-
+    if (msg != NULL)        return msg->src;
     return BOXID_MAX;
 }
 
@@ -313,6 +315,8 @@ inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src)
     if (dst->size > src->size)   dst->size = src->size;
 
     memcpy(dst->data, src->data, dst->size);
+    dst->src = src->src;
+
     return dst->size;
 }
 
@@ -332,6 +336,23 @@ void k_MsgClearAll(pmsgbox_t* box)
 
         k_pMsgDeallocate(&msg);
     }
+}
+
+pmsg_t* k_SearchMessageQueue(pmsg_t* msg, pmbox_t box)
+{
+    pmsg_t* search;
+
+    if (msg == NULL)    return NULL;
+    if (msg->src == box) return msg;
+
+    search = msg->next;
+
+    while (search != msg) {
+        if (search->src == box) return search;
+        else search = search->next;
+    }
+
+    return NULL;
 }
 
 inline pid_t OwnerPID(pmbox_t boxID)

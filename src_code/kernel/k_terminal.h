@@ -32,8 +32,11 @@ typedef enum TERMINAL_MODES {
 
 typedef struct active_IO_ {
     bitmap_t    active_pid[PID_BITMAP_SIZE];
-    bitmap_t    active_box[MSGBOX_BITMAP_SIZE];
-    bitmap_t*   OnHold;
+    char*       proc_inbuf;
+    uint32_t    inbuf_head;
+    uint32_t    inbuf_max;
+    pid_t       in_proc;
+    size_t*     ret_size;
 } active_IO_t;
 
 typedef struct terminal_ {
@@ -59,9 +62,7 @@ void send_home(char* home);
 
 void TerminalInputHandler(char c, terminal_t* term);
 
-void CommandHandler(char c, terminal_t* term);
-
-void InputCaptureHandler(char c, terminal_t* term);
+void SendUserInput(terminal_t* term);
 
 bool CommandCheck(terminal_t* term);
 

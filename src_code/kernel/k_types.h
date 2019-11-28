@@ -54,7 +54,7 @@ typedef struct pmsgbox_ {
     struct pcb_*    owner;
     pmsg_t*         recv_msgq;  // Messages to be received
     pmsg_t*         send_msgq;  // Messages waiting on a send
-    pmsg_t*         waitany_msg;    // Pointer to "rx any" message request
+    pmsg_t*         wait_msg;   // Pointer to "rx any" message request
     pmbox_t         ID;
 } pmsgbox_t;
 
@@ -85,7 +85,7 @@ typedef struct pcb_ {
 #endif
 
     uint32_t*   sp;
-    uint32_t    timer;
+    int32_t     timer;
     proc_state  state;
     bitmap_t    owned_box[MSGBOX_BITMAP_SIZE];
 } pcb_t;

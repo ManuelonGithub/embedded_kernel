@@ -76,11 +76,6 @@ void kernel_init()
     // Register the Terminal server process
     pTerminal = GetPCB(pcreate(0, 0, &terminal));
     k_MsgBoxBind(IN_BOX, pTerminal);
-
-    IO.OnHold = &msgbox[IN_BOX].OnHold;
-
-	// Register the Process Output Manager process
-    pcreate(0, 0, &output_manager);
 }
 
 /**
@@ -109,6 +104,11 @@ void SystemTick_handler(void)
         PendSV();
     }
 
+    if (!UART0_empty() && pTerminal->priority != 0) {
+        LinkPCB(pTerminal, 0);
+        PendSV();
+    }
+
     // Do time queue thing
 }
 
@@ -125,10 +125,6 @@ void PendSV_handler(void)
 
     SaveProcessContext();
     running->sp = (uint32_t*)GetPSP();
-
-    if (!UART0_empty() && pTerminal->priority != 0) {
-        LinkPCB(pTerminal, 0);
-    }
 
     if (running->state == RUNNING)  running->state = WAITING_TO_RUN;
     running = Schedule();
@@ -198,11 +194,6 @@ void k_KernelCall_handler(k_code_t code)
              */
             RestoreProcessContext();
 
-            PendSV();
-        } break;
-
-        case WAKE_TERMINAL: {
-            LinkPCB(pTerminal, 0);
             PendSV();
         } break;
 
@@ -290,9 +281,27 @@ void p_KernelCall_handler(k_call_t* call)
             k_Terminate();
         } break;
 
-        case WAKE_TERMINAL: {
-            LinkPCB(pTerminal, 0);
-            PendSV();
+        case SEND_USER: {
+            if (GetBit(IO.active_pid, running->id)) {
+                UART0_puts((char*)call->arg);
+            }
+        } break;
+
+        case RECV_USER: {
+            if (GetBit(IO.active_pid, running->id) && IO.in_proc == 0) {
+                IO.in_proc = running->id;
+                IO.proc_inbuf = (char*)call->arg[0];
+                IO.inbuf_max = (size_t)call->arg[1];
+                IO.ret_size = (size_t*)&call->retval;
+                IO.inbuf_head = 0;
+
+                UnlinkPCB(running);
+                running->state = BLOCKED;
+                PendSV();
+            }
+            else {
+                call->retval = 0;
+            }
         } break;
 
         default: {

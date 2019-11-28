@@ -123,6 +123,18 @@ size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
     return (size_t)msg.size;
 }
 
+void send_user(char* str)
+{
+    kcall(SEND_USER, (k_arg_t)str);
+}
+
+size_t recv_user(char* buf, uint32_t max_size)
+{
+    uint32_t args[] = {(uint32_t)buf, max_size};
+
+    return kcall(RECV_USER, (k_arg_t)args);
+}
+
 size_t recv_msg(pmsg_t* rx_msg)
 {
     kcall(RECV, (k_arg_t)rx_msg);

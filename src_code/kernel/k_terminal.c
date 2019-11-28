@@ -6,8 +6,9 @@
 #include "k_terminal.h"
 #include "calls.h"
 #include "uart.h"
-#include "k_messaging.h"
+//#include "k_messaging.h"
 #include "k_processes.h"
+#include "k_scheduler.h"
 #include "bitmap.h"
 #include "cstr_utils.h"
 
@@ -31,12 +32,12 @@ void init_term(terminal_t* term)
     term->mode = COMMAND_HANDLER;
     term->line_size = 40;
 
-    ClearBitRange(IO.active_box, 0, BOXID_MAX);
     ClearBitRange(IO.active_pid, 0, PID_MAX);
-
 
     term->buf_entry = 0;
     circular_buffer_init(&term->in_buf);
+
+    term->proc_outbox = 0;
 
     create_home_line(term->home_line, term->line_size);
 }
@@ -75,37 +76,6 @@ void send_home(char* home)
     UART0_puts(CURSOR_RESTORE);
 }
 
-void output_manager()
-{
-    pmbox_t box = bind(OUT_BOX);
-
-    circular_buffer_t buffer;
-    circular_buffer_init(&buffer);
-
-    pmsg_t proc_rx = {
-        .dst = box,
-        .src = 0,
-        .data = (uint8_t*)buffer.data,
-        .size = CIRCULAR_BUFFER_SIZE
-    };
-
-    while(1) {
-        buffer.wr_ptr = recv_msg(&proc_rx);
-        proc_rx.size = CIRCULAR_BUFFER_SIZE;
-
-        if (GetBit(IO.active_box, proc_rx.src)) {
-            while (buffer.rd_ptr < buffer.wr_ptr) {
-                buffer.rd_ptr += UART0_put (
-                        (buffer.data+buffer.rd_ptr), buffer_size(&buffer)
-                    );
-            }
-        }
-
-        buffer.wr_ptr = 0;
-        buffer.rd_ptr = 0;
-    }
-}
-
 void ResetTerminalScreen()
 {
     UART0_puts(CLEAR_SCREEN);
@@ -121,11 +91,6 @@ void terminal()
 
     init_term(&term);
 
-//    SetBitRange(IO.active_box, 0, BOXID_MAX);
-//    SetBitRange(IO.active_pid, 0, PID_MAX);
-
-//    term.mode = PROCESS_INPUT_CAPTURE;
-
     char in_char;
 
     ResetTerminalScreen();
@@ -140,28 +105,12 @@ void terminal()
                 ResetTerminalScreen();
                 send_home(term.home_line);
 
-                ClearBitRange(IO.active_box, 0, BOXID_MAX);
                 ClearBitRange(IO.active_pid, 0, PID_MAX);
 
                 term.mode = COMMAND_HANDLER;
             }
-            else if (term.mode == COMMAND_HANDLER) {
+            else if (term.mode == COMMAND_HANDLER || IO.in_proc != 0){
                 TerminalInputHandler(in_char, &term);
-            }
-            else if (term.mode == PROCESS_INPUT_CAPTURE){
-                if (term.proc_outbox == 0) {
-                    term.proc_outbox = FindSet(IO.OnHold, 0, BOXID_MAX);
-
-                    if (term.proc_outbox > BOXID_MAX) {
-                        term.proc_outbox = 0;
-                    }
-                    else {
-                        TerminalInputHandler(in_char, &term);
-                    }
-                }
-                else {
-                    TerminalInputHandler(in_char, &term);
-                }
             }
         }
         else if (term.mode != COMMAND_HANDLER){
@@ -191,23 +140,10 @@ void TerminalInputHandler(char c, terminal_t* term)
         case '\r':
         case '\n': {
             if (term->mode == COMMAND_HANDLER) {
-                enqueuec_s(&term->in_buf, '\0', true);
-                if (!CommandCheck(term)) {
-                    UART0_puts("? \n");
-                }
-                else {
-                    UART0_puts("> ");
-                }
+                CommandCheck(term);
             }
             else {
-                send(
-                    term->proc_outbox,
-                    IN_BOX,
-                    (uint8_t*)term->in_buf.data,
-                    (size_t)term->in_buf.wr_ptr
-                );
-
-                term->proc_outbox = 0;
+                SendUserInput(term);
             }
 
             term->buf_entry = 0;
@@ -238,45 +174,20 @@ void TerminalInputHandler(char c, terminal_t* term)
     }
 }
 
-void CommandHandler(char c, terminal_t* term)
+void SendUserInput(terminal_t* term)
 {
-    switch (c) {
-        case '\b':
-        case 0x7F: {
-            if (term->in_buf.wr_ptr > 0) {
-                term->in_buf.wr_ptr--;
-                term->buf_entry--;
-            }
-            else {
-                UART0_puts(" ");
-            }
-        } break;
-
-        case '\r':
-        case '\n': {
-            enqueuec_s(&term->in_buf, '\0', false);
-            if (!CommandCheck(term)) {
-                UART0_puts("? \n");
-            }
-
-            term->buf_entry = 0;
-            term->in_buf.wr_ptr = 0;
-
-            UART0_puts("> ");
-        } break;
-
-//        case 0x1B: {
-//            CursorCodeCheck(rx_buf);
-//        } break;
-
-        default: {
-            // todo: User input size constraints would be applied here.
-            if (!enqueuec_s(&term->in_buf, toupper(c), false)) UART0_puts("\b");
-            if (term->buf_entry < term->in_buf.wr_ptr) {
-                term->buf_entry = term->in_buf.wr_ptr;
-            }
-        } break;
+    if (term->in_buf.wr_ptr > IO.inbuf_max) {
+        *IO.ret_size = IO.inbuf_max-1;
     }
+    else {
+        *IO.ret_size = term->in_buf.wr_ptr;
+    }
+
+    memcpy(IO.proc_inbuf, term->in_buf.data, (*IO.ret_size));
+    IO.proc_inbuf[(*IO.ret_size)] = '\0';
+
+    pcb_t* proc = GetPCB(IO.in_proc);
+    LinkPCB(proc, proc->priority);
 }
 
 bool CommandCheck(terminal_t* term)
@@ -288,6 +199,10 @@ bool CommandCheck(terminal_t* term)
 
     char* keyword;
     char* attr_data;
+
+    if (!enqueuec_s(&term->in_buf, '\0', false)) {
+        term->in_buf.data[term->in_buf.wr_ptr] = '\0';
+    }
 
     int i = 0;
     // Find the begin of they query entry
@@ -330,18 +245,17 @@ bool SystemView(char* attr, terminal_t* term)
         }
     }
 
+    UART0_puts("> ");
     return true;
 }
 
 bool SetProcessFocus(char* attr, terminal_t* term)
 {
-    uint32_t start = 0, i = 0, end, j;
+    uint32_t start = 0, i = 0, end;
     pid_t pid;
-    pcb_t* pcb;
 
     if (attr == NULL) {
         SetBitRange(IO.active_pid, 0, PID_MAX);
-        SetBitRange(IO.active_box, 0, BOXID_MAX);
     }
     else {
         end = strlen(attr);
@@ -354,13 +268,7 @@ bool SetProcessFocus(char* attr, terminal_t* term)
 
             if (pid == 0 && attr[start] != '0') return false;
             else {
-                pcb = GetPCB(pid);
-
                 SetBit(IO.active_pid, pid);
-
-                for (j = 0; j < MSGBOX_BITMAP_SIZE; j++) {
-                    IO.active_box[j] |= pcb->owned_box[j];
-                }
             }
 
             start = i;
@@ -368,6 +276,7 @@ bool SetProcessFocus(char* attr, terminal_t* term)
     }
 
     term->mode = PROCESS_INPUT_CAPTURE;
+    term->proc_outbox = 0;
     return true;
 }
 

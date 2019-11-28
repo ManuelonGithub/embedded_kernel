@@ -101,8 +101,6 @@ void UART0_IntHandler(void)
         if (UART0->echo) {
             enqueuec(&UART0->tx, UART0_DR_R);
         }
-
-        PendSV();
     }
 
     if (UART0_MIS_R & UART_INT_TX) {
@@ -225,14 +223,5 @@ uint32_t UART0_gets(char* str, uint32_t MAX_BYTES)
     }
 
     return bytes_read;
-}
-
-void wakeup_terminal()
-{
-    k_call_t call;
-    call.code = WAKE_TERMINAL;
-
-    SetCallReg(&call);
-    SVC();
 }
 
