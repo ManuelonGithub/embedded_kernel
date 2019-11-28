@@ -35,10 +35,16 @@
 
 #define PID_MAX         16      /// Maximum Processes supported.
 
+#if (PID_MAX/BITMAP_WIDTH == 0)
+#define PID_BITMAP_SIZE  1
+#else
+    #define PID_BITMAP_SIZE  PID_MAX/BITMAP_WIDTH
+#endif
+
 /** @brief Error value for when an interaction with processes goes wrong. */
 #define PROC_ERR        -1
 
-#define RTS_PROCESSES   /// Enables "Real Time Systems" process management
+#define REAL_TIME_MODE   /// Enables "Real Time Systems" process management
 
 typedef enum PROC_STATE {
     UNASSIGNED, WAITING_TO_RUN, RUNNING, BLOCKED, TERMINATED
@@ -47,6 +53,22 @@ typedef enum PROC_STATE {
 /***************************** IPC Related Definitions *****************************/
 
 #define BOXID_MAX   16     /// Amount of Message boxes supported by the kernel
+
+#define MSG_MAX     32     /// Amount of allocated messages in RT mode
+
+#define MSG_MAX_SIZE 64    /// Max message size for messages in RT mode
+
+#if (MSGBOXES_MAX/BITMAP_WIDTH == 0)
+#define MSGBOX_BITMAP_SIZE  1
+#else
+    #define MSGBOX_BITMAP_SIZE  BOXID_MAX/BITMAP_WIDTH
+#endif
+
+#if (MSG_MAX/BITMAP_WIDTH == 0)
+#define MSG_BITMAP_SIZE  1
+#else
+    #define MSG_BITMAP_SIZE  BOXID_MAX/BITMAP_WIDTH
+#endif
 
 /** @brief Error value for when an interaction with processes goes wrong. */
 #define BOX_ERR     PROC_ERR

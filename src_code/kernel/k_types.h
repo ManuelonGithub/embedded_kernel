@@ -16,18 +16,6 @@
 #include "bitmap.h"
 #include "k_defs.h"
 
-#if (PID_MAX/BITMAP_WIDTH == 0)
-#define PID_BITMAP_SIZE  1
-#else
-    #define PID_BITMAP_SIZE  PID_MAX/BITMAP_WIDTH
-#endif
-
-#if (MSGBOXES_MAX/BITMAP_WIDTH == 0)
-#define MSGBOX_BITMAP_SIZE  1
-#else
-    #define MSGBOX_BITMAP_SIZE  BOXID_MAX/BITMAP_WIDTH
-#endif
-
 typedef uint32_t    id_t;       /// System ID type alias
 typedef id_t        pmbox_t;    /// Message Box ID type alias
 
@@ -44,9 +32,15 @@ typedef struct pmsg_ {
 
     pmbox_t     src;
     pmbox_t     dst;
-    size_t      size;
-    uint8_t*    data;
     bool        blocking;
+    size_t      size;
+
+#ifdef REAL_TIME_MODE
+    uint8_t     data[MSG_MAX_SIZE];
+    id_t        id;
+#else
+    uint8_t*    data;
+#endif
 } pmsg_t;
 
 typedef struct msgbox_attr_ {
@@ -86,7 +80,7 @@ typedef struct pcb_ {
     priority_t  priority;
     char        name[32];
 
-#ifdef  RTS_PROCESSES
+#ifdef  REAL_TIME_MODE
 
     uint32_t    sp_top[STACKSIZE/sizeof(uint32_t)];
 
@@ -111,5 +105,13 @@ typedef struct kernel_call_arguments_ {
     k_ret_t     retval;
     k_arg_t     arg;
 } k_call_t ;
+
+typedef struct IO_metadata_ {
+    pmbox_t     box_id;
+    pid_t       proc_id;
+    bool        is_send;
+    size_t      size;
+    uint8_t*    send_data;
+} IO_metadata_t;
 
 #endif

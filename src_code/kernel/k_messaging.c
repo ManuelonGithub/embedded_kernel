@@ -19,12 +19,32 @@
 pmsgbox_t msgbox[BOXID_MAX];
 bitmap_t available_box[MSGBOX_BITMAP_SIZE];
 
+#ifdef  REAL_TIME_MODE
+
+bitmap_t available_msg[MSG_BITMAP_SIZE];
+pmsg_t   msg_table[MSG_MAX];
+
+#endif
+
 /**
  * @brief   Initalizes the Messaging Module.
  * @details Initializes the free message box list.
  */
 void k_MsgInit()
 {
+    ClearBitRange(available_box, 0, BOXID_MAX);
+
+#ifdef REAL_TIME_MODE
+
+    ClearBitRange(available_msg, 0, MSG_MAX);
+
+    int i;
+    for(i = 0; i < MSG_MAX; i++) {
+        msg_table[i].id = i;
+    }
+
+#endif
+
     return;
 }
 
@@ -102,7 +122,19 @@ void k_MsgBoxUnbindAll(pcb_t* proc)
  */
 inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
 {
-    pmsg_t* msg = malloc(sizeof(pmsg_t));
+    pmsg_t* msg = NULL;
+
+#ifdef REAL_TIME_MODE
+    uint32_t i = FindClear(available_msg, 0, MSG_MAX);
+
+    if (i >= MSG_MAX)   return NULL;
+
+    msg = &msg_table[i];
+    SetBit(available_msg, i);
+    if (size > MSG_MAX_SIZE)    msg->size = MSG_MAX_SIZE;
+    else                        msg->size = size;
+#else
+    msg = malloc(sizeof(pmsg_t));
     if (msg == NULL) return NULL;
 
     msg->data = malloc(size);
@@ -110,11 +142,19 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
         free(msg);
         return NULL;
     }
+
+    msg->size = size;
+#endif
+
     msg->list.next = NULL;
     msg->list.prev = NULL;
-    msg->size = size;
 
-    memcpy(msg->data, data, size);
+    if (data != NULL) {
+        memcpy(msg->data, data, size);
+    }
+    else {
+        msg->size = 0;
+    }
 
     return msg;
 }
@@ -124,8 +164,12 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
  */
 inline void k_pMsgDeallocate(pmsg_t** msg)
 {
+#ifdef REAL_TIME_MODE
+    ClearBit(available_msg, (*msg)->id);
+#else
     free((*msg)->data);
     free((*msg));
+#endif
     *msg = NULL;
 }
 
@@ -138,48 +182,43 @@ inline void k_pMsgDeallocate(pmsg_t** msg)
  *          then this function places that process back into its scheduling queue
  *          and calls the scheduler trap to re-evaluate the running process.
  */
-size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
+size_t k_MsgSend(pmsg_t* msg)
 {
-    bool err = (msg->dst >= BOXID_MAX || msg->src >= BOXID_MAX ||
-                msgbox[msg->src].owner != proc);
-
     size_t retval = 0;
 
     pmsg_t* msg_out;
 
     pmsgbox_t* dst_box = &msgbox[msg->dst];
 
-    if (!err) {
-        bool wait_msg_good =
-                dst_box->wait_msg != NULL && (dst_box->wait_msg->src == ANY_BOX ||
-                        dst_box->wait_msg->src == msg->src);
+    bool wait_msg_good =
+            dst_box->wait_msg != NULL && (dst_box->wait_msg->src == ANY_BOX ||
+                    dst_box->wait_msg->src == msg->src);
 
-        if (wait_msg_good) {
-            retval = k_pMsgTransfer(dst_box->wait_msg, msg);
+    if (wait_msg_good) {
+        retval = k_pMsgTransfer(dst_box->wait_msg, msg);
 
-            // Remove link from the Receiver's box
-            dst_box->wait_msg = NULL;
+        // Remove link from the Receiver's box
+        dst_box->wait_msg = NULL;
 
-            LinkPCB(dst_box->owner, dst_box->owner->priority);
+        LinkPCB(dst_box->owner, dst_box->owner->priority);
 
-            PendSV();
-        }
-        else {
-            // Allocate Message
-            msg_out = k_pMsgAllocate(msg->data, msg->size);
-            msg_out->dst = msg->dst;
-            msg_out->src = msg->src;
+        PendSV();
+    }
+    else {
+        // Allocate Message
+        msg_out = k_pMsgAllocate(msg->data, msg->size);
+        msg_out->dst = msg->dst;
+        msg_out->src = msg->src;
 
-            // Send if message allocation was successful
-            if (msg_out != NULL) {
-                if (msgbox[msg->dst].recv_msgq == NULL) {
-                    msgbox[msg->dst].recv_msgq = msg_out;
-                }
-
-                dLink(&msg_out->list, &msgbox[msg->dst].recv_msgq->list);
-
-                retval = msg_out->size;
+        // Send if message allocation was successful
+        if (msg_out != NULL) {
+            if (msgbox[msg->dst].recv_msgq == NULL) {
+                msgbox[msg->dst].recv_msgq = msg_out;
             }
+
+            dLink(&msg_out->list, &msgbox[msg->dst].recv_msgq->list);
+
+            retval = msg_out->size;
         }
     }
 
@@ -195,70 +234,65 @@ size_t k_MsgSend(pmsg_t* msg, pcb_t* proc)
  * @return  True if a message was received,
  *          False if not.
  */
-size_t k_MsgRecv(pmsg_t* msg,  pcb_t* proc)
+size_t k_MsgRecv(pmsg_t* msg)
 {
-    // Initialized will all possible error conditions checked
-    bool retval = (msg == NULL || msg->dst >= BOXID_MAX || msg->src > BOXID_MAX ||
-                   msgbox[msg->dst].owner != proc);
-
-    pmsgbox_t* dst_box = NULL;
+pmsgbox_t* dst_box = NULL;
 
     pmsg_t* src_msg = NULL;
+    size_t retval = 0;
 
     // If no errors were found
-    if (!retval) {
-        dst_box = &msgbox[msg->dst];
+    dst_box = &msgbox[msg->dst];
 
-        if (dst_box->recv_msgq == NULL) {
-            // No messages to receive at the time.
+    if (dst_box->recv_msgq == NULL) {
+        // No messages to receive at the time.
+        if (msg->blocking) {
+            // Link Rx message onto message box
+            dst_box->wait_msg = msg;
+            UnlinkPCB(dst_box->owner);
+            dst_box->owner->state = BLOCKED;
+            PendSV();
+        }
+        retval = 0;
+    }
+    else if (msg->src == ANY_BOX || dst_box->recv_msgq->src == msg->src){
+        src_msg = dst_box->recv_msgq;
+
+        dst_box->recv_msgq = dst_box->recv_msgq->next;
+
+        if (dst_box->recv_msgq == src_msg) {
+            dst_box->recv_msgq = NULL;
+        }
+
+        dUnlink(&src_msg->list);
+
+        retval = k_pMsgTransfer(msg, src_msg);
+        k_pMsgDeallocate(&src_msg);
+    }
+    else {
+        // Search Recv queue for specific message box source
+        src_msg = k_SearchMessageQueue(dst_box->recv_msgq, msg->src);
+
+        if (src_msg == NULL) {
+            // If message was not found
+            // Link Rx message onto message box
             if (msg->blocking) {
                 // Link Rx message onto message box
                 dst_box->wait_msg = msg;
-                UnlinkPCB(proc);
-                proc->state = BLOCKED;
+                UnlinkPCB(dst_box->owner);
+                dst_box->owner->state = BLOCKED;
                 PendSV();
             }
             retval = 0;
         }
-        else if (msg->src == ANY_BOX || dst_box->recv_msgq->src == msg->src){
-            src_msg = dst_box->recv_msgq;
-
-            dst_box->recv_msgq = dst_box->recv_msgq->next;
-
-            if (dst_box->recv_msgq == src_msg) {
-                dst_box->recv_msgq = NULL;
-            }
-
+        else {
+            // Message was found
+            // Unlink it from Recv queue
             dUnlink(&src_msg->list);
 
+            // Transfer message
             retval = k_pMsgTransfer(msg, src_msg);
             k_pMsgDeallocate(&src_msg);
-        }
-        else {
-            // Search Recv queue for specific message box source
-            src_msg = k_SearchMessageQueue(dst_box->recv_msgq, msg->src);
-
-            if (src_msg == NULL) {
-                // If message was not found
-                // Link Rx message onto message box
-                if (msg->blocking) {
-                    // Link Rx message onto message box
-                    dst_box->wait_msg = msg;
-                    UnlinkPCB(proc);
-                    proc->state = BLOCKED;
-                    PendSV();
-                }
-                retval = 0;
-            }
-            else {
-                // Message was found
-                // Unlink it from Recv queue
-                dUnlink(&src_msg->list);
-
-                // Transfer message
-                retval = k_pMsgTransfer(msg, src_msg);
-                k_pMsgDeallocate(&src_msg);
-            }
         }
     }
 

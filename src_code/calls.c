@@ -100,14 +100,34 @@ pmbox_t unbind(pmbox_t box)
  */
 size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = false};
+    pmsg_t msg = {.dst = dst, .src = src, .blocking = false};
+
+#ifdef REAL_TIME_MODE
+    if (size < MSG_MAX_SIZE)    msg.size = size;
+    else                        msg.size = MSG_MAX_SIZE;
+
+    memcpy(msg.data, data, size);
+#else
+    msg.data = data;
+    msg.size = size;
+#endif
 
     return (size_t)kcall(SEND, (k_arg_t)&msg);
 }
 
 size_t send_sync(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = true};
+    pmsg_t msg = {.dst = dst, .src = src, .blocking = true};
+
+#ifdef REAL_TIME_MODE
+    if (size < MSG_MAX_SIZE)    msg.size = size;
+    else                        msg.size = MSG_MAX_SIZE;
+
+    memcpy(msg.data, data, size);
+#else
+    msg.data = data;
+    msg.size = size;
+#endif
 
     return (size_t)kcall(SEND, (k_arg_t)&msg);
 }
@@ -122,9 +142,17 @@ size_t send_sync(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
  */
 size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = true};
+    pmsg_t msg = {.dst = dst, .src = src, .size = size, .blocking = true};
+
+#ifndef REAL_TIME_MODE
+    msg.data = data;
+#endif
 
     kcall(RECV, (k_arg_t)&msg);
+
+#ifdef  REAL_TIME_MODE
+    memcpy(data, msg.data, size);
+#endif
 
     // retval for this call is irrelevant b/c msg may not be receive at "call" time.
     return (size_t)msg.size;
@@ -132,9 +160,17 @@ size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 
 size_t recv_async(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size, .blocking = false};
+    pmsg_t msg = {.dst = dst, .src = src, .size = size, .blocking = false};
+
+#ifndef REAL_TIME_MODE
+    msg.data = data;
+#endif
 
     kcall(RECV, (k_arg_t)&msg);
+
+#ifdef  REAL_TIME_MODE
+    memcpy(data, msg.data, size);
+#endif
 
     // retval for this call is irrelevant b/c msg may not be receive at "call" time.
     return (size_t)msg.size;

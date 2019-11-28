@@ -98,9 +98,6 @@ void UART0_IntHandler(void)
 
         enqueuec(&UART0->rx, UART0_DR_R);
 
-        if (UART0->echo) {
-            enqueuec(&UART0->tx, UART0_DR_R);
-        }
     }
 
     if (UART0_MIS_R & UART_INT_TX) {

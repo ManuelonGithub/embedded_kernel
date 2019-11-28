@@ -12,8 +12,7 @@
 
 #include "k_types.h"
 
-void scheduler_init();
-bool LinkPCB(pcb_t *newPCB, priority_t proc_lvl);
+void LinkPCB(pcb_t *newPCB, priority_t proc_lvl);
 void UnlinkPCB(pcb_t* pcb);
 pcb_t* Schedule();
 

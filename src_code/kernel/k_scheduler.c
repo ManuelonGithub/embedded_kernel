@@ -26,10 +26,8 @@ pcb_t* ProcessQueue[PROCESS_QUEUES];
  *          may be initialized with a "priority" lower than what is allowed,
  *          but that will only cause that process to never run.
  */
-bool LinkPCB(pcb_t *PCB, priority_t proc_lvl)
+void LinkPCB(pcb_t *PCB, priority_t proc_lvl)
 {
-    if (proc_lvl > PROCESS_QUEUES)  return false;
-
     /*
      * If the process was previously linked to other PCBs,
      * Severe those links before moving the PCB to a new queue.
@@ -49,8 +47,6 @@ bool LinkPCB(pcb_t *PCB, priority_t proc_lvl)
     }
 
     PCB->priority = proc_lvl;
-
-    return true;
 }
 
 /**

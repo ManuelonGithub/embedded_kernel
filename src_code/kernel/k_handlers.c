@@ -27,7 +27,7 @@ uart_descriptor_t uart;
 
 active_IO_t IO;
 
-#ifdef RTS_PROCESSES
+#ifdef REAL_TIME_MODE
 
 extern pcb_t   proc_table[PID_MAX];
 
@@ -252,7 +252,10 @@ void p_KernelCall_handler(k_call_t* call)
         } break;
 
         case NICE: {
-            call->retval = LinkPCB(running, (priority_t)call->arg[0]);
+            if (call->arg[0] > 0 && call->arg[0] < PRIORITY_LEVELS) {
+                LinkPCB(running, (priority_t)call->arg[0]);
+            }
+            call->retval = running->priority;
             PendSV();
         } break;
 
@@ -265,14 +268,24 @@ void p_KernelCall_handler(k_call_t* call)
         } break;
 
         case SEND: {
-            call->retval = k_MsgSend((pmsg_t*)call->arg, running);
+            if (((pmsg_t*)call->arg)->dst < BOXID_MAX &&
+                msgbox[((pmsg_t*)call->arg)->src].owner == running) {
+                call->retval = k_MsgSend((pmsg_t*)call->arg);
+            }
+            else {
+                call->retval = 0;
+            }
         } break;
 
         case RECV: {
-            k_MsgRecv((pmsg_t*)call->arg, running);
-                UnlinkPCB(running);
-                running->state = BLOCKED;
-                PendSV();
+            if (((pmsg_t*)call->arg)->dst < BOXID_MAX &&
+                msgbox[((pmsg_t*)call->arg)->dst].owner == running) {
+                k_MsgRecv((pmsg_t*)call->arg);
+            }
+            else {
+                ((pmsg_t*)call->arg)->size = 0;
+            }
+
             // "Message size" retval is taken care by the call function.
             // b/c this call may not have the desired retval when its called
             // i.e. when there is no message to receive

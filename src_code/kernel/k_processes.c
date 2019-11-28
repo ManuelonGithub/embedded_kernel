@@ -18,7 +18,7 @@
 
 bitmap_t available_pid[PID_BITMAP_SIZE];
 
-#ifdef RTS_PROCESSES
+#ifdef REAL_TIME_MODE
 
 pcb_t   proc_table[PID_MAX];
 
@@ -32,7 +32,7 @@ void process_init()
 {
     int i;
     for (i = 0; i < PID_MAX; i++) {
-#ifdef RTS_PROCESSES
+#ifdef REAL_TIME_MODE
 
         proc_table[i].id = i;
 
@@ -103,7 +103,7 @@ pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
  */
 pcb_t* k_AllocatePCB(pid_t id)
 {
-#ifdef RTS_PROCESSES
+#ifdef REAL_TIME_MODE
 
     SetBit(available_pid, id);
     return &proc_table[id];
