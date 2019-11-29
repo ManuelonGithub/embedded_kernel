@@ -15,7 +15,7 @@
 void inout_test()
 {
     pid_t id = getpid();
-    pmbox_t box = bind(0);
+    pmbox_t box = bind(ANY_BOX);
 
     char text[128], name[64];
 
@@ -34,7 +34,7 @@ void ipc_test()
     char text[128], name[64];
 
     int i;
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 2; i++) {
         recv(box, ANY_BOX, (uint8_t*)name, 64);
         sprintf(text, "Name %d: %s\n", i, name);
 
@@ -53,10 +53,10 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
+    pcreate(NULL, &inout_test);
+    pcreate(NULL, &inout_test);
+//    pcreate(NULL, &inout_test);
     pcreate(NULL, &ipc_test);
-    pcreate(NULL, &inout_test);
-    pcreate(NULL, &inout_test);
-    pcreate(NULL, &inout_test);
 
     kernel_start();
 

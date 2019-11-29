@@ -10,6 +10,11 @@
 #include "uart.h"
 #include "k_cpu.h"
 
+#include "k_types.h"
+#include "k_messaging.h"
+
+void ioServerSend();
+
 static uart_descriptor_t* UART0;
 
 /**
@@ -98,6 +103,7 @@ void UART0_IntHandler(void)
 
         enqueuec(&UART0->rx, UART0_DR_R);
 
+        ioServerSend();
     }
 
     if (UART0_MIS_R & UART_INT_TX) {
@@ -222,3 +228,15 @@ uint32_t UART0_gets(char* str, uint32_t MAX_BYTES)
     return bytes_read;
 }
 
+void ioServerSend()
+{
+    uart_msgdata_t data = {.box_id = IO_BOX, .c = dequeuec(&UART0->rx)};
+    pmsg_t msg = {
+         .dst = IO_BOX,
+         .src = IO_BOX,
+         .data = (uint8_t*)&data,
+         .size = sizeof(uart_msgdata_t)
+    };
+
+    k_MsgSend(&msg, NULL);
+}

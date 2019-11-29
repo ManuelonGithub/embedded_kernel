@@ -69,7 +69,7 @@ pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
     pid_t id = (attr == NULL || attr->id == 0) ?
             FindClear(available_pid, 0, PID_MAX) : attr->id;
 
-    priority_t priority = (attr == NULL || attr->priority == 0) ?
+    priority_t priority = (attr == NULL || attr->priority < 2) ?
             DEF_PRIORITY : attr->priority;
 
     bool err = (id > PID_MAX || GetBit(available_pid, id) || priority > PRIORITY_LEVELS);
@@ -154,6 +154,13 @@ pcb_t* GetPCB(pid_t id)
         return &proc_table[id];
     }
     return NULL;
+}
+
+void ChangeProcessPriority(pid_t id, priority_t new)
+{
+    if (id < PID_MAX && GetBit(available_pid, id) && new < (PRIORITY_LEVELS+1)) {
+        LinkPCB(&proc_table[id], new);
+    }
 }
 
 

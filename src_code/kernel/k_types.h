@@ -32,29 +32,26 @@ typedef struct pmsg_ {
 
     pmbox_t     src;
     pmbox_t     dst;
-    bool        blocking;
     size_t      size;
-
-#ifdef REAL_TIME_MODE
-    uint8_t     data[MSG_MAX_SIZE];
     id_t        id;
-#else
     uint8_t*    data;
-#endif
 } pmsg_t;
 
 typedef struct msgbox_attr_ {
     pmbox_t id;
     msgbox_mode_t mode;
+    auto_unbind_t auto_unbind;
 } msgbox_attr_t;
 
 /** @brief  Inter-process communication Message box structure */
 typedef struct pmsgbox_ {
     struct pcb_*    owner;
-    pmsg_t*         recv_msgq;  // Messages to be received
-    pmsg_t*         wait_msg;   // Pointer to a pending RECV message
     pmbox_t         id;
     msgbox_mode_t   mode;
+    auto_unbind_t   auto_unbind;
+    pmsg_t*         recv_msgq;  // Messages to be received
+    pmsg_t*         wait_msg;   // Pointer to a pending RECV message
+    size_t*         retsize;
 } pmsgbox_t;
 
 typedef id_t        pid_t;      /// Process id type alias
@@ -113,5 +110,10 @@ typedef struct IO_metadata_ {
     size_t      size;
     uint8_t*    send_data;
 } IO_metadata_t;
+
+typedef struct uart_msgdata_ {
+    pmbox_t     box_id;
+    char        c;
+} uart_msgdata_t;
 
 #endif

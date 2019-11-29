@@ -20,10 +20,6 @@ pcb_t* k_AllocatePCB(pid_t id);
 inline void k_DeallocatePCB(pid_t id);
 
 pcb_t* GetPCB(pid_t id);
-
-pid_t FindFreePID();
-inline void SetPIDbit(pid_t pid);
-inline void ClearPIDbit(pid_t pid);
-inline bool AvailablePID(pid_t pid);
+void ChangeProcessPriority(pid_t id, priority_t new);
 
 #endif	//  K_PROCESSES_H

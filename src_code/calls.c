@@ -7,6 +7,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include "k_cpu.h"
 #include "calls.h"
 
@@ -30,8 +31,8 @@ inline k_ret_t kcall(k_code_t code, k_arg_t arg)
  */
 pid_t pcreate(process_attr_t* attr, void (*proc_program)())
 {
-    uint32_t args[] = {(uint32_t)attr, (uint32_t)(proc_program)};
-    return (pid_t)kcall(PCREATE, (k_arg_t)args);
+    pcreate_args_t args = {.attr = attr, .proc_program = proc_program};
+    return (pid_t)kcall(PCREATE, (k_arg_t)&args);
 }
 
 /**
@@ -87,6 +88,11 @@ pmbox_t unbind(pmbox_t box)
     return (pmbox_t)kcall(UNBIND, (k_arg_t)&box);
 }
 
+pmbox_t getbox()
+{
+    return (pmbox_t)kcall(GETBOX, NULL);
+}
+
 /**
  * @brief   Send a message to a process.
  * @param   [in] dst: Destination message box for the message.
@@ -100,34 +106,7 @@ pmbox_t unbind(pmbox_t box)
  */
 size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .blocking = false};
-
-#ifdef REAL_TIME_MODE
-    if (size < MSG_MAX_SIZE)    msg.size = size;
-    else                        msg.size = MSG_MAX_SIZE;
-
-    memcpy(msg.data, data, size);
-#else
-    msg.data = data;
-    msg.size = size;
-#endif
-
-    return (size_t)kcall(SEND, (k_arg_t)&msg);
-}
-
-size_t send_sync(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
-{
-    pmsg_t msg = {.dst = dst, .src = src, .blocking = true};
-
-#ifdef REAL_TIME_MODE
-    if (size < MSG_MAX_SIZE)    msg.size = size;
-    else                        msg.size = MSG_MAX_SIZE;
-
-    memcpy(msg.data, data, size);
-#else
-    msg.data = data;
-    msg.size = size;
-#endif
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
 
     return (size_t)kcall(SEND, (k_arg_t)&msg);
 }
@@ -142,50 +121,71 @@ size_t send_sync(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
  */
 size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .size = size, .blocking = true};
+    pmsg_t msg = {.dst = dst, .src = src, .data = data, .size = size};
 
-#ifndef REAL_TIME_MODE
-    msg.data = data;
-#endif
-
-    kcall(RECV, (k_arg_t)&msg);
-
-#ifdef  REAL_TIME_MODE
-    memcpy(data, msg.data, size);
-#endif
-
-    // retval for this call is irrelevant b/c msg may not be receive at "call" time.
-    return (size_t)msg.size;
+    return kcall(RECV, (k_arg_t)&msg);
 }
 
-size_t recv_async(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size)
+size_t request(pmbox_t dst, pmbox_t src, uint8_t* req, size_t req_size, uint8_t* ret, size_t ret_max)
 {
-    pmsg_t msg = {.dst = dst, .src = src, .size = size, .blocking = false};
+    pmsg_t req_msg = {.dst = dst, .src = src, .data = req, .size = req_size};
+    pmsg_t ret_msg = {.dst = src, .src = dst, .data = ret, .size = ret_max};
 
-#ifndef REAL_TIME_MODE
-    msg.data = data;
-#endif
+    request_args_t args = {.req_msg = &req_msg, .ret_msg = &ret_msg};
 
-    kcall(RECV, (k_arg_t)&msg);
-
-#ifdef  REAL_TIME_MODE
-    memcpy(data, msg.data, size);
-#endif
-
-    // retval for this call is irrelevant b/c msg may not be receive at "call" time.
-    return (size_t)msg.size;
+    return kcall(REQUEST, (k_arg_t)&args);
 }
 
 size_t send_user(char* str)
 {
-    return (size_t)kcall(SEND_USER, (k_arg_t)str);
+    // Find a message box for the process to use
+    // Search the process' boxes
+    pmbox_t box = getbox();
+
+    if (box == (pmbox_t)BOX_ERR) {
+        // Process has no msg box, assigning one to it
+        // todo: make this assignment temporary
+        box = bind(ANY_BOX);
+
+        if (box == (pmbox_t)BOX_ERR)    return 0;
+    }
+
+    // Set up metadata to send IO server
+    IO_metadata_t meta = {
+         .box_id = box,
+         .is_send = true,
+         .proc_id = getpid(),
+         .size = strlen(str),
+         .send_data = (uint8_t*)str
+    };
+
+    return request(IO_BOX, box, (uint8_t*)&meta, sizeof(IO_metadata_t), NULL, strlen(str));
 }
 
 size_t recv_user(char* buf, uint32_t max_size)
 {
-    uint32_t args[] = {(uint32_t)buf, max_size};
+    // Find a message box for the process to use
+    // Search the process' boxes
+    pmbox_t box = getbox();
 
-    return (size_t)kcall(RECV_USER, (k_arg_t)args);
+    if (box == (pmbox_t)BOX_ERR) {
+        // Process has no msg box, assigning one to it
+        // todo: make this assignment temporary
+        box = bind(ANY_BOX);
+
+        if (box == (pmbox_t)BOX_ERR)    return 0;
+    }
+
+    // Set up metadata to send IO server
+    IO_metadata_t meta = {
+         .box_id = box,
+         .is_send = false,
+         .proc_id = getpid(),
+         .size = max_size,
+         .send_data = NULL
+    };
+
+    return request(IO_BOX, box, (uint8_t*)&meta, sizeof(IO_metadata_t), (uint8_t*)buf, max_size);
 }
 
 

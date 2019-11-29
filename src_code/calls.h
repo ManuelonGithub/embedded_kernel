@@ -16,6 +16,21 @@
 #include <stdbool.h>
 #include "k_types.h"
 
+typedef struct pcreate_args_ {
+    process_attr_t* attr;
+    void (*proc_program)();
+}pcreate_args_t;
+
+typedef struct bind_args_ {
+    msgbox_attr_t* attr;
+    pmbox_t box;
+} bind_args_t;
+
+typedef struct request_args_ {
+    pmsg_t* req_msg;
+    pmsg_t* ret_msg;
+} request_args_t;
+
 inline k_ret_t kcall(k_code_t code, k_arg_t arg);
 
 pid_t pcreate(process_attr_t* attr, void (*proc_program)());
@@ -26,12 +41,12 @@ priority_t nice(priority_t newPriority);
 
 pmbox_t bind(pmbox_t box);
 pmbox_t unbind(pmbox_t box);
+pmbox_t getbox();
 
 size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
-size_t send_sync(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
-
 size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
-size_t recv_async(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
+
+size_t request(pmbox_t dst, pmbox_t src, uint8_t* req, size_t req_size, uint8_t* ret, size_t ret_max);
 
 size_t send_user(char* str);
 size_t recv_user(char* buf, uint32_t max_size);

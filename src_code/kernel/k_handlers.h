@@ -13,17 +13,24 @@
 
 #include <stdint.h>
 #include "k_types.h"
-#include "k_calls.h"
-
-typedef struct pcreate_args_ {
-    pid_t       id;
-    priority_t  prio;
-    void        (*proc_program)();
-} pcreate_args_t;
+#include "calls.h"
 
 void kernel_init();
 inline void kernel_start();
 
+inline pid_t k_pcreateCall(pcreate_args_t* arg);
+inline pid_t getpidCall();
+inline priority_t niceCall(priority_t* new);
+inline pmbox_t k_bindCall(pmbox_t* box);
+inline pmbox_t k_unbindCall(pmbox_t* box);
+inline pmbox_t k_getboxCall();
+inline void k_sendCall(pmsg_t* msg, size_t* retsize);
+inline void k_recvCall(pmsg_t* msg, size_t* retsize);
+inline void k_requestCall(request_args_t* arg, size_t* retsize);
+
 void k_Terminate();
+
+size_t k_SendUser(char* str);
+size_t k_UserRecv(char* dst, uint32_t max_size);
 
 #endif  //	K_HANDLERS_H

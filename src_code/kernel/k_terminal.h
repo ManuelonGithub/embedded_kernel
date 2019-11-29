@@ -25,26 +25,27 @@
 
 typedef enum TERMINAL_MODES {
     COMMAND_HANDLER,
-    PROCESS_INPUT_CAPTURE
+    PROCESS_HANDLER
 } term_mode_t;
 
 #define HOME_HEADER "==="
 #define HOME_TEXT   "M'uh Kernel v0.3"
 
-typedef struct active_IO_ {
-    bitmap_t    active_pid[PID_BITMAP_SIZE];
-    bool        output_off;
-    char*       proc_inbuf;
-    uint32_t    inbuf_max;
-    pid_t       in_proc;
-    size_t*     ret_size;
-} active_IO_t;
+typedef struct input_capture_ {
+    bool                en;
+    size_t              max;
+    pid_t               pid;
+    pmbox_t             dst;
+} input_capture_t;
 
 typedef struct terminal_ {
-    circular_buffer_t   in_buf;
-    uint32_t            buf_entry;
-    char        home_line[128];
-    term_mode_t mode;
+    circular_buffer_t   buf;
+    uint32_t            input_entry;
+    char                home_line[128];
+    term_mode_t         mode;
+    pmbox_t             box;
+    bitmap_t            active_pid[PID_BITMAP_SIZE];
+    input_capture_t     capture;
 } terminal_t;
 
 void output_manager();
@@ -53,9 +54,15 @@ void terminal();
 void init_term(terminal_t* term);
 
 void create_home_line(char* home, uint32_t term_size);
-void send_home(char* home);
+inline void send_home(char* home);
 
-void TerminalInputHandler(char c, terminal_t* term);
+inline void ResetScreen();
+inline void ResetTerminal(terminal_t* term);
+
+inline void ConfigureInputCapture(input_capture_t* cap, IO_metadata_t* meta);
+inline void ResetInputCapture(input_capture_t* cap);
+
+void ProcessInput(char c, terminal_t* term);
 
 void SendUserInput(terminal_t* term);
 

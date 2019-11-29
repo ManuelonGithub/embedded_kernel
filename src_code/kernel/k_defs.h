@@ -35,6 +35,8 @@
 
 #define PID_MAX         16      /// Maximum Processes supported.
 
+#define IDLE_ID         0
+
 #if (PID_MAX/BITMAP_WIDTH == 0)
 #define PID_BITMAP_SIZE  1
 #else
@@ -75,13 +77,17 @@ typedef enum PROC_STATE {
 
 #define ANY_BOX     BOXID_MAX
 
+#define IO_BOX      15
+
 typedef enum MSGBOX_MODES {RX_ONLY, TX_ONLY, RX_TX} msgbox_mode_t;
+
+typedef enum AUTO_UNBIND {ON_SEND, ON_RECV, OFF} auto_unbind_t;
 
 /************************ Kernel Calls Related Definitions *************************/
 
 typedef enum KERNEL_CALL_CODES {
     PCREATE, STARTUP, GETPID, NICE, BIND, UNBIND,
-    SEND, RECV, SEND_USER, RECV_USER, TERMINATE
+    SEND, RECV, REQUEST, GETBOX, SEND_USER, RECV_USER, TERMINATE
 } k_code_t; /** Kernel Calls supported */
 
 #endif // K_DEFINITIONS_H

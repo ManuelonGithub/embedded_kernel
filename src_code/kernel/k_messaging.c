@@ -16,13 +16,14 @@
 #include "k_cpu.h"
 #include "bitmap.h"
 
-pmsgbox_t msgbox[BOXID_MAX];
-bitmap_t available_box[MSGBOX_BITMAP_SIZE];
+pmsgbox_t   msgbox[BOXID_MAX];
+bitmap_t    available_box[MSGBOX_BITMAP_SIZE];
 
 #ifdef  REAL_TIME_MODE
 
-bitmap_t available_msg[MSG_BITMAP_SIZE];
-pmsg_t   msg_table[MSG_MAX];
+bitmap_t    available_msg[MSG_BITMAP_SIZE];
+pmsg_t      msg_table[MSG_MAX];
+uint8_t     msg_buffer[MSG_MAX][MSG_MAX_SIZE];
 
 #endif
 
@@ -41,6 +42,7 @@ void k_MsgInit()
     int i;
     for(i = 0; i < MSG_MAX; i++) {
         msg_table[i].id = i;
+        msg_table[i].data = msg_buffer[i];
     }
 
 #endif
@@ -58,7 +60,7 @@ void k_MsgInit()
  */
 pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
 {
-    if (id == 0)    id = FindClear(available_box, 0, BOXID_MAX);
+    if (id == ANY_BOX)    id = FindClear(available_box, 0, BOXID_MAX);
 
     if (id < BOXID_MAX && msgbox[id].owner == NULL) {
         // Set the box's owner
@@ -182,9 +184,10 @@ inline void k_pMsgDeallocate(pmsg_t** msg)
  *          then this function places that process back into its scheduling queue
  *          and calls the scheduler trap to re-evaluate the running process.
  */
-size_t k_MsgSend(pmsg_t* msg)
+void k_MsgSend(pmsg_t* msg, size_t* retsize)
 {
-    size_t retval = 0;
+//    (*retsize) = 0;
+    size_t size = 0;
 
     pmsg_t* msg_out;
 
@@ -195,9 +198,10 @@ size_t k_MsgSend(pmsg_t* msg)
                     dst_box->wait_msg->src == msg->src);
 
     if (wait_msg_good) {
-        retval = k_pMsgTransfer(dst_box->wait_msg, msg);
+        size = k_pMsgTransfer(dst_box->wait_msg, msg);
 
         // Remove link from the Receiver's box
+        if (dst_box->retsize != NULL)   *dst_box->retsize = size;
         dst_box->wait_msg = NULL;
 
         LinkPCB(dst_box->owner, dst_box->owner->priority);
@@ -218,11 +222,11 @@ size_t k_MsgSend(pmsg_t* msg)
 
             dLink(&msg_out->list, &msgbox[msg->dst].recv_msgq->list);
 
-            retval = msg_out->size;
+            size = msg_out->size;
         }
     }
 
-    return retval;
+    if (retsize != NULL)    *retsize = size;
 }
 
 /**
@@ -234,26 +238,25 @@ size_t k_MsgSend(pmsg_t* msg)
  * @return  True if a message was received,
  *          False if not.
  */
-size_t k_MsgRecv(pmsg_t* msg)
+void k_MsgRecv(pmsg_t* msg, size_t* retsize)
 {
-pmsgbox_t* dst_box = NULL;
+    pmsgbox_t* dst_box = NULL;
 
     pmsg_t* src_msg = NULL;
-    size_t retval = 0;
+
+    (*retsize) = 0;
 
     // If no errors were found
     dst_box = &msgbox[msg->dst];
 
     if (dst_box->recv_msgq == NULL) {
         // No messages to receive at the time.
-        if (msg->blocking) {
-            // Link Rx message onto message box
-            dst_box->wait_msg = msg;
-            UnlinkPCB(dst_box->owner);
-            dst_box->owner->state = BLOCKED;
-            PendSV();
-        }
-        retval = 0;
+        // Link Rx message onto message box
+        dst_box->wait_msg = msg;
+        dst_box->retsize = retsize;
+        UnlinkPCB(dst_box->owner);
+        dst_box->owner->state = BLOCKED;
+        PendSV();
     }
     else if (msg->src == ANY_BOX || dst_box->recv_msgq->src == msg->src){
         src_msg = dst_box->recv_msgq;
@@ -266,7 +269,7 @@ pmsgbox_t* dst_box = NULL;
 
         dUnlink(&src_msg->list);
 
-        retval = k_pMsgTransfer(msg, src_msg);
+        (*retsize) = k_pMsgTransfer(msg, src_msg);
         k_pMsgDeallocate(&src_msg);
     }
     else {
@@ -276,14 +279,11 @@ pmsgbox_t* dst_box = NULL;
         if (src_msg == NULL) {
             // If message was not found
             // Link Rx message onto message box
-            if (msg->blocking) {
-                // Link Rx message onto message box
-                dst_box->wait_msg = msg;
-                UnlinkPCB(dst_box->owner);
-                dst_box->owner->state = BLOCKED;
-                PendSV();
-            }
-            retval = 0;
+            dst_box->wait_msg = msg;
+            dst_box->retsize = retsize;
+            UnlinkPCB(dst_box->owner);
+            dst_box->owner->state = BLOCKED;
+            PendSV();
         }
         else {
             // Message was found
@@ -291,12 +291,10 @@ pmsgbox_t* dst_box = NULL;
             dUnlink(&src_msg->list);
 
             // Transfer message
-            retval = k_pMsgTransfer(msg, src_msg);
+            (*retsize) = k_pMsgTransfer(msg, src_msg);
             k_pMsgDeallocate(&src_msg);
         }
     }
-
-    return retval;
 }
 
 /**
@@ -309,8 +307,9 @@ inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src)
 {
     // Truncate if not enough space in dst
     if (dst->size > src->size)   dst->size = src->size;
-
-    memcpy(dst->data, src->data, dst->size);
+    if (dst->data != NULL && src->data != NULL) {
+        memcpy(dst->data, src->data, dst->size);
+    }
     dst->src = src->src;
 
     return dst->size;

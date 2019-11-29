@@ -14,7 +14,6 @@
 #include "k_handlers.h"
 #include "k_scheduler.h"
 #include "k_processes.h"
-#include "calls.h"
 #include "k_cpu.h"
 #include "k_messaging.h"
 #include "dlist.h"
@@ -24,8 +23,6 @@
 
 pcb_t *running, *pTerminal, *pIdle;
 uart_descriptor_t uart;
-
-active_IO_t IO;
 
 #ifdef REAL_TIME_MODE
 
@@ -219,10 +216,7 @@ void p_KernelCall_handler(k_call_t* call)
 {
     switch(call->code) {
         case PCREATE: {
-            call->retval = k_pcreate(
-                    (process_attr_t*)call->arg[0],
-                    (void (*)())call->arg[1],
-                    &terminate);
+            call->retval = k_pcreateCall((pcreate_args_t*)call->arg);
         } break;
 
         case STARTUP: {
@@ -248,77 +242,48 @@ void p_KernelCall_handler(k_call_t* call)
         } break;
 
         case GETPID: {
-            call->retval = (int32_t)running->id;
+            call->retval = getpidCall();
         } break;
 
         case NICE: {
-            if (call->arg[0] > 0 && call->arg[0] < PRIORITY_LEVELS) {
-                LinkPCB(running, (priority_t)call->arg[0]);
-            }
-            call->retval = running->priority;
-            PendSV();
+            call->retval = niceCall((priority_t*)call->arg);
         } break;
 
         case BIND: {
-            call->retval = k_MsgBoxBind((pmbox_t)call->arg[0], running);
+            call->retval = k_bindCall((pmbox_t*)call->arg);
         } break;
 
         case UNBIND: {
-            call->retval = k_MsgBoxUnbind((pmbox_t)call->arg[0], running);
+            call->retval = k_unbindCall((pmbox_t*)call->arg);
+        } break;
+
+        case GETBOX: {
+            call->retval = k_getboxCall();
         } break;
 
         case SEND: {
-            if (((pmsg_t*)call->arg)->dst < BOXID_MAX &&
-                msgbox[((pmsg_t*)call->arg)->src].owner == running) {
-                call->retval = k_MsgSend((pmsg_t*)call->arg);
-            }
-            else {
-                call->retval = 0;
-            }
+            k_sendCall((pmsg_t*)call->arg, &call->retval);
         } break;
 
         case RECV: {
-            if (((pmsg_t*)call->arg)->dst < BOXID_MAX &&
-                msgbox[((pmsg_t*)call->arg)->dst].owner == running) {
-                k_MsgRecv((pmsg_t*)call->arg);
-            }
-            else {
-                ((pmsg_t*)call->arg)->size = 0;
-            }
+            k_recvCall((pmsg_t*)call->arg, &call->retval);
+        } break;
 
-            // "Message size" retval is taken care by the call function.
-            // b/c this call may not have the desired retval when its called
-            // i.e. when there is no message to receive
-            call->retval = 0;
+        case REQUEST: {
+            k_requestCall((request_args_t*)call->arg, &call->retval);
         } break;
 
         case TERMINATE: {
             k_Terminate();
         } break;
 
-        case SEND_USER: {
-            if (GetBit(IO.active_pid, running->id) && !IO.output_off) {
-                UART0_puts((char*)call->arg);
-                call->retval = strlen((char*)call->arg);
-            }
-        } break;
+//        case SEND_USER: {
+//            k_SendUser((char*)call->arg);
+//        } break;
 
-        case RECV_USER: {
-            if (GetBit(IO.active_pid, running->id) && IO.in_proc == 0) {
-                IO.in_proc = running->id;
-                IO.proc_inbuf = (char*)call->arg[0];
-                IO.inbuf_max = (size_t)call->arg[1];
-                IO.ret_size = (size_t*)&call->retval;
-                IO.output_off = true;
-
-                UnlinkPCB(running);
-                running->state = BLOCKED;
-                PendSV();
-            }
-            else {
-                call->retval = 0;
-            }
-        } break;
+//        case RECV_USER: {
+//            k_RecvUser()
+//        } break;
 
         default: {
 
@@ -326,6 +291,79 @@ void p_KernelCall_handler(k_call_t* call)
     }
 }
 
+inline pid_t k_pcreateCall(pcreate_args_t* arg)
+{
+    return k_pcreate(arg->attr, arg->proc_program, &terminate);
+}
+
+inline pid_t getpidCall()
+{
+    return (pid_t)running->id;
+}
+
+inline priority_t niceCall(priority_t* new)
+{
+    if ((*new) > 0 && (*new) < PRIORITY_LEVELS) {
+        LinkPCB(running, (*new));
+    }
+
+    PendSV();
+
+    return running->priority;
+}
+
+inline pmbox_t k_bindCall(pmbox_t* box)
+{
+    return k_MsgBoxBind((*box), running);
+}
+
+inline pmbox_t k_unbindCall(pmbox_t* box)
+{
+    return k_MsgBoxUnbind((*box), running);
+}
+
+inline pmbox_t k_getboxCall()
+{
+    pmbox_t retval = FindSet(running->owned_box, 0, BOXID_MAX);
+    if (retval == BOXID_MAX) retval = (pmbox_t)BOX_ERR;
+
+    return retval;
+}
+
+inline void k_sendCall(pmsg_t* msg, size_t* retsize)
+{
+    if (msg->dst < BOXID_MAX && msgbox[msg->src].owner == running) {
+        k_MsgSend(msg, retsize);
+    }
+    else {
+        *retsize = 0;
+    }
+}
+
+inline void k_recvCall(pmsg_t* msg, size_t* retsize)
+{
+    if (msg->dst < BOXID_MAX && msgbox[msg->dst].owner == running) {
+        k_MsgRecv(msg, retsize);
+    }
+    else {
+        *retsize = 0;
+    }
+}
+
+inline void k_requestCall(request_args_t* arg, size_t* retsize)
+{
+    if (arg->req_msg->dst < BOXID_MAX &&
+            msgbox[arg->req_msg->src].owner == running) {
+
+        k_MsgSend(arg->req_msg, retsize);
+        if ((*retsize) != 0) {
+            k_MsgRecv(arg->ret_msg, retsize);
+        }
+    }
+    else {
+        (*retsize) = 0;
+    }
+}
 
 /**
  * @brief   Terminates the running process.
@@ -342,17 +380,112 @@ void k_Terminate()
     // 3. Erase PCB
     k_DeallocatePCB(running->id);
 
-    // 4. Remove it from IO active PID bitmap
-    ClearBit(IO.active_pid, running->id);
-
-    // 5. Schedule a new process
+    // 4. Schedule a new process
     running = Schedule();
     SetPSP((uint32_t)running->sp);
     running->timer = PROC_RUNTIME;
 
-    // 6. Reset the System timer
+    // 5. Reset the System timer
     SysTick_Reset();
 }
+
+//size_t k_SendUser(char* str)
+//{
+//    // Find a message box for the process to use
+//    // Search the process' boxes
+//    pmbox_t box = FindSet(running->owned_box, 0, BOXID_MAX);
+//
+//    if (box == BOXID_MAX) {
+//        // Process has no msg box, assigning one to it
+//        // todo: make this assignment temporary
+//        box = k_MsgBoxBind(ANY_BOX, running);
+//
+//        if (box == (pmbox_t)BOX_ERR)    return 0;
+//    }
+//
+//    // Set up metadata to send IO server
+//    IO_metadata_t meta = {
+//         .box_id = box,
+//         .is_send = true,
+//         .proc_id = running->id,
+//         .size = strlen(str),
+//         .send_data = (uint8_t*)str
+//    };
+//
+//    // Set up request message
+//    pmsg_t msg = {
+//         .dst = IO_BOX,
+//         .src = box,
+//         .data = (uint8_t*)&meta,
+//         .size = sizeof(IO_metadata_t),
+//         .blocking = false
+//    };
+//
+//    // Send IO request to server
+//    if (k_MsgSend(&msg) != 0) {
+//        // Request successfully sent.
+//        // Set up request reply rx message
+//        msg.dst = box;
+//        msg.src = IO_BOX;
+//        msg.data = NULL;
+//        msg.size = strlen(str);
+//        msg.blocking = true;
+//
+//        k_MsgRecv(&msg);
+//    }
+//
+//    return 0;
+//}
+
+//size_t k_UserRecv(char* dst, uint32_t max_size)
+//{
+//    // Find a message box for the process to use
+//    // Search the process' boxes
+//    pmbox_t box = FindSet(running->owned_box, 0, BOXID_MAX);
+//
+//    if (box == BOXID_MAX) {
+//        // Process has no msg box, assigning one to it
+//        // todo: make this assignment temporary
+//        box = k_MsgBoxBind(ANY_BOX, running);
+//
+//        if (box == (pmbox_t)BOX_ERR)    return 0;
+//    }
+//
+//    // Set up metadata to send IO server
+//    IO_metadata_t meta = {
+//         .box_id = box,
+//         .is_send = false,
+//         .proc_id = running->id,
+//         .size = max_size,
+//         .send_data = NULL
+//    };
+//
+//    pmsg_t msg = {
+//         .dst = IO_BOX,
+//         .src = box,
+//         .data = (uint8_t*)&meta,
+//         .size = sizeof(IO_metadata_t),
+//         .blocking = false
+//    };
+//
+//    // Send IO request to server
+//    if (k_MsgSend(&msg) != 0) {
+//        // Request successfully sent.
+//        // Set up request reply rx message
+//        msg.dst = box;
+//        msg.src = IO_BOX;
+//        msg.data = (uint8_t*)dst;
+//        msg.size = max_size;
+//        msg.blocking = true;
+//
+//        k_MsgRecv(&msg);
+//    }
+//    else {
+//        msg.size = 0;
+//    }
+//
+//    return msg.size;
+//}
 
 
 

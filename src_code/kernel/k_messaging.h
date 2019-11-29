@@ -23,8 +23,8 @@ void k_MsgBoxUnbindAll(pcb_t* proc);
 inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size);
 inline void k_pMsgDeallocate(pmsg_t** msg);
 
-size_t k_MsgSend(pmsg_t* msg);
-size_t k_MsgRecv(pmsg_t* msg);
+void k_MsgSend(pmsg_t* msg, size_t* retsize);
+void k_MsgRecv(pmsg_t* msg, size_t* retsize);
 
 inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src);
 
