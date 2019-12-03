@@ -14,14 +14,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-//
-
-//typedef uint8_t bitmap8_t;
-//#define BITMAP_WIDTH        8  /// Amount of bits in a bitmap field (bitmap_t)
-//#define BITMAP_INDEX_MASK   3   /// log2(BITMAP_WIDTH)
-//#define FIELD_BIT_MASK      BITMAP8_WIDTH-1
-
-typedef uint32_t bitmap_t;
+typedef uint32_t bitmap_t;      /// Bitmap type alias
 
 #define BITMAP_WIDTH        32  /// Amount of bits in a bitmap entry (bitmap_t)
 #define BITMAP_INDEX_MASK   5   /// Mask to find the position of a bit in the bitmap array. log2(BITMAP_WIDTH).

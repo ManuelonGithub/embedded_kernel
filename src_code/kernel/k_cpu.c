@@ -3,8 +3,6 @@
  * @brief   Contains the implementations of all CPU specific functionality
  *          that the kernel requires to operate.
  * @details This is the module that opens the kernel to the CPU it runs on.
- *          Ideally this is the only module (.c & .h files) that needs to change in order to transfer
- *          the kernel from one CPU to another (while still maintaining the same function names).
  * @author  Manuel Burnay
  * @date    2019.11.02  (Created)
  * @date    2019.11.03  (Last Modified)

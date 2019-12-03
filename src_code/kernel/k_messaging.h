@@ -30,7 +30,7 @@ inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src);
 
 void k_MsgClearAll(pmsgbox_t* box);
 
-pmsg_t* k_SearchMessageQueue(pmsg_t* msg, pmbox_t box);
+pmsg_t* k_SearchMessageList(pmsg_t* msg, pmbox_t box);
 
 inline pid_t OwnerPID(pmbox_t boxID);
 

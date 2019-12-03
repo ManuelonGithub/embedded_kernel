@@ -42,6 +42,23 @@ void ipc_test()
     }
 }
 
+void name_test()
+{
+    char name[64], name_new[] = {"name tester"};
+
+    get_name(name);
+    set_name(name_new);
+
+    send_user("Old name was: ");
+    send_user(name);
+
+    get_name(name);
+    send_user("New name is: ");
+    send_user(name);
+
+    while(1) {}
+}
+
 /**
  * @brief   main.c
  * @details Initializes the kernel and all processes to run in the system.
@@ -53,10 +70,10 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
-    pcreate(NULL, &inout_test);
-    pcreate(NULL, &inout_test);
+    pcreate(NULL, &name_test);
 //    pcreate(NULL, &inout_test);
-    pcreate(NULL, &ipc_test);
+//    pcreate(NULL, &inout_test);
+//    pcreate(NULL, &ipc_test);
 
     kernel_start();
 

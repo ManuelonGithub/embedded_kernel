@@ -4,7 +4,7 @@
  *          supporting functionality related to the kernel processes.
  * @author  Manuel Burnay
  * @date    2019.11.13  (Created)
- * @date    2019.11.21  (Last Modified)
+ * @date    2019.11.29  (Last Modified)
  */
 
 
@@ -17,23 +17,15 @@
 #include "bitmap.h"
 
 bitmap_t available_pid[PID_BITMAP_SIZE];
-
-#ifdef REAL_TIME_MODE
-
 pcb_t   proc_table[PID_MAX];
 
-#else
-
-pcb_t*  proc_table[PID_MAX];
-
-#endif
-
+/**
+ * @brief   Initializes the kernel's process data structures and parameters.
+ */
 void process_init()
 {
     int i;
     for (i = 0; i < PID_MAX; i++) {
-#ifdef REAL_TIME_MODE
-
         proc_table[i].id = i;
 
         proc_table[i].sp = proc_table[i].sp_top + (STACKSIZE/sizeof(uint32_t)) - 1;
@@ -44,10 +36,6 @@ void process_init()
         proc_table[i].state = UNASSIGNED;
 
         ClearBitRange(proc_table[i].owned_box, 0, BOXID_MAX);
-
-#else
-        proc_table[i] = NULL;
-#endif
     }
 
     ClearBitRange(available_pid, 0, PID_MAX);
@@ -55,12 +43,12 @@ void process_init()
 
 /**
  * @brief   Creates a process and registers it in kernel space.
- * @param   [in] pid: Unique process identifier value.
+ * @param   [in] attr: Pointer to process attributes to configure a process with.
  * @param   [in] priortity: Priority level that the process will run in.
  * @param   [in] proc_program:
  *              Pointer to start of the program the process will execute.
  * @retval  Returns the process ID that was created.
- *          0 if a process wasn't able to be created.
+ *          PROC_ERR if a process wasn't able to be created.
  */
 pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
 {
@@ -70,9 +58,13 @@ pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
             FindClear(available_pid, 0, PID_MAX) : attr->id;
 
     priority_t priority = (attr == NULL || attr->priority < 2) ?
-            DEF_PRIORITY : attr->priority;
+            USER_PRIORITY : attr->priority;
 
-    bool err = (id > PID_MAX || GetBit(available_pid, id) || priority > PRIORITY_LEVELS);
+    bool err = (
+            id > PID_MAX ||
+            GetBit(available_pid, id) ||
+            priority > PRIORITY_LEVELS
+        );
 
     if (!err) {
         pcb = k_AllocatePCB(id);
@@ -99,43 +91,11 @@ pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
  * @brief   Allocates a new PCB.
  * @param   [in] id: ID of the PCB.
  * @return  Pointer to allocated PCB.
- *          NULL if PCB allocation failed.
  */
 pcb_t* k_AllocatePCB(pid_t id)
 {
-#ifdef REAL_TIME_MODE
-
     SetBit(available_pid, id);
     return &proc_table[id];
-
-#else
-
-    pcb_t* pcb = (pcb_t*)malloc(sizeof(pcb_t));
-    if (pcb == NULL) return NULL;
-
-    pcb->sp_top = (uint32_t*)malloc(STACKSIZE);
-    if (pcb->sp_top == NULL) {
-        free(pcb);
-        return NULL;
-    }
-
-    proc_table[id] = pcb;
-
-    pcb->id = id;
-
-    pcb->sp = pcb->sp_top + (STACKSIZE/sizeof(uint32_t)) - 1;
-
-    pcb->next = NULL;
-    pcb->prev = NULL;
-
-    pcb->state = UNASSIGNED;
-
-    ClearBitRange(pcb->owned_box, 0, BOXID_MAX);
-
-    SetBit(available_pid, id);
-
-    return pcb;
-#endif
 }
 
 /**
@@ -148,6 +108,12 @@ inline void k_DeallocatePCB(pid_t id)
     proc_table[id].state = TERMINATED;
 }
 
+/**
+ * @brief   Gets pointer to PCB.
+ * @param   [in] process ID to retrieve its PCB location.
+ * @return  pointer to PCB if ID is valid,
+ *          NULL if not.
+ */
 pcb_t* GetPCB(pid_t id)
 {
     if (id < PID_MAX) {
@@ -156,6 +122,11 @@ pcb_t* GetPCB(pid_t id)
     return NULL;
 }
 
+/**
+ * @brief   Changes the priority of a process.
+ * @param   [in] id: Process ID of the process whose priority will be changed.
+ * @param   [in] new: New priority level to set the process to.
+ */
 void ChangeProcessPriority(pid_t id, priority_t new)
 {
     if (id < PID_MAX && GetBit(available_pid, id) && new < (PRIORITY_LEVELS+1)) {

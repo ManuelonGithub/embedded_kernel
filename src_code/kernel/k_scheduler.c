@@ -5,7 +5,7 @@
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
  * @date    2019.10.23  (Created)
- * @date    2019.11.21  (Last Modified)
+ * @date    2019.11.29  (Last Modified)
  */
 
 #include <stdio.h>
@@ -18,8 +18,6 @@ pcb_t* ProcessQueue[PROCESS_QUEUES];
  * @brief   Links a PCB into a specific priority queue.
  * @param   [in,out] PCB:
  *              pointer to PCB element to link into the respective process queue.
- * @return  False if process wasn't able be linked (invalid priority level)
- *          True if it was successfully linked.
  * @details This function is also used to place the
  *          idle process in the idle process queue.
  *          This poses a potential risk that processes
@@ -71,7 +69,6 @@ void UnlinkPCB(pcb_t* pcb)
  * @details This function does not perform any process switching.
  *          It simply iterates through the process queues to find
  *          the next available process to run.
- * @todo    Remove the IDLE process queue
  */
 pcb_t* Schedule()
 {

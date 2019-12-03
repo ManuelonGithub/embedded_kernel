@@ -5,7 +5,7 @@
  *          supporting functionality regarding IPC via messages.
  * @author  Manuel Burnay
  * @date    2019.11.18 (Created)
- * @date    2019.11.21 (Last Modified)
+ * @date    2019.11.29 (Last Modified)
  */
 
 #include <stdio.h>
@@ -19,23 +19,16 @@
 pmsgbox_t   msgbox[BOXID_MAX];
 bitmap_t    available_box[MSGBOX_BITMAP_SIZE];
 
-#ifdef  REAL_TIME_MODE
-
 bitmap_t    available_msg[MSG_BITMAP_SIZE];
 pmsg_t      msg_table[MSG_MAX];
 uint8_t     msg_buffer[MSG_MAX][MSG_MAX_SIZE];
 
-#endif
-
 /**
  * @brief   Initalizes the Messaging Module.
- * @details Initializes the free message box list.
  */
 void k_MsgInit()
 {
     ClearBitRange(available_box, 0, BOXID_MAX);
-
-#ifdef REAL_TIME_MODE
 
     ClearBitRange(available_msg, 0, MSG_MAX);
 
@@ -44,8 +37,6 @@ void k_MsgInit()
         msg_table[i].id = i;
         msg_table[i].data = msg_buffer[i];
     }
-
-#endif
 
     return;
 }
@@ -56,7 +47,7 @@ void k_MsgInit()
  * @param   [in,out] owner: Pointer to process to have a box bound to.
  * @return  Box ID that was bound to the process.
  *          BOX_ERR if it wasn't possible to bind a box to the process.
- * @details If box ID is 0, then the next available box is bound to the process.
+ * @details If box ID is ANY_BOX, then an available box is bound to the process.
  */
 pmbox_t k_MsgBoxBind(pmbox_t id, pcb_t* owner)
 {
@@ -105,6 +96,10 @@ pmbox_t k_MsgBoxUnbind(pmbox_t id, pcb_t* proc)
     return id;
 }
 
+/**
+ * @brief   Unbinds all message boxes bound to a process.
+ * @param   [in,out] proc: pointer to process PCB to unbind all boxes from.
+ */
 void k_MsgBoxUnbindAll(pcb_t* proc)
 {
     uint32_t min = FindSet(proc->owned_box, 0, BOXID_MAX);
@@ -126,7 +121,6 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
 {
     pmsg_t* msg = NULL;
 
-#ifdef REAL_TIME_MODE
     uint32_t i = FindClear(available_msg, 0, MSG_MAX);
 
     if (i >= MSG_MAX)   return NULL;
@@ -135,18 +129,6 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
     SetBit(available_msg, i);
     if (size > MSG_MAX_SIZE)    msg->size = MSG_MAX_SIZE;
     else                        msg->size = size;
-#else
-    msg = malloc(sizeof(pmsg_t));
-    if (msg == NULL) return NULL;
-
-    msg->data = malloc(size);
-    if (msg->data == NULL) {
-        free(msg);
-        return NULL;
-    }
-
-    msg->size = size;
-#endif
 
     msg->list.next = NULL;
     msg->list.prev = NULL;
@@ -163,30 +145,24 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
 
 /**
  * @brief   De-allocates a message
+ * @param   [in,out] msg: pointer to message pointer to be deallocated.
  */
 inline void k_pMsgDeallocate(pmsg_t** msg)
 {
-#ifdef REAL_TIME_MODE
     ClearBit(available_msg, (*msg)->id);
-#else
-    free((*msg)->data);
-    free((*msg));
-#endif
     *msg = NULL;
 }
 
 /**
  * @brief   Sends a message from one process to another.
  * @param   [in] msg: Message to be sent to a process.
- * @param   [in] proc: Process that sent the message.
- * @return  Amount of bytes successfully sent to the other process.
+ * @param   [out] retsize: Amount of bytes successfully sent to message box.
  * @details If a message was sent to a process that was awaiting the message,
  *          then this function places that process back into its scheduling queue
  *          and calls the scheduler trap to re-evaluate the running process.
  */
 void k_MsgSend(pmsg_t* msg, size_t* retsize)
 {
-//    (*retsize) = 0;
     size_t size = 0;
 
     pmsg_t* msg_out;
@@ -234,9 +210,11 @@ void k_MsgSend(pmsg_t* msg, size_t* retsize)
  * @param   [in,out] dst_msg:
  *              Pointer to the receiver's message slot.
  *              A message that is awaiting to be received will be copied here.
- * @param   [in,out] proc: Process that is asking for a message.
- * @return  True if a message was received,
- *          False if not.
+ * @param   [out] retsize: Number of bytes successfully received.
+ * @details If there isn't any messages to receive,
+ *          the dst_msg and retsize's addresses are copied onto the receiver's
+ *          message box and the process that owns the message box is then blocked
+ *          while it awaits for another process to send it a message.
  */
 void k_MsgRecv(pmsg_t* msg, size_t* retsize)
 {
@@ -274,7 +252,7 @@ void k_MsgRecv(pmsg_t* msg, size_t* retsize)
     }
     else {
         // Search Recv queue for specific message box source
-        src_msg = k_SearchMessageQueue(dst_box->recv_msgq, msg->src);
+        src_msg = k_SearchMessageList(dst_box->recv_msgq, msg->src);
 
         if (src_msg == NULL) {
             // If message was not found
@@ -301,7 +279,12 @@ void k_MsgRecv(pmsg_t* msg, size_t* retsize)
  * @brief   Transfers a message to another.
  * @param   [in,out] dst: Pointer to message that will be overwritten
  * @param   [in] src: Pointer to src message whose contents will be copied.
- * @return  Amount of bytes successfully copied from one message to another.
+ * @return  Amount of bytes successfully transfered from one message to another.
+ * @details If the destination doesn't have a valid data pointer,
+ *          data won't be transfered, but the size of the "would-be" transfer is
+ *          still recorded.
+ *          This allows for messages that just want the size of the message
+ *          to be possible.
  */
 inline uint32_t k_pMsgTransfer(pmsg_t* dst, pmsg_t* src)
 {
@@ -333,7 +316,15 @@ void k_MsgClearAll(pmsgbox_t* box)
     }
 }
 
-pmsg_t* k_SearchMessageQueue(pmsg_t* msg, pmbox_t box)
+/**
+ * @brief   Searches through message list for a message with a particular
+ *          message box as its source.
+ * @param   [in] msg: pointer to message list entry point.
+ * @param   [in] box: box ID to search message's source for.
+ * @return  pointer to message whose source has a matching box ID.
+ *          NULL if no messages in message list has a source matching the box ID.
+ */
+pmsg_t* k_SearchMessageList(pmsg_t* msg, pmbox_t box)
 {
     pmsg_t* search;
 
@@ -348,9 +339,4 @@ pmsg_t* k_SearchMessageQueue(pmsg_t* msg, pmbox_t box)
     }
 
     return NULL;
-}
-
-inline pid_t OwnerPID(pmbox_t boxID)
-{
-    return msgbox[boxID].owner->id;
 }

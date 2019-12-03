@@ -12,9 +12,10 @@
 
 #include <stdint.h>
 
+/** @brief  Double linked list node structure. */
 typedef struct node_ {
-    struct node_* next;
-    struct node_* prev;
+    struct node_* next; /**< Pointer to next element. */
+    struct node_* prev; /**< Pointer to previous element. */
 } node_t;
 
 inline void dLink(node_t* node, node_t* front);

@@ -3,7 +3,7 @@
  * @brief   Contains functionality to operate the UART0 driver for the tiva board.
  * @author  Manuel Burnay, Emad Khan (Based on his work)
  * @date    2019.09.18 (Created)
- * @date    2019.10.04 (Last Modified)
+ * @date    2019.11.30 (Last Modified)
  */
 
 #include <string.h>
@@ -64,9 +64,8 @@ void UART0_Init(uart_descriptor_t* descriptor)
 
 /**
  * @brief   Sets the interrupt enable bit for a peripheral in the NVIC register.
- * @param   [in] InterruptIndex: The peripheral's interrupt index in the NVIC register.
- *
- * @todo    Move this onto the cpu.h since it's a general way to enable the interrupt in the NVIC register.
+ * @param   [in] InterruptIndex:
+ *              The peripheral's interrupt index in the NVIC register.
  */
 void UART0_InterruptEnable(unsigned long InterruptIndex)
 {
@@ -119,8 +118,10 @@ void UART0_IntHandler(void)
 /**
  * @brief   Send a character to UART 0.
  * @param   [in] c: Character to be transmitted.
- * @details It sends a character to UART0's data register when the UART0 peripheral is ready to transmit.
- *          This function is blocking program progression while UART0 isn't ready to transmit.
+ * @details It sends a character to UART0's data register
+ *          when the UART0 peripheral is ready to transmit.
+ *          This function is blocking program progression
+ *          while UART0 isn't ready to transmit.
  */
 inline void UART0_putc(char c)
 {
@@ -151,8 +152,10 @@ void UART0_puts(char* str)
 
     while (bytes_sent != length) {
         /*
-         * Although there is no issues with calling UART0_send when the buffer is full,
-         * doing so might be worst for code progression than to only call it once there is room
+         * Although there is no issues with calling
+         * UART0_send when the buffer is full,
+         * doing so might be worst for code progression
+         * than to only call it once there is room
          * to queue more characters from the string.
          */
         if (buffer_size(&UART0->tx) != BUFFER_FULL) 
@@ -166,7 +169,8 @@ void UART0_puts(char* str)
  * @param   [in] length: amount of bytes in the byte stream.
  * @return  [uint32_t] Returns amount of bytes successfully sent to UART 0.
  * @details This function does not guarantee that all bytes in the string are sent.
- *          if there isn't enough space in the TX buffer, the byte stream is truncated.
+ *          if there isn't enough space in the TX buffer,
+ *          the byte stream is truncated.
  */
 uint32_t UART0_put(char* data, uint8_t length)
 {
@@ -177,11 +181,23 @@ uint32_t UART0_put(char* data, uint8_t length)
     return bytes_sent;
 }
 
+/**
+ * @brief   Checks if the UART's RX buffer is empty.
+ * @return  True if it is empty,
+ *          False if not.
+ */
 inline bool UART0_empty()
 {
     return (buffer_size(&UART0->rx) == 0);
 }
 
+/**
+ * @brief   Gets a character from the UART buffer.
+ * @param   [out] c:
+ *              pointer to variable where the dequeued character will be placed in.
+ * @return  True if a character was able to be dequeued,
+ *          False if not.
+ */
 bool UART0_getc(char* c)
 {
     if (buffer_size(&UART0->rx) != BUFFER_EMPTY) {
@@ -228,6 +244,9 @@ uint32_t UART0_gets(char* str, uint32_t MAX_BYTES)
     return bytes_read;
 }
 
+/**
+ * @brief   Send a character from the RX buffer to the kernel IO server.
+ */
 void ioServerSend()
 {
     uart_msgdata_t data = {.box_id = IO_BOX, .c = dequeuec(&UART0->rx)};

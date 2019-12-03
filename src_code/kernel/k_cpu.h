@@ -1,10 +1,7 @@
 /**
  * @file    k_cpu.h
  * @brief   Contains all definitions and entities regarding the
- *          cpu-specific implementation of the embedded kernel.
- * @details This is the module that opens the kernel to the cpu it runs on.
- *          Ideally this is the only module (.c & .h files) that needs to change in order to transfer
- *          the kernel from one cpu to another.
+ *          cpu-specific operations that the embedded kernel requires.
  * @author  Manuel Burnay
  * @date    2019.11.02  (Created)
  * @date    2019.11.21  (Last Modified)
@@ -15,12 +12,6 @@
 
 #include <stdint.h>
 #include "k_types.h"
-
-// todo: Give up on the idea and distribute this code where it's relevant
-// This file is just so damn bloated
-// And the kernel code is structure so very clearly for an ARM cpu
-// that it's pointless to have this file
-// You'd need to perform a lot of changes to the kernel code to port it anyways...
 
 #define NVIC_INT_CTRL_R (*((volatile uint32_t*) 0xE000ED04))
 #define TRIGGER_PENDSV 0x10000000

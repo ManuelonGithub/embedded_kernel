@@ -5,7 +5,7 @@
  * @details This module should not be exposed to user programs.
  * @author  Manuel Burnay
  * @date    2019.10.23 (Created)
- * @date    2019.11.21 (Last Modified)
+ * @date    2019.11.29 (Last Modified)
  */
 
 #include <stdlib.h>
@@ -24,28 +24,8 @@
 pcb_t *running, *pTerminal, *pIdle;
 uart_descriptor_t uart;
 
-#ifdef REAL_TIME_MODE
-
 extern pcb_t   proc_table[PID_MAX];
-
-#else
-
-extern pcb_t*  proc_table[PID_MAX];
-
-#endif
-
 extern pmsgbox_t msgbox[BOXID_MAX];
-
-void k_KernelCall_handler(k_code_t code);
-void p_KernelCall_handler(k_call_t* call);
-
-/**
- * @brief   Generic Idle process used by the kernel.
- */
-void idle()
-{
-    while (1) {}
-}
 
 /**
  * @brief   Initializes kernel data structures, drivers, and critical processes.
@@ -76,7 +56,7 @@ void kernel_init()
     strcpy(pattr.name, "terminal");
 
     pTerminal = GetPCB(k_pcreate(&pattr, &terminal, &terminate));
-    LinkPCB(pTerminal, PRIV_PRIORITY);
+    LinkPCB(pTerminal, PRIV0_PRIORITY);
 }
 
 /**
@@ -102,11 +82,6 @@ void SystemTick_handler(void)
 {
     running->timer--;
     if (running->timer == 0) {
-        PendSV();
-    }
-
-    if (!UART0_empty() && pTerminal->priority != 0) {
-        LinkPCB(pTerminal, 0);
         PendSV();
     }
 
@@ -155,53 +130,18 @@ void SVC_handler()
     if (TrapSource() == KERNEL) {   // Check if the trap was called by the kernel
         // In which case the kernel needs to save its own context
         SaveContext();
-        p_KernelCall_handler(GetCallReg());
+        KernelCall_handler(GetCallReg());
         RestoreContext();
     }
     else {                      // Trap was called by a process
         SaveProcessContext();   // So the process' context is saved
-        p_KernelCall_handler(GetCallReg());
+        KernelCall_handler(GetCallReg());
         RestoreProcessContext();
     }
 
     SysTick_Start();
 
     RestoreTrapReturn();
-}
-
-
-void k_KernelCall_handler(k_code_t code)
-{
-    switch(code) {
-        case STARTUP: {
-            /*
-             * This block of code is here to counter-act what PendSV would do to a
-             * Non-initialized process.
-             * While admittedly a bit ugly,
-             * it does allow for both PendSV and this Call handler
-             * to be as efficient as possible at "steady-state" operation.
-             * Here we're making the assumption
-             * that running is set to be the idle process.
-             */
-
-            // Initializes the process stack pointer to the idle process stack
-            SetPSP((uint32_t)running->sp);
-//            RestoreContext();
-            /*
-             * This essentially removes the initial "non-essential"
-             * cpu context in the process' stack, which is necessary since
-             * PendSV will save the current "non-essential" cpu context
-             * onto the process stack at the beginning of its handler.
-             */
-            RestoreProcessContext();
-
-            PendSV();
-        } break;
-
-        default: {
-
-        } break;
-    }
 }
 
 /**
@@ -212,7 +152,7 @@ void k_KernelCall_handler(k_code_t code)
  *          the kernel call structure passed to the trap
  *          and service the call if its parameters are valid.
  */
-void p_KernelCall_handler(k_call_t* call)
+void KernelCall_handler(k_call_t* call)
 {
     switch(call->code) {
         case PCREATE: {
@@ -224,12 +164,6 @@ void p_KernelCall_handler(k_call_t* call)
             // Initializes the process stack pointer to the idle process stack
             SetPSP((uint32_t)running->sp);
 
-            /*
-             * This essentially removes the initial "non-essential"
-             * cpu context in the process' stack, which is necessary since
-             * PendSV will save the current "non-essential" cpu context
-             * onto the process stack at the beginning of its handler.
-             */
             RestoreProcessContext();
 
             running->timer = PROC_RUNTIME;
@@ -277,33 +211,49 @@ void p_KernelCall_handler(k_call_t* call)
             k_Terminate();
         } break;
 
-//        case SEND_USER: {
-//            k_SendUser((char*)call->arg);
-//        } break;
+        case GET_NAME: {
+            k_getnameCall((char*)call->arg);
+        } break;
 
-//        case RECV_USER: {
-//            k_RecvUser()
-//        } break;
+        case SET_NAME: {
+            k_setnameCall((char*)call->arg);
+        } break;
 
         default: {
-
         } break;
     }
 }
 
+/**
+ * @brief   Performs all operations required for process allocation.
+ * @param   [in] arg: pointer to a pcreate arguments structure.
+ * @return  Process ID of allocated process.
+ *          PROC_ERR if allocation failed.
+ */
 inline pid_t k_pcreateCall(pcreate_args_t* arg)
 {
     return k_pcreate(arg->attr, arg->proc_program, &terminate);
 }
 
+/**
+ * @brief   Performs all operations required for retrieving the running process' ID.
+ * @return  Running process' ID.
+ */
 inline pid_t getpidCall()
 {
     return (pid_t)running->id;
 }
 
+/**
+ * @brief   Performs all operations required for changing the user process' priority.
+ * @param   new: pointer to new priority value.
+ * @return  Running process' priority after all operations are complete.
+ * @details This function ensures the user process doesn't change
+ *          to an invalid/unallowed priority.
+ */
 inline priority_t niceCall(priority_t* new)
 {
-    if ((*new) > 0 && (*new) < PRIORITY_LEVELS) {
+    if ((*new) > PRIV1_PRIORITY && (*new) < PRIORITY_LEVELS) {
         LinkPCB(running, (*new));
     }
 
@@ -312,16 +262,36 @@ inline priority_t niceCall(priority_t* new)
     return running->priority;
 }
 
+/**
+ * @brief   Performs all operations required for binding
+ *          a message box to running process.
+ * @param   [in] pointer to box ID to be used in binding procedure.
+ * @returns Box ID bound to process.
+ *          BOX_ERR if bound procedure failed.
+ */
 inline pmbox_t k_bindCall(pmbox_t* box)
 {
     return k_MsgBoxBind((*box), running);
 }
 
+/**
+ * @brief   Performs all operations required for unbinding
+ *          a message box to running process.
+ * @param   [in] pointer to box ID to be used in unbinding procedure.
+ * @returns 0 if unbinding procedure was successful,
+ *          supplied box ID otherwise.
+ */
 inline pmbox_t k_unbindCall(pmbox_t* box)
 {
     return k_MsgBoxUnbind((*box), running);
 }
 
+/**
+ * @brief   Performs all operations required to retrieve a
+ *          bound message box to the running process.
+ * @returns Box ID of a box bound to process.
+ *          BOX_ERR if no boxes are bound to process.
+ */
 inline pmbox_t k_getboxCall()
 {
     pmbox_t retval = FindSet(running->owned_box, 0, BOXID_MAX);
@@ -330,6 +300,12 @@ inline pmbox_t k_getboxCall()
     return retval;
 }
 
+/**
+ * @brief   Performs all operations required to send a message from a message
+ *          box belonging to the running process to another message box.
+ * @param   [in] msg: message to send to a message box.
+ * @param   [out] retsize: number of bytes successfully sent.
+ */
 inline void k_sendCall(pmsg_t* msg, size_t* retsize)
 {
     if (msg->dst < BOXID_MAX && msgbox[msg->src].owner == running) {
@@ -340,6 +316,12 @@ inline void k_sendCall(pmsg_t* msg, size_t* retsize)
     }
 }
 
+/**
+ * @brief   Performs all operations required to receive a message from a message
+ *          box to a message box belonging to the running process.
+ * @param   [out] msg: destination of message to be received from a message box.
+ * @param   [out] retsize: number of bytes successfully received.
+ */
 inline void k_recvCall(pmsg_t* msg, size_t* retsize)
 {
     if (msg->dst < BOXID_MAX && msgbox[msg->dst].owner == running) {
@@ -350,6 +332,13 @@ inline void k_recvCall(pmsg_t* msg, size_t* retsize)
     }
 }
 
+/**
+ * @brief   Performs all operations required to perform the request transaction
+ *          between a message box belonging to the running process to another.
+ * @param   [in,out] args: Request transaction arguments.
+ * @param   [out] retsize:
+ *              number of bytes successfully received on the reply message.
+ */
 inline void k_requestCall(request_args_t* arg, size_t* retsize)
 {
     if (arg->req_msg->dst < BOXID_MAX &&
@@ -363,6 +352,26 @@ inline void k_requestCall(request_args_t* arg, size_t* retsize)
     else {
         (*retsize) = 0;
     }
+}
+
+/**
+ * @brief   Performs all operations required to
+ *          retrieve the name of the running process.
+ * @param   [out] Pointer to character string to copy the process' name to.
+ */
+inline void k_getnameCall(char* str)
+{
+    strcpy(running->name, str);
+}
+
+/**
+ * @brief   Performs all operations required to
+ *          set the name of the running process.
+ * @param   [out] Pointer to character string to set the process' name to.
+ */
+inline void k_setnameCall(char* str)
+{
+    if (strlen(str) < 31)   strcpy(str, running->name);
 }
 
 /**
@@ -389,103 +398,13 @@ void k_Terminate()
     SysTick_Reset();
 }
 
-//size_t k_SendUser(char* str)
-//{
-//    // Find a message box for the process to use
-//    // Search the process' boxes
-//    pmbox_t box = FindSet(running->owned_box, 0, BOXID_MAX);
-//
-//    if (box == BOXID_MAX) {
-//        // Process has no msg box, assigning one to it
-//        // todo: make this assignment temporary
-//        box = k_MsgBoxBind(ANY_BOX, running);
-//
-//        if (box == (pmbox_t)BOX_ERR)    return 0;
-//    }
-//
-//    // Set up metadata to send IO server
-//    IO_metadata_t meta = {
-//         .box_id = box,
-//         .is_send = true,
-//         .proc_id = running->id,
-//         .size = strlen(str),
-//         .send_data = (uint8_t*)str
-//    };
-//
-//    // Set up request message
-//    pmsg_t msg = {
-//         .dst = IO_BOX,
-//         .src = box,
-//         .data = (uint8_t*)&meta,
-//         .size = sizeof(IO_metadata_t),
-//         .blocking = false
-//    };
-//
-//    // Send IO request to server
-//    if (k_MsgSend(&msg) != 0) {
-//        // Request successfully sent.
-//        // Set up request reply rx message
-//        msg.dst = box;
-//        msg.src = IO_BOX;
-//        msg.data = NULL;
-//        msg.size = strlen(str);
-//        msg.blocking = true;
-//
-//        k_MsgRecv(&msg);
-//    }
-//
-//    return 0;
-//}
-
-//size_t k_UserRecv(char* dst, uint32_t max_size)
-//{
-//    // Find a message box for the process to use
-//    // Search the process' boxes
-//    pmbox_t box = FindSet(running->owned_box, 0, BOXID_MAX);
-//
-//    if (box == BOXID_MAX) {
-//        // Process has no msg box, assigning one to it
-//        // todo: make this assignment temporary
-//        box = k_MsgBoxBind(ANY_BOX, running);
-//
-//        if (box == (pmbox_t)BOX_ERR)    return 0;
-//    }
-//
-//    // Set up metadata to send IO server
-//    IO_metadata_t meta = {
-//         .box_id = box,
-//         .is_send = false,
-//         .proc_id = running->id,
-//         .size = max_size,
-//         .send_data = NULL
-//    };
-//
-//    pmsg_t msg = {
-//         .dst = IO_BOX,
-//         .src = box,
-//         .data = (uint8_t*)&meta,
-//         .size = sizeof(IO_metadata_t),
-//         .blocking = false
-//    };
-//
-//    // Send IO request to server
-//    if (k_MsgSend(&msg) != 0) {
-//        // Request successfully sent.
-//        // Set up request reply rx message
-//        msg.dst = box;
-//        msg.src = IO_BOX;
-//        msg.data = (uint8_t*)dst;
-//        msg.size = max_size;
-//        msg.blocking = true;
-//
-//        k_MsgRecv(&msg);
-//    }
-//    else {
-//        msg.size = 0;
-//    }
-//
-//    return msg.size;
-//}
+/**
+ * @brief   Generic Idle process used by the kernel.
+ */
+void idle()
+{
+    while (1) {}
+}
 
 
 

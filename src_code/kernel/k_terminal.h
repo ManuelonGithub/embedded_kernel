@@ -26,11 +26,17 @@
 typedef enum TERMINAL_MODES {
     COMMAND_HANDLER,
     PROCESS_HANDLER
-} term_mode_t;
+} term_mode_t;  /// The modes the terminal program operates in.
 
-#define HOME_HEADER "==="
-#define HOME_TEXT   "M'uh Kernel v0.3"
+#define HEADER_FRAME    "==="
+#define HEADER_TEXT     "M'uh Kernel v0.4"
 
+/**
+ * @brief   input capture information structure.
+ * @details Structure is used to encapsulate the information
+ *          related to input capture for a process that
+ *          requested it.
+ */
 typedef struct input_capture_ {
     bool                en;
     size_t              max;
@@ -38,10 +44,14 @@ typedef struct input_capture_ {
     pmbox_t             dst;
 } input_capture_t;
 
+/**
+ * @brief   Structure that encapsulates all data and elements the terminal process
+ *          requires to operate.
+ */
 typedef struct terminal_ {
     circular_buffer_t   buf;
     uint32_t            input_entry;
-    char                home_line[128];
+    char                header[128];
     term_mode_t         mode;
     pmbox_t             box;
     bitmap_t            active_pid[PID_BITMAP_SIZE];
@@ -53,8 +63,8 @@ void terminal();
 
 void init_term(terminal_t* term);
 
-void create_home_line(char* home, uint32_t term_size);
-inline void send_home(char* home);
+void generate_header(char* header, uint32_t width);
+inline void send_header(char* header);
 
 inline void ResetScreen();
 inline void ResetTerminal(terminal_t* term);
@@ -69,7 +79,9 @@ void SendUserInput(terminal_t* term);
 bool CommandCheck(terminal_t* term);
 
 bool SystemView(char* attr_str, terminal_t* term);
-bool SetProcessFocus(char* attr_str, terminal_t* term);
+bool SetIO(char* attr_str, terminal_t* term);
+bool ClearIO(char* attr, terminal_t* term);
+bool run(char* attr, terminal_t* term);
 
 #endif // K_TERMINAL_H
 
