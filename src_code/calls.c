@@ -251,7 +251,7 @@ size_t recv_user(char* buf, uint32_t max_size)
  */
 void get_name(char* dst_str)
 {
-    kcall(GET_NAME, (k_arg_t)&dst_str);
+    kcall(GET_NAME, (k_arg_t)dst_str);
 }
 
 /**
@@ -260,7 +260,7 @@ void get_name(char* dst_str)
  */
 void set_name(char* src_str)
 {
-    kcall(SET_NAME, (k_arg_t)&src_str);
+    kcall(SET_NAME, (k_arg_t)src_str);
 }
 
 

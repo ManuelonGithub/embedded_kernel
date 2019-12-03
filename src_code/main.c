@@ -53,7 +53,7 @@ void name_test()
     send_user(name);
 
     get_name(name);
-    send_user("New name is: ");
+    send_user("\nNew name is: ");
     send_user(name);
 
     while(1) {}

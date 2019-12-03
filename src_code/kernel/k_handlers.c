@@ -361,7 +361,7 @@ inline void k_requestCall(request_args_t* arg, size_t* retsize)
  */
 inline void k_getnameCall(char* str)
 {
-    strcpy(running->name, str);
+    strcpy(str, running->name);
 }
 
 /**
@@ -371,7 +371,7 @@ inline void k_getnameCall(char* str)
  */
 inline void k_setnameCall(char* str)
 {
-    if (strlen(str) < 31)   strcpy(str, running->name);
+    if (strlen(str) < 31)   strcpy(running->name, str);
 }
 
 /**
