@@ -1,0 +1,12 @@
+digraph "k_getboxCall"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="k_getboxCall",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Performs all operations required to retrieve a bound message box to the running process."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="FindSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a2b442817bc15cbc0c86a872e1c3ce95b",tooltip="Finds The earliest set bit in bitmap."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="GetBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#aea47b36efa670baedacd8eb1c8cefed9",tooltip="Gets thevalue of a specific bit in a bitmap."];
+}

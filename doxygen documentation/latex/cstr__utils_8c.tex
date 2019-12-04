@@ -1,0 +1,33 @@
+\hypertarget{cstr__utils_8c}{}\doxysection{utils/cstr\+\_\+utils.c File Reference}
+\label{cstr__utils_8c}\index{utils/cstr\_utils.c@{utils/cstr\_utils.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}cstr\+\_\+utils.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{cstr__utils_8c_a6be047b16875816417040dcd4168ea82}{itoa}} (int i, char $\ast$str\+\_\+buf)
+\begin{DoxyCompactList}\small\item\em Converts a signed integer into a string in base10. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{cstr__utils_8c_a6be047b16875816417040dcd4168ea82}\label{cstr__utils_8c_a6be047b16875816417040dcd4168ea82}} 
+\index{cstr\_utils.c@{cstr\_utils.c}!itoa@{itoa}}
+\index{itoa@{itoa}!cstr\_utils.c@{cstr\_utils.c}}
+\doxysubsubsection{\texorpdfstring{itoa()}{itoa()}}
+{\footnotesize\ttfamily char$\ast$ itoa (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{char $\ast$}]{str\+\_\+buf }\end{DoxyParamCaption})}
+
+
+
+Converts a signed integer into a string in base10. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em i} & Value to convert. \\
+\hline
+\mbox{\texttt{ out}}  & {\em buf} & Character array to write number string to. Must be of size I\+N\+T\+\_\+\+B\+UF.\`{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to start of number in the character array. Function writes to buffer from the last character so the string visual fits wth how we view numbers. (largest decimal case to smallest). this means that the beginning of the buffer string may be invalid, so the returned pointer must be used to analyse the buffer data.
+\end{DoxyReturn}
+This function is based on the itoa implementation found in \href{https://opensource.apple.com/source/groff/groff-10/groff/libgroff/itoa.c}{\texttt{ https\+://opensource.\+apple.\+com/source/groff/groff-\/10/groff/libgroff/itoa.\+c}} 

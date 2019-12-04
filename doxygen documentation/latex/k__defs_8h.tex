@@ -1,0 +1,467 @@
+\hypertarget{k__defs_8h}{}\doxysection{kernel/k\+\_\+defs.h File Reference}
+\label{k__defs_8h}\index{kernel/k\_defs.h@{kernel/k\_defs.h}}
+
+
+Contains all kernel configuration definitions.  
+
+
+{\ttfamily \#include \char`\"{}bitmap.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}{P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+E\+V\+E\+LS}}~5
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a84ad22acb920f80e8fcde1ca7950d758}{I\+D\+L\+E\+\_\+\+L\+E\+V\+EL}}~5
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a0d317d11dec1bc0eba980551fc6f5de6}{L\+O\+W\+E\+S\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}~\mbox{\hyperlink{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}{P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+E\+V\+E\+LS}}-\/1
+\begin{DoxyCompactList}\small\item\em Lowest priority supported by the system. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_aed801c122c559efe4677d351d07747b4}{H\+I\+G\+H\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}~2
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a73a0fd964c95d292fb8d7b7911086920}{U\+S\+E\+R\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}~3
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a9bd1f7dd220426bf57b0e710f7f56b0e}{P\+R\+I\+V0\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}~0
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a3915888d0e5bbbe31bd67714e440e44a}{P\+R\+I\+V1\+\_\+\+P\+R\+I\+O\+R\+I\+TY}}~1
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a0cca6a878a6e8cb6375ec8c9d0957eb3}{P\+R\+O\+C\+E\+S\+S\+\_\+\+Q\+U\+E\+U\+ES}}~\mbox{\hyperlink{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}{P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+E\+V\+E\+LS}}+1
+\begin{DoxyCompactList}\small\item\em Total amount of process levels the kernel scheduler accepts. +1 for the \char`\"{}\+Idle\char`\"{} queue. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_a21d9543c516fffee84a7963224271f95}{S\+T\+A\+C\+K\+S\+I\+ZE}}~2048
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_af56477a6e6be768afe8e8c7edfbe3273}{P\+R\+O\+C\+\_\+\+R\+U\+N\+T\+I\+ME}}~100
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a2ded3bab320b6ac387798d39189fb505}{P\+I\+D\+\_\+\+M\+AX}}~16
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_ae95e9e2713e3dedebc7bfde02083edeb}{I\+D\+L\+E\+\_\+\+ID}}~0
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_ad57304bdde0de57cc666dfd966ed1ada}{P\+I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}~\mbox{\hyperlink{k__defs_8h_a2ded3bab320b6ac387798d39189fb505}{P\+I\+D\+\_\+\+M\+AX}}/\mbox{\hyperlink{bitmap_8h_a444fec18efc59740428a6bb879824685}{B\+I\+T\+M\+A\+P\+\_\+\+W\+I\+D\+TH}}
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_ab94b8e89ab206d6d71590753cb26b447}{P\+R\+O\+C\+\_\+\+E\+RR}}~-\/1
+\begin{DoxyCompactList}\small\item\em Error value for when an interaction with processes goes wrong. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}{B\+O\+X\+I\+D\+\_\+\+M\+AX}}~16
+\begin{DoxyCompactList}\small\item\em All possible states for the kernel processes to be in. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_a125068d98a9d9d367518ed22f5b8568e}{M\+S\+G\+\_\+\+M\+AX}}~32
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_aa5a2da7fe0739dc631b4f9bc25ca1001}{M\+S\+G\+\_\+\+M\+A\+X\+\_\+\+S\+I\+ZE}}~64
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_afc673d12a10de2c32e1e87f49b5716b9}{M\+S\+G\+B\+O\+X\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}~1
+\item 
+\#define \mbox{\hyperlink{k__defs_8h_a238392e852f08c23e6bbc8408adfcba1}{M\+S\+G\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}~\mbox{\hyperlink{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}{B\+O\+X\+I\+D\+\_\+\+M\+AX}}/\mbox{\hyperlink{bitmap_8h_a444fec18efc59740428a6bb879824685}{B\+I\+T\+M\+A\+P\+\_\+\+W\+I\+D\+TH}}
+\begin{DoxyCompactList}\small\item\em Bitmap array size to cover all message boxes. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_a86dfee5e320fd5bcf305737b819a6b8f}{B\+O\+X\+\_\+\+E\+RR}}~\mbox{\hyperlink{k__defs_8h_ab94b8e89ab206d6d71590753cb26b447}{P\+R\+O\+C\+\_\+\+E\+RR}}
+\begin{DoxyCompactList}\small\item\em Error value for when an interaction with processes goes wrong. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_ae405354dde224b38a20b826f7428ed9e}{A\+N\+Y\+\_\+\+B\+OX}}~\mbox{\hyperlink{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}{B\+O\+X\+I\+D\+\_\+\+M\+AX}}
+\begin{DoxyCompactList}\small\item\em Indicator that box ID is unimportant for the current operation. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{k__defs_8h_a85c483c5ee4f692f4572711625816b8b}{I\+O\+\_\+\+B\+OX}}~15
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117f}{P\+R\+O\+C\+\_\+\+S\+T\+A\+TE}} \mbox{\hyperlink{k__defs_8h_af61430b5435d93be57b4fdbe9782a516}{proc\+\_\+state}}
+\item 
+typedef enum \mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9}{M\+S\+G\+B\+O\+X\+\_\+\+M\+O\+D\+ES}} \mbox{\hyperlink{k__defs_8h_ad22c75b5d72d880a0b645594b9a63569}{msgbox\+\_\+mode\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em All supported modes for a message box\textquotesingle{} interaction (W\+IP). \end{DoxyCompactList}\item 
+typedef enum \mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1c}{A\+U\+T\+O\+\_\+\+U\+N\+B\+I\+ND}} \mbox{\hyperlink{k__defs_8h_a4ff3e3243b1c1dcaf7626f686608f236}{auto\+\_\+unbind\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em All supported modes for a message box\textquotesingle{} auto-\/unbind feature (W\+IP). \end{DoxyCompactList}\item 
+typedef enum \mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4}{K\+E\+R\+N\+E\+L\+\_\+\+C\+A\+L\+L\+\_\+\+C\+O\+D\+ES}} \mbox{\hyperlink{k__defs_8h_a7641fab3302584496affe124a53546d3}{k\+\_\+code\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117f}{P\+R\+O\+C\+\_\+\+S\+T\+A\+TE}} \{ \newline
+\mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa56ffb466ab6da4b7d190191d215f8b68}{U\+N\+A\+S\+S\+I\+G\+N\+ED}}, 
+\mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa68427c50b77e1696abcfa41c9ce533b5}{W\+A\+I\+T\+I\+N\+G\+\_\+\+T\+O\+\_\+\+R\+UN}}, 
+\mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa1061be6c3fb88d32829cba6f6b2be304}{R\+U\+N\+N\+I\+NG}}, 
+\mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa376c1b6a3f75d283a2efacf737438d61}{B\+L\+O\+C\+K\+ED}}, 
+\newline
+\mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa240c1965a48eaf409ba68c4cc9462ac5}{T\+E\+R\+M\+I\+N\+A\+T\+ED}}
+ \}
+\item 
+enum \mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9}{M\+S\+G\+B\+O\+X\+\_\+\+M\+O\+D\+ES}} \{ \mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9abcce9c7fa0be88e04437d599c4cbe0ec}{R\+X\+\_\+\+O\+N\+LY}}, 
+\mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9a169155072a8462c49d5d2ded02e51766}{T\+X\+\_\+\+O\+N\+LY}}, 
+\mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9a205ec304f5095a097b17283c8a970103}{R\+X\+\_\+\+TX}}
+ \}
+\begin{DoxyCompactList}\small\item\em All supported modes for a message box\textquotesingle{} interaction (W\+IP). \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1c}{A\+U\+T\+O\+\_\+\+U\+N\+B\+I\+ND}} \{ \mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1cac958beeb9ddbff607de25216dbfd0bc7}{O\+N\+\_\+\+S\+E\+ND}}, 
+\mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1ca9c77cc60101a01805d55f31cbd5ce581}{O\+N\+\_\+\+R\+E\+CV}}, 
+\mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1caac132f2982b98bcaa3445e535a03ff75}{O\+FF}}
+ \}
+\begin{DoxyCompactList}\small\item\em All supported modes for a message box\textquotesingle{} auto-\/unbind feature (W\+IP). \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4}{K\+E\+R\+N\+E\+L\+\_\+\+C\+A\+L\+L\+\_\+\+C\+O\+D\+ES}} \{ \newline
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a336a515367f6ba8f60a8b8c5f90dc64a}{P\+C\+R\+E\+A\+TE}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a56f275913421aac16b5efff541f5dfc4}{S\+T\+A\+R\+T\+UP}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a6f1d8c805b57d039d6fe91bc0b485ead}{G\+E\+T\+P\+ID}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4ab31411fab4fd2cab988d78995b9e888f}{N\+I\+CE}}, 
+\newline
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4ae6b27a517c1c937b0a945c7393179677}{B\+I\+ND}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a8c9b060d5e771ff3f7678f7a5c482926}{U\+N\+B\+I\+ND}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a67be7a5f47004345047b32fff72a2230}{S\+E\+ND}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a586011d90be069a5203e7bdbcb760302}{R\+E\+CV}}, 
+\newline
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4abaf6b8e08edf0e9d2eb38551fed1fb39}{R\+E\+Q\+U\+E\+ST}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a17281a8bb02fefd8d7e1a0bd63e14d34}{G\+E\+T\+B\+OX}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a03389f87717cf62603d101b664e5c094}{S\+E\+N\+D\+\_\+\+U\+S\+ER}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a49f327641aeec2b8a2ecc002fd6e1e77}{R\+E\+C\+V\+\_\+\+U\+S\+ER}}, 
+\newline
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a8bf8289c94234d8ca4425193416ab743}{G\+E\+T\+\_\+\+N\+A\+ME}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a65587905a2f72abaed330d871ae335d7}{S\+E\+T\+\_\+\+N\+A\+ME}}, 
+\mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a9aab2d9eae3e9a84d9fed3f0cadd7e22}{T\+E\+R\+M\+I\+N\+A\+TE}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all kernel configuration definitions. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+20 (Created) 
+
+2019.\+11.\+29 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{k__defs_8h_ae405354dde224b38a20b826f7428ed9e}\label{k__defs_8h_ae405354dde224b38a20b826f7428ed9e}} 
+\index{k\_defs.h@{k\_defs.h}!ANY\_BOX@{ANY\_BOX}}
+\index{ANY\_BOX@{ANY\_BOX}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{ANY\_BOX}{ANY\_BOX}}
+{\footnotesize\ttfamily \#define A\+N\+Y\+\_\+\+B\+OX~\mbox{\hyperlink{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}{B\+O\+X\+I\+D\+\_\+\+M\+AX}}}
+
+
+
+Indicator that box ID is unimportant for the current operation. 
+
+\mbox{\Hypertarget{k__defs_8h_a86dfee5e320fd5bcf305737b819a6b8f}\label{k__defs_8h_a86dfee5e320fd5bcf305737b819a6b8f}} 
+\index{k\_defs.h@{k\_defs.h}!BOX\_ERR@{BOX\_ERR}}
+\index{BOX\_ERR@{BOX\_ERR}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{BOX\_ERR}{BOX\_ERR}}
+{\footnotesize\ttfamily \#define B\+O\+X\+\_\+\+E\+RR~\mbox{\hyperlink{k__defs_8h_ab94b8e89ab206d6d71590753cb26b447}{P\+R\+O\+C\+\_\+\+E\+RR}}}
+
+
+
+Error value for when an interaction with processes goes wrong. 
+
+\mbox{\Hypertarget{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}\label{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}} 
+\index{k\_defs.h@{k\_defs.h}!BOXID\_MAX@{BOXID\_MAX}}
+\index{BOXID\_MAX@{BOXID\_MAX}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{BOXID\_MAX}{BOXID\_MAX}}
+{\footnotesize\ttfamily \#define B\+O\+X\+I\+D\+\_\+\+M\+AX~16}
+
+
+
+All possible states for the kernel processes to be in. 
+
+\mbox{\Hypertarget{k__defs_8h_aed801c122c559efe4677d351d07747b4}\label{k__defs_8h_aed801c122c559efe4677d351d07747b4}} 
+\index{k\_defs.h@{k\_defs.h}!HIGH\_PRIORITY@{HIGH\_PRIORITY}}
+\index{HIGH\_PRIORITY@{HIGH\_PRIORITY}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{HIGH\_PRIORITY}{HIGH\_PRIORITY}}
+{\footnotesize\ttfamily \#define H\+I\+G\+H\+\_\+\+P\+R\+I\+O\+R\+I\+TY~2}
+
+\mbox{\Hypertarget{k__defs_8h_ae95e9e2713e3dedebc7bfde02083edeb}\label{k__defs_8h_ae95e9e2713e3dedebc7bfde02083edeb}} 
+\index{k\_defs.h@{k\_defs.h}!IDLE\_ID@{IDLE\_ID}}
+\index{IDLE\_ID@{IDLE\_ID}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{IDLE\_ID}{IDLE\_ID}}
+{\footnotesize\ttfamily \#define I\+D\+L\+E\+\_\+\+ID~0}
+
+\mbox{\Hypertarget{k__defs_8h_a84ad22acb920f80e8fcde1ca7950d758}\label{k__defs_8h_a84ad22acb920f80e8fcde1ca7950d758}} 
+\index{k\_defs.h@{k\_defs.h}!IDLE\_LEVEL@{IDLE\_LEVEL}}
+\index{IDLE\_LEVEL@{IDLE\_LEVEL}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{IDLE\_LEVEL}{IDLE\_LEVEL}}
+{\footnotesize\ttfamily \#define I\+D\+L\+E\+\_\+\+L\+E\+V\+EL~5}
+
+\mbox{\Hypertarget{k__defs_8h_a85c483c5ee4f692f4572711625816b8b}\label{k__defs_8h_a85c483c5ee4f692f4572711625816b8b}} 
+\index{k\_defs.h@{k\_defs.h}!IO\_BOX@{IO\_BOX}}
+\index{IO\_BOX@{IO\_BOX}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{IO\_BOX}{IO\_BOX}}
+{\footnotesize\ttfamily \#define I\+O\+\_\+\+B\+OX~15}
+
+\mbox{\Hypertarget{k__defs_8h_a0d317d11dec1bc0eba980551fc6f5de6}\label{k__defs_8h_a0d317d11dec1bc0eba980551fc6f5de6}} 
+\index{k\_defs.h@{k\_defs.h}!LOWEST\_PRIORITY@{LOWEST\_PRIORITY}}
+\index{LOWEST\_PRIORITY@{LOWEST\_PRIORITY}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{LOWEST\_PRIORITY}{LOWEST\_PRIORITY}}
+{\footnotesize\ttfamily \#define L\+O\+W\+E\+S\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY~\mbox{\hyperlink{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}{P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+E\+V\+E\+LS}}-\/1}
+
+
+
+Lowest priority supported by the system. 
+
+\mbox{\Hypertarget{k__defs_8h_a238392e852f08c23e6bbc8408adfcba1}\label{k__defs_8h_a238392e852f08c23e6bbc8408adfcba1}} 
+\index{k\_defs.h@{k\_defs.h}!MSG\_BITMAP\_SIZE@{MSG\_BITMAP\_SIZE}}
+\index{MSG\_BITMAP\_SIZE@{MSG\_BITMAP\_SIZE}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_BITMAP\_SIZE}{MSG\_BITMAP\_SIZE}}
+{\footnotesize\ttfamily \#define M\+S\+G\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE~\mbox{\hyperlink{k__defs_8h_af64b8ee4c12f1984c0da85a98942cd0d}{B\+O\+X\+I\+D\+\_\+\+M\+AX}}/\mbox{\hyperlink{bitmap_8h_a444fec18efc59740428a6bb879824685}{B\+I\+T\+M\+A\+P\+\_\+\+W\+I\+D\+TH}}}
+
+
+
+Bitmap array size to cover all message boxes. 
+
+\mbox{\Hypertarget{k__defs_8h_a125068d98a9d9d367518ed22f5b8568e}\label{k__defs_8h_a125068d98a9d9d367518ed22f5b8568e}} 
+\index{k\_defs.h@{k\_defs.h}!MSG\_MAX@{MSG\_MAX}}
+\index{MSG\_MAX@{MSG\_MAX}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_MAX}{MSG\_MAX}}
+{\footnotesize\ttfamily \#define M\+S\+G\+\_\+\+M\+AX~32}
+
+\mbox{\Hypertarget{k__defs_8h_aa5a2da7fe0739dc631b4f9bc25ca1001}\label{k__defs_8h_aa5a2da7fe0739dc631b4f9bc25ca1001}} 
+\index{k\_defs.h@{k\_defs.h}!MSG\_MAX\_SIZE@{MSG\_MAX\_SIZE}}
+\index{MSG\_MAX\_SIZE@{MSG\_MAX\_SIZE}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{MSG\_MAX\_SIZE}{MSG\_MAX\_SIZE}}
+{\footnotesize\ttfamily \#define M\+S\+G\+\_\+\+M\+A\+X\+\_\+\+S\+I\+ZE~64}
+
+\mbox{\Hypertarget{k__defs_8h_afc673d12a10de2c32e1e87f49b5716b9}\label{k__defs_8h_afc673d12a10de2c32e1e87f49b5716b9}} 
+\index{k\_defs.h@{k\_defs.h}!MSGBOX\_BITMAP\_SIZE@{MSGBOX\_BITMAP\_SIZE}}
+\index{MSGBOX\_BITMAP\_SIZE@{MSGBOX\_BITMAP\_SIZE}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{MSGBOX\_BITMAP\_SIZE}{MSGBOX\_BITMAP\_SIZE}}
+{\footnotesize\ttfamily \#define M\+S\+G\+B\+O\+X\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE~1}
+
+\mbox{\Hypertarget{k__defs_8h_ad57304bdde0de57cc666dfd966ed1ada}\label{k__defs_8h_ad57304bdde0de57cc666dfd966ed1ada}} 
+\index{k\_defs.h@{k\_defs.h}!PID\_BITMAP\_SIZE@{PID\_BITMAP\_SIZE}}
+\index{PID\_BITMAP\_SIZE@{PID\_BITMAP\_SIZE}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PID\_BITMAP\_SIZE}{PID\_BITMAP\_SIZE}}
+{\footnotesize\ttfamily \#define P\+I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE~\mbox{\hyperlink{k__defs_8h_a2ded3bab320b6ac387798d39189fb505}{P\+I\+D\+\_\+\+M\+AX}}/\mbox{\hyperlink{bitmap_8h_a444fec18efc59740428a6bb879824685}{B\+I\+T\+M\+A\+P\+\_\+\+W\+I\+D\+TH}}}
+
+\mbox{\Hypertarget{k__defs_8h_a2ded3bab320b6ac387798d39189fb505}\label{k__defs_8h_a2ded3bab320b6ac387798d39189fb505}} 
+\index{k\_defs.h@{k\_defs.h}!PID\_MAX@{PID\_MAX}}
+\index{PID\_MAX@{PID\_MAX}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PID\_MAX}{PID\_MAX}}
+{\footnotesize\ttfamily \#define P\+I\+D\+\_\+\+M\+AX~16}
+
+\mbox{\Hypertarget{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}\label{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}} 
+\index{k\_defs.h@{k\_defs.h}!PRIORITY\_LEVELS@{PRIORITY\_LEVELS}}
+\index{PRIORITY\_LEVELS@{PRIORITY\_LEVELS}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PRIORITY\_LEVELS}{PRIORITY\_LEVELS}}
+{\footnotesize\ttfamily \#define P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+E\+V\+E\+LS~5}
+
+\mbox{\Hypertarget{k__defs_8h_a9bd1f7dd220426bf57b0e710f7f56b0e}\label{k__defs_8h_a9bd1f7dd220426bf57b0e710f7f56b0e}} 
+\index{k\_defs.h@{k\_defs.h}!PRIV0\_PRIORITY@{PRIV0\_PRIORITY}}
+\index{PRIV0\_PRIORITY@{PRIV0\_PRIORITY}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PRIV0\_PRIORITY}{PRIV0\_PRIORITY}}
+{\footnotesize\ttfamily \#define P\+R\+I\+V0\+\_\+\+P\+R\+I\+O\+R\+I\+TY~0}
+
+\mbox{\Hypertarget{k__defs_8h_a3915888d0e5bbbe31bd67714e440e44a}\label{k__defs_8h_a3915888d0e5bbbe31bd67714e440e44a}} 
+\index{k\_defs.h@{k\_defs.h}!PRIV1\_PRIORITY@{PRIV1\_PRIORITY}}
+\index{PRIV1\_PRIORITY@{PRIV1\_PRIORITY}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PRIV1\_PRIORITY}{PRIV1\_PRIORITY}}
+{\footnotesize\ttfamily \#define P\+R\+I\+V1\+\_\+\+P\+R\+I\+O\+R\+I\+TY~1}
+
+\mbox{\Hypertarget{k__defs_8h_ab94b8e89ab206d6d71590753cb26b447}\label{k__defs_8h_ab94b8e89ab206d6d71590753cb26b447}} 
+\index{k\_defs.h@{k\_defs.h}!PROC\_ERR@{PROC\_ERR}}
+\index{PROC\_ERR@{PROC\_ERR}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PROC\_ERR}{PROC\_ERR}}
+{\footnotesize\ttfamily \#define P\+R\+O\+C\+\_\+\+E\+RR~-\/1}
+
+
+
+Error value for when an interaction with processes goes wrong. 
+
+\mbox{\Hypertarget{k__defs_8h_af56477a6e6be768afe8e8c7edfbe3273}\label{k__defs_8h_af56477a6e6be768afe8e8c7edfbe3273}} 
+\index{k\_defs.h@{k\_defs.h}!PROC\_RUNTIME@{PROC\_RUNTIME}}
+\index{PROC\_RUNTIME@{PROC\_RUNTIME}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PROC\_RUNTIME}{PROC\_RUNTIME}}
+{\footnotesize\ttfamily \#define P\+R\+O\+C\+\_\+\+R\+U\+N\+T\+I\+ME~100}
+
+\mbox{\Hypertarget{k__defs_8h_a0cca6a878a6e8cb6375ec8c9d0957eb3}\label{k__defs_8h_a0cca6a878a6e8cb6375ec8c9d0957eb3}} 
+\index{k\_defs.h@{k\_defs.h}!PROCESS\_QUEUES@{PROCESS\_QUEUES}}
+\index{PROCESS\_QUEUES@{PROCESS\_QUEUES}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PROCESS\_QUEUES}{PROCESS\_QUEUES}}
+{\footnotesize\ttfamily \#define P\+R\+O\+C\+E\+S\+S\+\_\+\+Q\+U\+E\+U\+ES~\mbox{\hyperlink{k__defs_8h_aa0b94d79c9cebe3506d2881d6487e376}{P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+E\+V\+E\+LS}}+1}
+
+
+
+Total amount of process levels the kernel scheduler accepts. +1 for the \char`\"{}\+Idle\char`\"{} queue. 
+
+\mbox{\Hypertarget{k__defs_8h_a21d9543c516fffee84a7963224271f95}\label{k__defs_8h_a21d9543c516fffee84a7963224271f95}} 
+\index{k\_defs.h@{k\_defs.h}!STACKSIZE@{STACKSIZE}}
+\index{STACKSIZE@{STACKSIZE}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{STACKSIZE}{STACKSIZE}}
+{\footnotesize\ttfamily \#define S\+T\+A\+C\+K\+S\+I\+ZE~2048}
+
+\mbox{\Hypertarget{k__defs_8h_a73a0fd964c95d292fb8d7b7911086920}\label{k__defs_8h_a73a0fd964c95d292fb8d7b7911086920}} 
+\index{k\_defs.h@{k\_defs.h}!USER\_PRIORITY@{USER\_PRIORITY}}
+\index{USER\_PRIORITY@{USER\_PRIORITY}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{USER\_PRIORITY}{USER\_PRIORITY}}
+{\footnotesize\ttfamily \#define U\+S\+E\+R\+\_\+\+P\+R\+I\+O\+R\+I\+TY~3}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{k__defs_8h_a4ff3e3243b1c1dcaf7626f686608f236}\label{k__defs_8h_a4ff3e3243b1c1dcaf7626f686608f236}} 
+\index{k\_defs.h@{k\_defs.h}!auto\_unbind\_t@{auto\_unbind\_t}}
+\index{auto\_unbind\_t@{auto\_unbind\_t}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{auto\_unbind\_t}{auto\_unbind\_t}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1c}{A\+U\+T\+O\+\_\+\+U\+N\+B\+I\+ND}}  \mbox{\hyperlink{k__defs_8h_a4ff3e3243b1c1dcaf7626f686608f236}{auto\+\_\+unbind\+\_\+t}}}
+
+
+
+All supported modes for a message box\textquotesingle{} auto-\/unbind feature (W\+IP). 
+
+\mbox{\Hypertarget{k__defs_8h_a7641fab3302584496affe124a53546d3}\label{k__defs_8h_a7641fab3302584496affe124a53546d3}} 
+\index{k\_defs.h@{k\_defs.h}!k\_code\_t@{k\_code\_t}}
+\index{k\_code\_t@{k\_code\_t}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{k\_code\_t}{k\_code\_t}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4}{K\+E\+R\+N\+E\+L\+\_\+\+C\+A\+L\+L\+\_\+\+C\+O\+D\+ES}}  \mbox{\hyperlink{k__defs_8h_a7641fab3302584496affe124a53546d3}{k\+\_\+code\+\_\+t}}}
+
+\mbox{\Hypertarget{k__defs_8h_ad22c75b5d72d880a0b645594b9a63569}\label{k__defs_8h_ad22c75b5d72d880a0b645594b9a63569}} 
+\index{k\_defs.h@{k\_defs.h}!msgbox\_mode\_t@{msgbox\_mode\_t}}
+\index{msgbox\_mode\_t@{msgbox\_mode\_t}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{msgbox\_mode\_t}{msgbox\_mode\_t}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9}{M\+S\+G\+B\+O\+X\+\_\+\+M\+O\+D\+ES}}  \mbox{\hyperlink{k__defs_8h_ad22c75b5d72d880a0b645594b9a63569}{msgbox\+\_\+mode\+\_\+t}}}
+
+
+
+All supported modes for a message box\textquotesingle{} interaction (W\+IP). 
+
+\mbox{\Hypertarget{k__defs_8h_af61430b5435d93be57b4fdbe9782a516}\label{k__defs_8h_af61430b5435d93be57b4fdbe9782a516}} 
+\index{k\_defs.h@{k\_defs.h}!proc\_state@{proc\_state}}
+\index{proc\_state@{proc\_state}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{proc\_state}{proc\_state}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117f}{P\+R\+O\+C\+\_\+\+S\+T\+A\+TE}}  \mbox{\hyperlink{k__defs_8h_af61430b5435d93be57b4fdbe9782a516}{proc\+\_\+state}}}
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1c}\label{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1c}} 
+\index{k\_defs.h@{k\_defs.h}!AUTO\_UNBIND@{AUTO\_UNBIND}}
+\index{AUTO\_UNBIND@{AUTO\_UNBIND}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{AUTO\_UNBIND}{AUTO\_UNBIND}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1c}{A\+U\+T\+O\+\_\+\+U\+N\+B\+I\+ND}}}
+
+
+
+All supported modes for a message box\textquotesingle{} auto-\/unbind feature (W\+IP). 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ON\_SEND@{ON\_SEND}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!ON\_SEND@{ON\_SEND}}}\mbox{\Hypertarget{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1cac958beeb9ddbff607de25216dbfd0bc7}\label{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1cac958beeb9ddbff607de25216dbfd0bc7}} 
+O\+N\+\_\+\+S\+E\+ND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ON\_RECV@{ON\_RECV}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!ON\_RECV@{ON\_RECV}}}\mbox{\Hypertarget{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1ca9c77cc60101a01805d55f31cbd5ce581}\label{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1ca9c77cc60101a01805d55f31cbd5ce581}} 
+O\+N\+\_\+\+R\+E\+CV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OFF@{OFF}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!OFF@{OFF}}}\mbox{\Hypertarget{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1caac132f2982b98bcaa3445e535a03ff75}\label{k__defs_8h_af8c76a1a0c7417e5dc7d434d3047ec1caac132f2982b98bcaa3445e535a03ff75}} 
+O\+FF&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4}} 
+\index{k\_defs.h@{k\_defs.h}!KERNEL\_CALL\_CODES@{KERNEL\_CALL\_CODES}}
+\index{KERNEL\_CALL\_CODES@{KERNEL\_CALL\_CODES}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{KERNEL\_CALL\_CODES}{KERNEL\_CALL\_CODES}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4}{K\+E\+R\+N\+E\+L\+\_\+\+C\+A\+L\+L\+\_\+\+C\+O\+D\+ES}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PCREATE@{PCREATE}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!PCREATE@{PCREATE}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a336a515367f6ba8f60a8b8c5f90dc64a}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a336a515367f6ba8f60a8b8c5f90dc64a}} 
+P\+C\+R\+E\+A\+TE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{STARTUP@{STARTUP}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!STARTUP@{STARTUP}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a56f275913421aac16b5efff541f5dfc4}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a56f275913421aac16b5efff541f5dfc4}} 
+S\+T\+A\+R\+T\+UP&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GETPID@{GETPID}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!GETPID@{GETPID}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a6f1d8c805b57d039d6fe91bc0b485ead}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a6f1d8c805b57d039d6fe91bc0b485ead}} 
+G\+E\+T\+P\+ID&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NICE@{NICE}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!NICE@{NICE}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4ab31411fab4fd2cab988d78995b9e888f}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4ab31411fab4fd2cab988d78995b9e888f}} 
+N\+I\+CE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BIND@{BIND}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!BIND@{BIND}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4ae6b27a517c1c937b0a945c7393179677}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4ae6b27a517c1c937b0a945c7393179677}} 
+B\+I\+ND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNBIND@{UNBIND}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!UNBIND@{UNBIND}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a8c9b060d5e771ff3f7678f7a5c482926}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a8c9b060d5e771ff3f7678f7a5c482926}} 
+U\+N\+B\+I\+ND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SEND@{SEND}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!SEND@{SEND}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a67be7a5f47004345047b32fff72a2230}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a67be7a5f47004345047b32fff72a2230}} 
+S\+E\+ND&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RECV@{RECV}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!RECV@{RECV}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a586011d90be069a5203e7bdbcb760302}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a586011d90be069a5203e7bdbcb760302}} 
+R\+E\+CV&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{REQUEST@{REQUEST}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!REQUEST@{REQUEST}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4abaf6b8e08edf0e9d2eb38551fed1fb39}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4abaf6b8e08edf0e9d2eb38551fed1fb39}} 
+R\+E\+Q\+U\+E\+ST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GETBOX@{GETBOX}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!GETBOX@{GETBOX}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a17281a8bb02fefd8d7e1a0bd63e14d34}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a17281a8bb02fefd8d7e1a0bd63e14d34}} 
+G\+E\+T\+B\+OX&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SEND\_USER@{SEND\_USER}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!SEND\_USER@{SEND\_USER}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a03389f87717cf62603d101b664e5c094}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a03389f87717cf62603d101b664e5c094}} 
+S\+E\+N\+D\+\_\+\+U\+S\+ER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RECV\_USER@{RECV\_USER}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!RECV\_USER@{RECV\_USER}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a49f327641aeec2b8a2ecc002fd6e1e77}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a49f327641aeec2b8a2ecc002fd6e1e77}} 
+R\+E\+C\+V\+\_\+\+U\+S\+ER&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{GET\_NAME@{GET\_NAME}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!GET\_NAME@{GET\_NAME}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a8bf8289c94234d8ca4425193416ab743}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a8bf8289c94234d8ca4425193416ab743}} 
+G\+E\+T\+\_\+\+N\+A\+ME&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SET\_NAME@{SET\_NAME}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!SET\_NAME@{SET\_NAME}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a65587905a2f72abaed330d871ae335d7}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a65587905a2f72abaed330d871ae335d7}} 
+S\+E\+T\+\_\+\+N\+A\+ME&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TERMINATE@{TERMINATE}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!TERMINATE@{TERMINATE}}}\mbox{\Hypertarget{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a9aab2d9eae3e9a84d9fed3f0cadd7e22}\label{k__defs_8h_a25b53bc86413aa43f054139b2dab86a4a9aab2d9eae3e9a84d9fed3f0cadd7e22}} 
+T\+E\+R\+M\+I\+N\+A\+TE&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9}\label{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9}} 
+\index{k\_defs.h@{k\_defs.h}!MSGBOX\_MODES@{MSGBOX\_MODES}}
+\index{MSGBOX\_MODES@{MSGBOX\_MODES}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{MSGBOX\_MODES}{MSGBOX\_MODES}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9}{M\+S\+G\+B\+O\+X\+\_\+\+M\+O\+D\+ES}}}
+
+
+
+All supported modes for a message box\textquotesingle{} interaction (W\+IP). 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RX\_ONLY@{RX\_ONLY}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!RX\_ONLY@{RX\_ONLY}}}\mbox{\Hypertarget{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9abcce9c7fa0be88e04437d599c4cbe0ec}\label{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9abcce9c7fa0be88e04437d599c4cbe0ec}} 
+R\+X\+\_\+\+O\+N\+LY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TX\_ONLY@{TX\_ONLY}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!TX\_ONLY@{TX\_ONLY}}}\mbox{\Hypertarget{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9a169155072a8462c49d5d2ded02e51766}\label{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9a169155072a8462c49d5d2ded02e51766}} 
+T\+X\+\_\+\+O\+N\+LY&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RX\_TX@{RX\_TX}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!RX\_TX@{RX\_TX}}}\mbox{\Hypertarget{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9a205ec304f5095a097b17283c8a970103}\label{k__defs_8h_a76e82e1bbb7da01f0454acb69aab48f9a205ec304f5095a097b17283c8a970103}} 
+R\+X\+\_\+\+TX&\\
+\hline
+
+\end{DoxyEnumFields}
+\mbox{\Hypertarget{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117f}\label{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117f}} 
+\index{k\_defs.h@{k\_defs.h}!PROC\_STATE@{PROC\_STATE}}
+\index{PROC\_STATE@{PROC\_STATE}!k\_defs.h@{k\_defs.h}}
+\doxysubsubsection{\texorpdfstring{PROC\_STATE}{PROC\_STATE}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117f}{P\+R\+O\+C\+\_\+\+S\+T\+A\+TE}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{UNASSIGNED@{UNASSIGNED}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!UNASSIGNED@{UNASSIGNED}}}\mbox{\Hypertarget{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa56ffb466ab6da4b7d190191d215f8b68}\label{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa56ffb466ab6da4b7d190191d215f8b68}} 
+U\+N\+A\+S\+S\+I\+G\+N\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WAITING\_TO\_RUN@{WAITING\_TO\_RUN}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!WAITING\_TO\_RUN@{WAITING\_TO\_RUN}}}\mbox{\Hypertarget{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa68427c50b77e1696abcfa41c9ce533b5}\label{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa68427c50b77e1696abcfa41c9ce533b5}} 
+W\+A\+I\+T\+I\+N\+G\+\_\+\+T\+O\+\_\+\+R\+UN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RUNNING@{RUNNING}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!RUNNING@{RUNNING}}}\mbox{\Hypertarget{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa1061be6c3fb88d32829cba6f6b2be304}\label{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa1061be6c3fb88d32829cba6f6b2be304}} 
+R\+U\+N\+N\+I\+NG&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BLOCKED@{BLOCKED}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!BLOCKED@{BLOCKED}}}\mbox{\Hypertarget{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa376c1b6a3f75d283a2efacf737438d61}\label{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa376c1b6a3f75d283a2efacf737438d61}} 
+B\+L\+O\+C\+K\+ED&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{TERMINATED@{TERMINATED}!k\_defs.h@{k\_defs.h}}\index{k\_defs.h@{k\_defs.h}!TERMINATED@{TERMINATED}}}\mbox{\Hypertarget{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa240c1965a48eaf409ba68c4cc9462ac5}\label{k__defs_8h_aefb9e5facfe7cdd58b3f6f0b0d80117fa240c1965a48eaf409ba68c4cc9462ac5}} 
+T\+E\+R\+M\+I\+N\+A\+T\+ED&\\
+\hline
+
+\end{DoxyEnumFields}

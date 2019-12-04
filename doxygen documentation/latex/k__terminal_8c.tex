@@ -1,0 +1,368 @@
+\hypertarget{k__terminal_8c}{}\doxysection{kernel/k\+\_\+terminal.c File Reference}
+\label{k__terminal_8c}\index{kernel/k\_terminal.c@{kernel/k\_terminal.c}}
+
+
+Contains the terminal process and all its supporting functionality.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+terminal.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}calls.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}uart.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+processes.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+scheduler.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cstr\+\_\+utils.\+h\char`\"{}}\newline
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4}{S\+U\+P\+P\+O\+R\+T\+E\+D\+\_\+\+C\+O\+M\+M\+A\+N\+DS}} \{ \newline
+\mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a9264040e7f31f1aeb707c97e39e2535a}{S\+Y\+S\+V\+I\+EW}}, 
+\mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4ab3b8b9b266b8d73c7f3a04c487ee35b6}{S\+E\+T\+IO}}, 
+\mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4af1a954ed4ad205650d0b980a581ff968}{C\+L\+E\+A\+R\+IO}}, 
+\mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a439c688a4e9ed31638d5922a50680a8e}{R\+UN}}, 
+\newline
+\mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a9d141360f4456ea9d82f55a309660a08}{C\+O\+M\+M\+A\+N\+D\+S\+\_\+\+S\+I\+ZE}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{k__terminal_8c_a3cbd88ed10b5fb037f3a043d3513cbf3}{init\+\_\+term}} (\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\begin{DoxyCompactList}\small\item\em Initializes the terminal settings. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_ad67e330028c5712e9400392a146ff9b6}{generate\+\_\+header}} (char $\ast$home, uint32\+\_\+t width)
+\begin{DoxyCompactList}\small\item\em Generates the header text displayed when terminal is running in Command-\/mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a54c8e2feafb5a3efa9c223ea1d87b2b9}{send\+\_\+header}} (char $\ast$header)
+\begin{DoxyCompactList}\small\item\em Sends the header line to computer terminal. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a5f6047bae9bf82be7be019edf176fdba}{Reset\+Screen}} ()
+\begin{DoxyCompactList}\small\item\em Resets the computer terminal settings and cursor position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a82fdf1845852f11bd394d7ff4a6be0c4}{Reset\+Terminal}} (\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\begin{DoxyCompactList}\small\item\em Resets the terminal settings. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a5ce9f04f34a42384329c6b8950731295}{Configure\+Input\+Capture}} (\mbox{\hyperlink{k__terminal_8h_a1d9a980b81c3b5963b7d54aeb758fef4}{input\+\_\+capture\+\_\+t}} $\ast$cap, \mbox{\hyperlink{k__types_8h_a695e358cbbbe198eead6f5a274151bdf}{I\+O\+\_\+metadata\+\_\+t}} $\ast$meta)
+\begin{DoxyCompactList}\small\item\em Configures the terminal\textquotesingle{}s input capture settings based on supplied metadata. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a09406fe2c7ef6d8a6ee586f645c27f1f}{Reset\+Input\+Capture}} (\mbox{\hyperlink{k__terminal_8h_a1d9a980b81c3b5963b7d54aeb758fef4}{input\+\_\+capture\+\_\+t}} $\ast$cap)
+\begin{DoxyCompactList}\small\item\em Resets the terminal\textquotesingle{}s input capture settings. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_aadb0857d6d4bedf44cea1a4d10b01947}{terminal}} ()
+\begin{DoxyCompactList}\small\item\em Terminal process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a64ca3a424dd85aa6cbdd6600f59a3780}{Process\+Input}} (char c, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\begin{DoxyCompactList}\small\item\em Processes an input character sent from U\+A\+RT. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__terminal_8c_a1b445477a235c3a0764638e73c8025a8}{Send\+User\+Input}} (\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\begin{DoxyCompactList}\small\item\em Sends captured input to process that requested it. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{k__terminal_8c_a17d4e3cec6e8979d90f76e0c1c8ed02b}{Command\+Check}} (\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\begin{DoxyCompactList}\small\item\em Checks terminal\textquotesingle{}s buffer for valid commands and calls their respective handler functions. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{k__terminal_8c_a11369793cb663aef5e3ddd9d2220c211}{System\+View}} (char $\ast$attr, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\begin{DoxyCompactList}\small\item\em Displays information about the system and allocated processes. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{k__terminal_8c_a704722aa445f2d08ec51784b071b1e3d}{Set\+IO}} (char $\ast$attr, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\item 
+bool \mbox{\hyperlink{k__terminal_8c_aaa27a5cf4effb4de9793dbc5d8485251}{Clear\+IO}} (char $\ast$attr, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\item 
+bool \mbox{\hyperlink{k__terminal_8c_a278dcd638c1669d47cac62d07ceafc39}{run}} (char $\ast$attr, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$term)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$const \mbox{\hyperlink{k__terminal_8c_a8aba0f53fb47f71d635b44b50fca21bb}{C\+O\+M\+M\+A\+ND}} \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em Supported command keywords. Commands are case insensitive. \end{DoxyCompactList}\item 
+const char $\ast$const \mbox{\hyperlink{k__terminal_8c_a7b5a544b390f09c673bc6be6b58d26a3}{I\+O\+\_\+\+O\+P\+T\+I\+O\+NS}} \mbox{[}$\,$\mbox{]}
+\begin{DoxyCompactList}\small\item\em IO command sub-\/options supported. \end{DoxyCompactList}\item 
+bool($\ast$const \mbox{\hyperlink{k__terminal_8c_aae8a68a3433f46851e29c51be705fb5a}{Comm\+Handler}} \mbox{[}$\,$\mbox{]})(char $\ast$, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains the terminal process and all its supporting functionality. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+22 (Created) 
+
+2019.\+11.\+29 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4}\label{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4}} 
+\index{k\_terminal.c@{k\_terminal.c}!SUPPORTED\_COMMANDS@{SUPPORTED\_COMMANDS}}
+\index{SUPPORTED\_COMMANDS@{SUPPORTED\_COMMANDS}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{SUPPORTED\_COMMANDS}{SUPPORTED\_COMMANDS}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4}{S\+U\+P\+P\+O\+R\+T\+E\+D\+\_\+\+C\+O\+M\+M\+A\+N\+DS}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SYSVIEW@{SYSVIEW}!k\_terminal.c@{k\_terminal.c}}\index{k\_terminal.c@{k\_terminal.c}!SYSVIEW@{SYSVIEW}}}\mbox{\Hypertarget{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a9264040e7f31f1aeb707c97e39e2535a}\label{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a9264040e7f31f1aeb707c97e39e2535a}} 
+S\+Y\+S\+V\+I\+EW&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SETIO@{SETIO}!k\_terminal.c@{k\_terminal.c}}\index{k\_terminal.c@{k\_terminal.c}!SETIO@{SETIO}}}\mbox{\Hypertarget{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4ab3b8b9b266b8d73c7f3a04c487ee35b6}\label{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4ab3b8b9b266b8d73c7f3a04c487ee35b6}} 
+S\+E\+T\+IO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CLEARIO@{CLEARIO}!k\_terminal.c@{k\_terminal.c}}\index{k\_terminal.c@{k\_terminal.c}!CLEARIO@{CLEARIO}}}\mbox{\Hypertarget{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4af1a954ed4ad205650d0b980a581ff968}\label{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4af1a954ed4ad205650d0b980a581ff968}} 
+C\+L\+E\+A\+R\+IO&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RUN@{RUN}!k\_terminal.c@{k\_terminal.c}}\index{k\_terminal.c@{k\_terminal.c}!RUN@{RUN}}}\mbox{\Hypertarget{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a439c688a4e9ed31638d5922a50680a8e}\label{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a439c688a4e9ed31638d5922a50680a8e}} 
+R\+UN&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMMANDS\_SIZE@{COMMANDS\_SIZE}!k\_terminal.c@{k\_terminal.c}}\index{k\_terminal.c@{k\_terminal.c}!COMMANDS\_SIZE@{COMMANDS\_SIZE}}}\mbox{\Hypertarget{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a9d141360f4456ea9d82f55a309660a08}\label{k__terminal_8c_aef503f441affa59e48ac1120b984f6c4a9d141360f4456ea9d82f55a309660a08}} 
+C\+O\+M\+M\+A\+N\+D\+S\+\_\+\+S\+I\+ZE&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{k__terminal_8c_aaa27a5cf4effb4de9793dbc5d8485251}\label{k__terminal_8c_aaa27a5cf4effb4de9793dbc5d8485251}} 
+\index{k\_terminal.c@{k\_terminal.c}!ClearIO@{ClearIO}}
+\index{ClearIO@{ClearIO}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{ClearIO()}{ClearIO()}}
+{\footnotesize\ttfamily bool Clear\+IO (\begin{DoxyParamCaption}\item[{char $\ast$}]{attr,  }\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{k__terminal_8c_a17d4e3cec6e8979d90f76e0c1c8ed02b}\label{k__terminal_8c_a17d4e3cec6e8979d90f76e0c1c8ed02b}} 
+\index{k\_terminal.c@{k\_terminal.c}!CommandCheck@{CommandCheck}}
+\index{CommandCheck@{CommandCheck}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{CommandCheck()}{CommandCheck()}}
+{\footnotesize\ttfamily bool Command\+Check (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+
+
+Checks terminal\textquotesingle{}s buffer for valid commands and calls their respective handler functions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em term} & pointer to active terminal structure. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if a valid command was found in the buffer False if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__terminal_8c_a5ce9f04f34a42384329c6b8950731295}\label{k__terminal_8c_a5ce9f04f34a42384329c6b8950731295}} 
+\index{k\_terminal.c@{k\_terminal.c}!ConfigureInputCapture@{ConfigureInputCapture}}
+\index{ConfigureInputCapture@{ConfigureInputCapture}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{ConfigureInputCapture()}{ConfigureInputCapture()}}
+{\footnotesize\ttfamily void Configure\+Input\+Capture (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__terminal_8h_a1d9a980b81c3b5963b7d54aeb758fef4}{input\+\_\+capture\+\_\+t}} $\ast$}]{cap,  }\item[{\mbox{\hyperlink{k__types_8h_a695e358cbbbe198eead6f5a274151bdf}{I\+O\+\_\+metadata\+\_\+t}} $\ast$}]{meta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Configures the terminal\textquotesingle{}s input capture settings based on supplied metadata. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em cap} & pointer to capture settings of the terminal. \\
+\hline
+\mbox{\texttt{ in}}  & {\em in} & pointer to metadata structure containing the input configuration of a process request. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__terminal_8c_ad67e330028c5712e9400392a146ff9b6}\label{k__terminal_8c_ad67e330028c5712e9400392a146ff9b6}} 
+\index{k\_terminal.c@{k\_terminal.c}!generate\_header@{generate\_header}}
+\index{generate\_header@{generate\_header}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{generate\_header()}{generate\_header()}}
+{\footnotesize\ttfamily void generate\+\_\+header (\begin{DoxyParamCaption}\item[{char $\ast$}]{home,  }\item[{uint32\+\_\+t}]{width }\end{DoxyParamCaption})}
+
+
+
+Generates the header text displayed when terminal is running in Command-\/mode. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em home} & pointer to string where generated output will be placed in. \\
+\hline
+\mbox{\texttt{ in}}  & {\em width} & Width of the header line. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__terminal_8c_a3cbd88ed10b5fb037f3a043d3513cbf3}\label{k__terminal_8c_a3cbd88ed10b5fb037f3a043d3513cbf3}} 
+\index{k\_terminal.c@{k\_terminal.c}!init\_term@{init\_term}}
+\index{init\_term@{init\_term}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{init\_term()}{init\_term()}}
+{\footnotesize\ttfamily void init\+\_\+term (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+
+
+Initializes the terminal settings. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em term} & pointer to terminal structure to initialize. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__terminal_8c_a64ca3a424dd85aa6cbdd6600f59a3780}\label{k__terminal_8c_a64ca3a424dd85aa6cbdd6600f59a3780}} 
+\index{k\_terminal.c@{k\_terminal.c}!ProcessInput@{ProcessInput}}
+\index{ProcessInput@{ProcessInput}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{ProcessInput()}{ProcessInput()}}
+{\footnotesize\ttfamily void Process\+Input (\begin{DoxyParamCaption}\item[{char}]{c,  }\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+
+
+Processes an input character sent from U\+A\+RT. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em c} & input character. \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em term} & pointer to active terminal structure.\\
+\hline
+\end{DoxyParams}
+Function is used when either in command handler mode or process handler mode. \mbox{\Hypertarget{k__terminal_8c_a09406fe2c7ef6d8a6ee586f645c27f1f}\label{k__terminal_8c_a09406fe2c7ef6d8a6ee586f645c27f1f}} 
+\index{k\_terminal.c@{k\_terminal.c}!ResetInputCapture@{ResetInputCapture}}
+\index{ResetInputCapture@{ResetInputCapture}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{ResetInputCapture()}{ResetInputCapture()}}
+{\footnotesize\ttfamily void Reset\+Input\+Capture (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__terminal_8h_a1d9a980b81c3b5963b7d54aeb758fef4}{input\+\_\+capture\+\_\+t}} $\ast$}]{cap }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Resets the terminal\textquotesingle{}s input capture settings. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em cap} & pointer to capture settings of the terminal. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__terminal_8c_a5f6047bae9bf82be7be019edf176fdba}\label{k__terminal_8c_a5f6047bae9bf82be7be019edf176fdba}} 
+\index{k\_terminal.c@{k\_terminal.c}!ResetScreen@{ResetScreen}}
+\index{ResetScreen@{ResetScreen}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{ResetScreen()}{ResetScreen()}}
+{\footnotesize\ttfamily void Reset\+Screen (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Resets the computer terminal settings and cursor position. 
+
+\mbox{\Hypertarget{k__terminal_8c_a82fdf1845852f11bd394d7ff4a6be0c4}\label{k__terminal_8c_a82fdf1845852f11bd394d7ff4a6be0c4}} 
+\index{k\_terminal.c@{k\_terminal.c}!ResetTerminal@{ResetTerminal}}
+\index{ResetTerminal@{ResetTerminal}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{ResetTerminal()}{ResetTerminal()}}
+{\footnotesize\ttfamily void Reset\+Terminal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Resets the terminal settings. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em term} & pointer to terminal structure to reset its contents \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__terminal_8c_a278dcd638c1669d47cac62d07ceafc39}\label{k__terminal_8c_a278dcd638c1669d47cac62d07ceafc39}} 
+\index{k\_terminal.c@{k\_terminal.c}!run@{run}}
+\index{run@{run}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily bool run (\begin{DoxyParamCaption}\item[{char $\ast$}]{attr,  }\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{k__terminal_8c_a54c8e2feafb5a3efa9c223ea1d87b2b9}\label{k__terminal_8c_a54c8e2feafb5a3efa9c223ea1d87b2b9}} 
+\index{k\_terminal.c@{k\_terminal.c}!send\_header@{send\_header}}
+\index{send\_header@{send\_header}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{send\_header()}{send\_header()}}
+{\footnotesize\ttfamily void send\+\_\+header (\begin{DoxyParamCaption}\item[{char $\ast$}]{header }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sends the header line to computer terminal. 
+
+\mbox{\Hypertarget{k__terminal_8c_a1b445477a235c3a0764638e73c8025a8}\label{k__terminal_8c_a1b445477a235c3a0764638e73c8025a8}} 
+\index{k\_terminal.c@{k\_terminal.c}!SendUserInput@{SendUserInput}}
+\index{SendUserInput@{SendUserInput}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{SendUserInput()}{SendUserInput()}}
+{\footnotesize\ttfamily void Send\+User\+Input (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+
+
+Sends captured input to process that requested it. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em term} & pointer to active terminal structure. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__terminal_8c_a704722aa445f2d08ec51784b071b1e3d}\label{k__terminal_8c_a704722aa445f2d08ec51784b071b1e3d}} 
+\index{k\_terminal.c@{k\_terminal.c}!SetIO@{SetIO}}
+\index{SetIO@{SetIO}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{SetIO()}{SetIO()}}
+{\footnotesize\ttfamily bool Set\+IO (\begin{DoxyParamCaption}\item[{char $\ast$}]{attr,  }\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{k__terminal_8c_a11369793cb663aef5e3ddd9d2220c211}\label{k__terminal_8c_a11369793cb663aef5e3ddd9d2220c211}} 
+\index{k\_terminal.c@{k\_terminal.c}!SystemView@{SystemView}}
+\index{SystemView@{SystemView}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{SystemView()}{SystemView()}}
+{\footnotesize\ttfamily bool System\+View (\begin{DoxyParamCaption}\item[{char $\ast$}]{attr,  }\item[{\mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$}]{term }\end{DoxyParamCaption})}
+
+
+
+Displays information about the system and allocated processes. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em attr} & pointer to attribute string associated with command (not used in this command). \\
+\hline
+\mbox{\texttt{ in}}  & {\em term} & pointer to active terminal (not used in this command). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__terminal_8c_aadb0857d6d4bedf44cea1a4d10b01947}\label{k__terminal_8c_aadb0857d6d4bedf44cea1a4d10b01947}} 
+\index{k\_terminal.c@{k\_terminal.c}!terminal@{terminal}}
+\index{terminal@{terminal}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{terminal()}{terminal()}}
+{\footnotesize\ttfamily void terminal (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Terminal process. 
+
+Serves as a user command processor and as the IO server for processes. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{k__terminal_8c_a8aba0f53fb47f71d635b44b50fca21bb}\label{k__terminal_8c_a8aba0f53fb47f71d635b44b50fca21bb}} 
+\index{k\_terminal.c@{k\_terminal.c}!COMMAND@{COMMAND}}
+\index{COMMAND@{COMMAND}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{COMMAND}{COMMAND}}
+{\footnotesize\ttfamily const char$\ast$ const C\+O\+M\+M\+A\+ND\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"SYSVIEW"}, \textcolor{stringliteral}{"SETIO"}, \textcolor{stringliteral}{"CLEARIO"}, \textcolor{stringliteral}{"RUN"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Supported command keywords. Commands are case insensitive. 
+
+S\+Y\+S\+V\+I\+EW\+: displays information about the current processes. IO\+: IO permissions command. Let\textquotesingle{}s user configure or display IO permissions. R\+UN\+: places terminal process on the background and lets user processes run. \mbox{\Hypertarget{k__terminal_8c_aae8a68a3433f46851e29c51be705fb5a}\label{k__terminal_8c_aae8a68a3433f46851e29c51be705fb5a}} 
+\index{k\_terminal.c@{k\_terminal.c}!CommHandler@{CommHandler}}
+\index{CommHandler@{CommHandler}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{CommHandler}{CommHandler}}
+{\footnotesize\ttfamily bool($\ast$ const Comm\+Handler\mbox{[}$\,$\mbox{]})(char $\ast$, \mbox{\hyperlink{k__terminal_8h_a43dd4197d69e72b1863fd980c54cf64e}{terminal\+\_\+t}} $\ast$)}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \mbox{\hyperlink{k__terminal_8c_a11369793cb663aef5e3ddd9d2220c211}{SystemView}},}
+\DoxyCodeLine{    \mbox{\hyperlink{k__terminal_8c_a704722aa445f2d08ec51784b071b1e3d}{SetIO}},}
+\DoxyCodeLine{    \mbox{\hyperlink{k__terminal_8c_aaa27a5cf4effb4de9793dbc5d8485251}{ClearIO}},}
+\DoxyCodeLine{    \mbox{\hyperlink{k__terminal_8c_a278dcd638c1669d47cac62d07ceafc39}{run}}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{k__terminal_8c_a7b5a544b390f09c673bc6be6b58d26a3}\label{k__terminal_8c_a7b5a544b390f09c673bc6be6b58d26a3}} 
+\index{k\_terminal.c@{k\_terminal.c}!IO\_OPTIONS@{IO\_OPTIONS}}
+\index{IO\_OPTIONS@{IO\_OPTIONS}!k\_terminal.c@{k\_terminal.c}}
+\doxysubsubsection{\texorpdfstring{IO\_OPTIONS}{IO\_OPTIONS}}
+{\footnotesize\ttfamily const char$\ast$ const I\+O\+\_\+\+O\+P\+T\+I\+O\+NS\mbox{[}$\,$\mbox{]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"ON"}, \textcolor{stringliteral}{"OFF"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+IO command sub-\/options supported. 
+

@@ -2,15 +2,29 @@
  * @mainpage    Lightweight Message-Passing Embedded Kernel
  *
  * @section     Project Information
- *              This kernel enables multi-tasking capabilities 
- *				in an embedded environment.
+ *              This real-time kernel enables multi-tasking capabilities 
+ *				in an embedded environment. \n
  *				It also provides message-passing capabilities between processes and
  * 				user Input/Output functionality via message-passing.
- *				 
+ *				
+ * @section		Processes
+ *				Processes are instances of a CPU context. This includes all general
+ *				purpose registers, the stack pointer, the program counter, and the 
+ *				status register. \n
+ *				A process can be registered into the kernel using the pcreate kernel
+ *				call, which requires a function that the processs will run, 
+ *				optionally a pointer to a process attribute function to allow 
+ *				customization of the process' ID, priority, and name. \n
+ *				main.c is the default place to register processes in, but processes
+ *				themselves can register processes. \n
+ *				Due to the kernel being made for real-time operations,
+ *				the number of supported process is static.
+ *				
+ *
  * @section		Kernel calls
  *				Kernel functionality and information can be accessed by a process via
- *				kernel calls.
- *				The supported kernel calls can be found in calls.h
+ *				kernel calls. \n
+ *				The supported kernel calls can be found in calls.h \n
  *				Message-passing is done via kernel calls.
  *
  * @section		Message Passing System
@@ -47,29 +61,31 @@
  *				message box, and the req_data must be a IO_metadata structure which
  *				contains information that the server requires to perform process
  *				requests to output data to user or receive data from user.
+ *				This interaction is all encapsulated through send_user and recv_user
+ *				kernel calls however.
  *
  * subsection	IO Server Terminal mode
  *				the IO server doubles up as a terminal program that can take in user
  *				commands to enable process' IO permissions, and to view system 
  *				process' information.
  *				currently supported commands are:
- *				sysview:
- *					displays information about the system processes.
- *				setio pid# pid# pid#... :
- *					used to enable IO permissions for the system processes.
- *					can be used with no pid# following it to enable IO permissions
- *					for all processes.
- *				cleario pid# pid# pid#... :
- *					used to disable IO permissions for the system processes.
+ *				sysview: \n
+ *					displays information about the system processes. \n
+ *				setio pid# pid# pid#... : \n
+ *					used to enable IO permissions for the system processes. 
+ *					Can be used with no pid# following it to enable IO permissions
+ *					for all processes. \n
+ *				cleario pid# pid# pid#... : \n
+ *					used to disable IO permissions for the system processes. \n
  *					can be used with no pid# following it to disable IO permissions
- *					for all processes.
- *				run:
+ *					for all processes. \n
+ *				run: \n
  *					Places IO server process in the background 
- *					and allows user processes to run.
+ *					and allows user processes to run. \n
  *
  *				Whenever the terminal process is running, the user-processes won't 
  *				be able to run. the 'run' command must be inputted by the user to 
- *				place the terminal in the background.
+ *				place the terminal in the background. \n
  * 				The IO server can be set to be in terminal mode at anytime by 
  *				inputting ctrl+c, which will then pause all user processes.
  *

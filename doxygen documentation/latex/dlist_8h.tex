@@ -1,0 +1,86 @@
+\hypertarget{dlist_8h}{}\doxysection{utils/dlist.h File Reference}
+\label{dlist_8h}\index{utils/dlist.h@{utils/dlist.h}}
+
+
+Contains all structures and function declarations on how to manage double linked lists.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structnode__}{node\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Double linked list node structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structnode__}{node\+\_\+}} \mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Double linked list node structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{dlist_8h_af800d7b4d997230f7d590c452dcb1ea3}{d\+Link}} (\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$node, \mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$front)
+\begin{DoxyCompactList}\small\item\em Links a node into the back of another. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{dlist_8h_a4ac5bcc32a4b91f514e4eeff11361b61}{d\+Unlink}} (\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Unlinks a node from its current list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all structures and function declarations on how to manage double linked lists. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+13 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{dlist_8h_a38f7020633ceadf24f531b56520d21dc}\label{dlist_8h_a38f7020633ceadf24f531b56520d21dc}} 
+\index{dlist.h@{dlist.h}!node\_t@{node\_t}}
+\index{node\_t@{node\_t}!dlist.h@{dlist.h}}
+\doxysubsubsection{\texorpdfstring{node\_t}{node\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structnode__}{node\+\_\+}}  \mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}}}
+
+
+
+Double linked list node structure. 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{dlist_8h_af800d7b4d997230f7d590c452dcb1ea3}\label{dlist_8h_af800d7b4d997230f7d590c452dcb1ea3}} 
+\index{dlist.h@{dlist.h}!dLink@{dLink}}
+\index{dLink@{dLink}!dlist.h@{dlist.h}}
+\doxysubsubsection{\texorpdfstring{dLink()}{dLink()}}
+{\footnotesize\ttfamily void d\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$}]{node,  }\item[{\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$}]{front }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Links a node into the back of another. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em node} & Node to be linked. \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em front} & \char`\"{}\+Head node\char`\"{} where the above node will be linked to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{dlist_8h_a4ac5bcc32a4b91f514e4eeff11361b61}\label{dlist_8h_a4ac5bcc32a4b91f514e4eeff11361b61}} 
+\index{dlist.h@{dlist.h}!dUnlink@{dUnlink}}
+\index{dUnlink@{dUnlink}!dlist.h@{dlist.h}}
+\doxysubsubsection{\texorpdfstring{dUnlink()}{dUnlink()}}
+{\footnotesize\ttfamily void d\+Unlink (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$}]{node }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Unlinks a node from its current list. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em node} & Node to unlink from its list. \\
+\hline
+\end{DoxyParams}

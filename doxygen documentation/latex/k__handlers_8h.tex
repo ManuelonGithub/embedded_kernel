@@ -1,0 +1,310 @@
+\hypertarget{k__handlers_8h}{}\doxysection{kernel/k\+\_\+handlers.h File Reference}
+\label{k__handlers_8h}\index{kernel/k\_handlers.h@{kernel/k\_handlers.h}}
+
+
+Defines all the functions and entities pertaining towards the kernel\textquotesingle{}s trap handlers and initializer functions.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+types.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}calls.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{k__handlers_8h_adabddf42ff4d80314613ac4f1d91fbc8}{K\+E\+R\+N\+E\+L\+\_\+\+H\+A\+N\+D\+L\+E\+R\+S\+\_\+H}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{k__handlers_8h_a3f19ffb1e6c83b6c0203fd69c0534437}{kernel\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initializes kernel data structures, drivers, and critical processes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a5fed83f1870809270475ca393c04530f}{kernel\+\_\+start}} ()
+\begin{DoxyCompactList}\small\item\em Starts the kernel\textquotesingle{}s run-\/mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a53c69e53135737e747747a3a6eb8dd69}{Kernel\+Call\+\_\+handler}} (\mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}} $\ast$call)
+\begin{DoxyCompactList}\small\item\em Kernel Call Handler function. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{k__handlers_8h_a727e88ff2dee6e3988e3887f8fc82d38}{k\+\_\+pcreate\+Call}} (\mbox{\hyperlink{calls_8h_a0aab65b05a29071e7244779fc0a556d7}{pcreate\+\_\+args\+\_\+t}} $\ast$arg)
+\begin{DoxyCompactList}\small\item\em Performs all operations required for process allocation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{k__handlers_8h_a03af669db50be36c37c7f65fab0d74ec}{getpid\+Call}} ()
+\begin{DoxyCompactList}\small\item\em Performs all operations required for retrieving the running process\textquotesingle{} ID. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} \mbox{\hyperlink{k__handlers_8h_a95f66b90fdb1b7c744e8a1f3322c525a}{nice\+Call}} (\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} $\ast$new)
+\begin{DoxyCompactList}\small\item\em Performs all operations required for changing the user process\textquotesingle{} priority. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{k__handlers_8h_adf47b77fffe9facad2fdacefe28a2991}{k\+\_\+bind\+Call}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} $\ast$box)
+\begin{DoxyCompactList}\small\item\em Performs all operations required for binding a message box to running process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{k__handlers_8h_a276094c1bdb99ff7f5fad586760f28d1}{k\+\_\+unbind\+Call}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} $\ast$box)
+\begin{DoxyCompactList}\small\item\em Performs all operations required for unbinding a message box to running process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{k__handlers_8h_abba44a3b1b08d596cf3f23f072c41abf}{k\+\_\+getbox\+Call}} ()
+\begin{DoxyCompactList}\small\item\em Performs all operations required to retrieve a bound message box to the running process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a1130306eda0cd5c78882a05d20d59831}{k\+\_\+send\+Call}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$msg, size\+\_\+t $\ast$retsize)
+\begin{DoxyCompactList}\small\item\em Performs all operations required to send a message from a message box belonging to the running process to another message box. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_ae6d9745010d84afa874ab46ec9a85790}{k\+\_\+recv\+Call}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$msg, size\+\_\+t $\ast$retsize)
+\begin{DoxyCompactList}\small\item\em Performs all operations required to receive a message from a message box to a message box belonging to the running process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a868c3d8f4b853b0704586dc61488138e}{k\+\_\+request\+Call}} (\mbox{\hyperlink{calls_8h_ab3f7eef7d8c33c7d0b43253b8242aaef}{request\+\_\+args\+\_\+t}} $\ast$arg, size\+\_\+t $\ast$retsize)
+\begin{DoxyCompactList}\small\item\em Performs all operations required to perform the request transaction between a message box belonging to the running process to another. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a6e0e1ecbce2ec53356f099e3bfcb0d20}{k\+\_\+getname\+Call}} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Performs all operations required to retrieve the name of the running process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a8cdf4ac67bb3e9f8a67f796125aab838}{k\+\_\+setname\+Call}} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Performs all operations required to set the name of the running process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_aadffaeb748922aa217329a31c4663a95}{k\+\_\+\+Terminate}} ()
+\begin{DoxyCompactList}\small\item\em Terminates the running process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__handlers_8h_a83abbeda22fc5e6c2b35523b64199c1c}{idle}} ()
+\begin{DoxyCompactList}\small\item\em Generic Idle process used by the kernel. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines all the functions and entities pertaining towards the kernel\textquotesingle{}s trap handlers and initializer functions. 
+
+This module should not be exposed to user programs. \begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+10.\+23 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{k__handlers_8h_adabddf42ff4d80314613ac4f1d91fbc8}\label{k__handlers_8h_adabddf42ff4d80314613ac4f1d91fbc8}} 
+\index{k\_handlers.h@{k\_handlers.h}!KERNEL\_HANDLERS\_H@{KERNEL\_HANDLERS\_H}}
+\index{KERNEL\_HANDLERS\_H@{KERNEL\_HANDLERS\_H}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{KERNEL\_HANDLERS\_H}{KERNEL\_HANDLERS\_H}}
+{\footnotesize\ttfamily \#define K\+E\+R\+N\+E\+L\+\_\+\+H\+A\+N\+D\+L\+E\+R\+S\+\_\+H}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{k__handlers_8h_a03af669db50be36c37c7f65fab0d74ec}\label{k__handlers_8h_a03af669db50be36c37c7f65fab0d74ec}} 
+\index{k\_handlers.h@{k\_handlers.h}!getpidCall@{getpidCall}}
+\index{getpidCall@{getpidCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{getpidCall()}{getpidCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} getpid\+Call (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required for retrieving the running process\textquotesingle{} ID. 
+
+\begin{DoxyReturn}{Returns}
+Running process\textquotesingle{} ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__handlers_8h_a83abbeda22fc5e6c2b35523b64199c1c}\label{k__handlers_8h_a83abbeda22fc5e6c2b35523b64199c1c}} 
+\index{k\_handlers.h@{k\_handlers.h}!idle@{idle}}
+\index{idle@{idle}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{idle()}{idle()}}
+{\footnotesize\ttfamily void idle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Generic Idle process used by the kernel. 
+
+\mbox{\Hypertarget{k__handlers_8h_adf47b77fffe9facad2fdacefe28a2991}\label{k__handlers_8h_adf47b77fffe9facad2fdacefe28a2991}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_bindCall@{k\_bindCall}}
+\index{k\_bindCall@{k\_bindCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_bindCall()}{k\_bindCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} k\+\_\+bind\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} $\ast$}]{box }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required for binding a message box to running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em pointer} & to box ID to be used in binding procedure. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Box ID bound to process. B\+O\+X\+\_\+\+E\+RR if bound procedure failed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__handlers_8h_abba44a3b1b08d596cf3f23f072c41abf}\label{k__handlers_8h_abba44a3b1b08d596cf3f23f072c41abf}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_getboxCall@{k\_getboxCall}}
+\index{k\_getboxCall@{k\_getboxCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_getboxCall()}{k\_getboxCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} k\+\_\+getbox\+Call (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required to retrieve a bound message box to the running process. 
+
+\begin{DoxyReturn}{Returns}
+Box ID of a box bound to process. B\+O\+X\+\_\+\+E\+RR if no boxes are bound to process. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__handlers_8h_a6e0e1ecbce2ec53356f099e3bfcb0d20}\label{k__handlers_8h_a6e0e1ecbce2ec53356f099e3bfcb0d20}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_getnameCall@{k\_getnameCall}}
+\index{k\_getnameCall@{k\_getnameCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_getnameCall()}{k\_getnameCall()}}
+{\footnotesize\ttfamily void k\+\_\+getname\+Call (\begin{DoxyParamCaption}\item[{char $\ast$}]{str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required to retrieve the name of the running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em Pointer} & to character string to copy the process\textquotesingle{} name to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__handlers_8h_a727e88ff2dee6e3988e3887f8fc82d38}\label{k__handlers_8h_a727e88ff2dee6e3988e3887f8fc82d38}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_pcreateCall@{k\_pcreateCall}}
+\index{k\_pcreateCall@{k\_pcreateCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_pcreateCall()}{k\_pcreateCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} k\+\_\+pcreate\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{calls_8h_a0aab65b05a29071e7244779fc0a556d7}{pcreate\+\_\+args\+\_\+t}} $\ast$}]{arg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required for process allocation. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg} & pointer to a pcreate arguments structure. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Process ID of allocated process. P\+R\+O\+C\+\_\+\+E\+RR if allocation failed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__handlers_8h_ae6d9745010d84afa874ab46ec9a85790}\label{k__handlers_8h_ae6d9745010d84afa874ab46ec9a85790}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_recvCall@{k\_recvCall}}
+\index{k\_recvCall@{k\_recvCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_recvCall()}{k\_recvCall()}}
+{\footnotesize\ttfamily void k\+\_\+recv\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{msg,  }\item[{size\+\_\+t $\ast$}]{retsize }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required to receive a message from a message box to a message box belonging to the running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em msg} & destination of message to be received from a message box. \\
+\hline
+\mbox{\texttt{ out}}  & {\em retsize} & number of bytes successfully received. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__handlers_8h_a868c3d8f4b853b0704586dc61488138e}\label{k__handlers_8h_a868c3d8f4b853b0704586dc61488138e}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_requestCall@{k\_requestCall}}
+\index{k\_requestCall@{k\_requestCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_requestCall()}{k\_requestCall()}}
+{\footnotesize\ttfamily void k\+\_\+request\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{calls_8h_ab3f7eef7d8c33c7d0b43253b8242aaef}{request\+\_\+args\+\_\+t}} $\ast$}]{arg,  }\item[{size\+\_\+t $\ast$}]{retsize }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required to perform the request transaction between a message box belonging to the running process to another. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em args} & Request transaction arguments. \\
+\hline
+\mbox{\texttt{ out}}  & {\em retsize} & number of bytes successfully received on the reply message. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__handlers_8h_a1130306eda0cd5c78882a05d20d59831}\label{k__handlers_8h_a1130306eda0cd5c78882a05d20d59831}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_sendCall@{k\_sendCall}}
+\index{k\_sendCall@{k\_sendCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_sendCall()}{k\_sendCall()}}
+{\footnotesize\ttfamily void k\+\_\+send\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{msg,  }\item[{size\+\_\+t $\ast$}]{retsize }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required to send a message from a message box belonging to the running process to another message box. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em msg} & message to send to a message box. \\
+\hline
+\mbox{\texttt{ out}}  & {\em retsize} & number of bytes successfully sent. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__handlers_8h_a8cdf4ac67bb3e9f8a67f796125aab838}\label{k__handlers_8h_a8cdf4ac67bb3e9f8a67f796125aab838}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_setnameCall@{k\_setnameCall}}
+\index{k\_setnameCall@{k\_setnameCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_setnameCall()}{k\_setnameCall()}}
+{\footnotesize\ttfamily void k\+\_\+setname\+Call (\begin{DoxyParamCaption}\item[{char $\ast$}]{str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required to set the name of the running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em Pointer} & to character string to set the process\textquotesingle{} name to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__handlers_8h_aadffaeb748922aa217329a31c4663a95}\label{k__handlers_8h_aadffaeb748922aa217329a31c4663a95}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_Terminate@{k\_Terminate}}
+\index{k\_Terminate@{k\_Terminate}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_Terminate()}{k\_Terminate()}}
+{\footnotesize\ttfamily void k\+\_\+\+Terminate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Terminates the running process. 
+
+Unbinds all message boxes and de-\/allocates the process. \mbox{\Hypertarget{k__handlers_8h_a276094c1bdb99ff7f5fad586760f28d1}\label{k__handlers_8h_a276094c1bdb99ff7f5fad586760f28d1}} 
+\index{k\_handlers.h@{k\_handlers.h}!k\_unbindCall@{k\_unbindCall}}
+\index{k\_unbindCall@{k\_unbindCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{k\_unbindCall()}{k\_unbindCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} k\+\_\+unbind\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} $\ast$}]{box }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required for unbinding a message box to running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em pointer} & to box ID to be used in unbinding procedure. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if unbinding procedure was successful, supplied box ID otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__handlers_8h_a3f19ffb1e6c83b6c0203fd69c0534437}\label{k__handlers_8h_a3f19ffb1e6c83b6c0203fd69c0534437}} 
+\index{k\_handlers.h@{k\_handlers.h}!kernel\_init@{kernel\_init}}
+\index{kernel\_init@{kernel\_init}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{kernel\_init()}{kernel\_init()}}
+{\footnotesize\ttfamily void kernel\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initializes kernel data structures, drivers, and critical processes. 
+
+\mbox{\Hypertarget{k__handlers_8h_a5fed83f1870809270475ca393c04530f}\label{k__handlers_8h_a5fed83f1870809270475ca393c04530f}} 
+\index{k\_handlers.h@{k\_handlers.h}!kernel\_start@{kernel\_start}}
+\index{kernel\_start@{kernel\_start}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{kernel\_start()}{kernel\_start()}}
+{\footnotesize\ttfamily void kernel\+\_\+start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Starts the kernel\textquotesingle{}s run-\/mode. 
+
+When a kernel is in run mode, user processes are able to run. \mbox{\Hypertarget{k__handlers_8h_a53c69e53135737e747747a3a6eb8dd69}\label{k__handlers_8h_a53c69e53135737e747747a3a6eb8dd69}} 
+\index{k\_handlers.h@{k\_handlers.h}!KernelCall\_handler@{KernelCall\_handler}}
+\index{KernelCall\_handler@{KernelCall\_handler}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{KernelCall\_handler()}{KernelCall\_handler()}}
+{\footnotesize\ttfamily void Kernel\+Call\+\_\+handler (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}} $\ast$}]{call }\end{DoxyParamCaption})}
+
+
+
+Kernel Call Handler function. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em call} & Pointer to call structure where the call\textquotesingle{}s code and arguments reside.\\
+\hline
+\end{DoxyParams}
+This function is in charge of analyzing the kernel call structure passed to the trap and service the call if its parameters are valid. \mbox{\Hypertarget{k__handlers_8h_a95f66b90fdb1b7c744e8a1f3322c525a}\label{k__handlers_8h_a95f66b90fdb1b7c744e8a1f3322c525a}} 
+\index{k\_handlers.h@{k\_handlers.h}!niceCall@{niceCall}}
+\index{niceCall@{niceCall}!k\_handlers.h@{k\_handlers.h}}
+\doxysubsubsection{\texorpdfstring{niceCall()}{niceCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} nice\+Call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} $\ast$}]{new }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Performs all operations required for changing the user process\textquotesingle{} priority. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new} & pointer to new priority value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Running process\textquotesingle{} priority after all operations are complete.
+\end{DoxyReturn}
+This function ensures the user process doesn\textquotesingle{}t change to an invalid/unallowed priority. 

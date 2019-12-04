@@ -1,0 +1,17 @@
+digraph "k_MsgSend"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="k_MsgSend",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Sends a message from one process to another."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="k_requestCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a868c3d8f4b853b0704586dc61488138e",tooltip="Performs all operations required to perform the request transaction between a message box belonging t..."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="KernelCall_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a53c69e53135737e747747a3a6eb8dd69",tooltip="Kernel Call Handler function."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="SVC_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8c.html#a5703d8fe19774bd873f7d7db5cd60242",tooltip="Supervisor Call trap handler."];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="k_sendCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a1130306eda0cd5c78882a05d20d59831",tooltip="Performs all operations required to send a message from a message box belonging to the running proces..."];
+  Node5 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

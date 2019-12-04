@@ -1,0 +1,449 @@
+\hypertarget{calls_8c}{}\doxysection{calls.\+c File Reference}
+\label{calls_8c}\index{calls.c@{calls.c}}
+
+
+Contains all the kernel call functions that user programs have access to.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+cpu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}calls.\+h\char`\"{}}\newline
+Include dependency graph for calls.\+c\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{k__types_8h_ad7e50dcaa7fc9e8530cae8c0c080bbb8}{k\+\_\+ret\+\_\+t}} \mbox{\hyperlink{calls_8c_a84f7c9fb55cbe7f8924be7b30eef3926}{kcall}} (\mbox{\hyperlink{k__defs_8h_a7641fab3302584496affe124a53546d3}{k\+\_\+code\+\_\+t}} code, \mbox{\hyperlink{k__types_8h_a782cd988847c169d093155e67d755439}{k\+\_\+arg\+\_\+t}} arg)
+\begin{DoxyCompactList}\small\item\em Sets up the kernel call and gives C\+PU control to the kernel to service the call. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{calls_8c_ae1c0c48399f147fc1d0487e4b534b121}{pcreate}} (\mbox{\hyperlink{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}{process\+\_\+attr\+\_\+t}} $\ast$attr, void($\ast$proc\+\_\+program)())
+\begin{DoxyCompactList}\small\item\em Requests the creation and registration of a new process in kernel space. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{calls_8c_a5354b26c0e92bc241bbaf8daedc5a28c}{terminate}} (void)
+\begin{DoxyCompactList}\small\item\em Requests the termination of the running process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{calls_8c_ac61b207337ca21b3b309593fd1a0cb82}{getpid}} (void)
+\begin{DoxyCompactList}\small\item\em Requests the process ID of the running process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} \mbox{\hyperlink{calls_8c_a9f3c24842355ea338505bd997093a25a}{nice}} (\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} new\+Priority)
+\begin{DoxyCompactList}\small\item\em Requests that the running process\textquotesingle{} priority to be changed. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{calls_8c_af77c30ce11306b9f5fcd5dbd97db3a56}{bind}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} box)
+\begin{DoxyCompactList}\small\item\em Binds a message box to the running process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{calls_8c_abb48d8ef7218b489ff9322ec9d0e53ff}{unbind}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} box)
+\begin{DoxyCompactList}\small\item\em Unbinds a message box from the running process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{calls_8c_a01cc81316a050edc81616ff5ad532aa2}{getbox}} ()
+\begin{DoxyCompactList}\small\item\em Gets the B\+OX ID of a box bound to the process. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{calls_8c_a89d7c5e892dc1998d7663efa98d9f487}{send}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} dst, \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} src, uint8\+\_\+t $\ast$data, uint32\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Send a message to a process. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{calls_8c_a19517e048e33085f0511109325b10392}{recv}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} dst, \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} src, uint8\+\_\+t $\ast$data, uint32\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Recieves a message from a process. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{calls_8c_a8e195efd858e3f28f50199e071df9f87}{request}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} dst, \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} src, uint8\+\_\+t $\ast$req, size\+\_\+t req\+\_\+size, uint8\+\_\+t $\ast$ret, size\+\_\+t ret\+\_\+max)
+\begin{DoxyCompactList}\small\item\em Performs a request transaction to a process. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{calls_8c_a3db582ffbfa51b05d8c8d1fba49f58b1}{send\+\_\+user}} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Send a character string to IO server to be displayed to user. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{calls_8c_a67cfc95199f6a35287de875c59178767}{recv\+\_\+user}} (char $\ast$buf, uint32\+\_\+t max\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Receives a character string from the IO server (generated by the user). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{calls_8c_aedeffc3bcf7111f111a109ac55b4320f}{get\+\_\+name}} (char $\ast$dst\+\_\+str)
+\begin{DoxyCompactList}\small\item\em Gets process name. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{calls_8c_a9013a2d8fef03e41dd58b43810829450}{set\+\_\+name}} (char $\ast$src\+\_\+str)
+\begin{DoxyCompactList}\small\item\em Sets the process name. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all the kernel call functions that user programs have access to. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+10.\+23 (Created) 
+
+2019.\+11.\+29 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{calls_8c_af77c30ce11306b9f5fcd5dbd97db3a56}\label{calls_8c_af77c30ce11306b9f5fcd5dbd97db3a56}} 
+\index{calls.c@{calls.c}!bind@{bind}}
+\index{bind@{bind}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{bind()}{bind()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} bind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{box }\end{DoxyParamCaption})}
+
+
+
+Binds a message box to the running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Box} & ID to bind with ($\ast$). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The box ID that was bound to the process. If the returned value is 0, a bind wasn\textquotesingle{}t able to be made.
+\end{DoxyReturn}
+($\ast$) A process can set the bind ID to A\+N\+Y\+\_\+\+B\+OX if no particular box ID is required. 
+
+Definition at line 84 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+\mbox{\Hypertarget{calls_8c_aedeffc3bcf7111f111a109ac55b4320f}\label{calls_8c_aedeffc3bcf7111f111a109ac55b4320f}} 
+\index{calls.c@{calls.c}!get\_name@{get\_name}}
+\index{get\_name@{get\_name}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{get\_name()}{get\_name()}}
+{\footnotesize\ttfamily void get\+\_\+name (\begin{DoxyParamCaption}\item[{char $\ast$}]{dst\+\_\+str }\end{DoxyParamCaption})}
+
+
+
+Gets process name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em dst\+\_\+str} & pointer to character buffer to place the process\textquotesingle{} name into. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 252 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 3
+Here is the caller graph for this function\+:
+% FIG 4
+\mbox{\Hypertarget{calls_8c_a01cc81316a050edc81616ff5ad532aa2}\label{calls_8c_a01cc81316a050edc81616ff5ad532aa2}} 
+\index{calls.c@{calls.c}!getbox@{getbox}}
+\index{getbox@{getbox}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{getbox()}{getbox()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} getbox (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the B\+OX ID of a box bound to the process. 
+
+\begin{DoxyReturn}{Returns}
+Box ID of box bound to process. B\+OX E\+RR if no boxes are bound. 
+\end{DoxyReturn}
+
+
+Definition at line 105 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 5
+Here is the caller graph for this function\+:
+% FIG 6
+\mbox{\Hypertarget{calls_8c_ac61b207337ca21b3b309593fd1a0cb82}\label{calls_8c_ac61b207337ca21b3b309593fd1a0cb82}} 
+\index{calls.c@{calls.c}!getpid@{getpid}}
+\index{getpid@{getpid}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{getpid()}{getpid()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} getpid (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Requests the process ID of the running process. 
+
+\begin{DoxyReturn}{Returns}
+The process ID value. 
+\end{DoxyReturn}
+
+
+Definition at line 54 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 7
+Here is the caller graph for this function\+:
+% FIG 8
+\mbox{\Hypertarget{calls_8c_a84f7c9fb55cbe7f8924be7b30eef3926}\label{calls_8c_a84f7c9fb55cbe7f8924be7b30eef3926}} 
+\index{calls.c@{calls.c}!kcall@{kcall}}
+\index{kcall@{kcall}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{kcall()}{kcall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_ad7e50dcaa7fc9e8530cae8c0c080bbb8}{k\+\_\+ret\+\_\+t}} kcall (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__defs_8h_a7641fab3302584496affe124a53546d3}{k\+\_\+code\+\_\+t}}}]{code,  }\item[{\mbox{\hyperlink{k__types_8h_a782cd988847c169d093155e67d755439}{k\+\_\+arg\+\_\+t}}}]{arg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets up the kernel call and gives C\+PU control to the kernel to service the call. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em code} & Code associated with the kernel call to be serviced. \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em arg} & Kernel call argument relevant to the call done. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A 32-\/bit value associated with the call done. 
+\end{DoxyReturn}
+
+
+Definition at line 21 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 9
+Here is the caller graph for this function\+:
+% FIG 10
+\mbox{\Hypertarget{calls_8c_a9f3c24842355ea338505bd997093a25a}\label{calls_8c_a9f3c24842355ea338505bd997093a25a}} 
+\index{calls.c@{calls.c}!nice@{nice}}
+\index{nice@{nice}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{nice()}{nice()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} nice (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}}}]{new\+Priority }\end{DoxyParamCaption})}
+
+
+
+Requests that the running process\textquotesingle{} priority to be changed. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em new\+Priority} & New priority level for the running process to run. Process can be set to a priority between H\+I\+G\+H\+\_\+\+P\+R\+I\+O\+R\+I\+TY and L\+O\+W\+E\+S\+T\+\_\+\+P\+R\+I\+O\+R\+I\+TY. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value of the running\textquotesingle{}s priority after the call was serviced. If the return value is different than the new priority value, then the change of priority was unsuccessful.
+\end{DoxyReturn}
+This is a preemptive call. When the call is done the kernel scheduler will re-\/evaluate which process will run based on their priorities. 
+
+Definition at line 71 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 11
+\mbox{\Hypertarget{calls_8c_ae1c0c48399f147fc1d0487e4b534b121}\label{calls_8c_ae1c0c48399f147fc1d0487e4b534b121}} 
+\index{calls.c@{calls.c}!pcreate@{pcreate}}
+\index{pcreate@{pcreate}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{pcreate()}{pcreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} pcreate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}{process\+\_\+attr\+\_\+t}} $\ast$}]{attr,  }\item[{void($\ast$)()}]{proc\+\_\+program }\end{DoxyParamCaption})}
+
+
+
+Requests the creation and registration of a new process in kernel space. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em attr} & Pointer to process attributes to configure the process with. \\
+\hline
+\mbox{\texttt{ in}}  & {\em proc\+\_\+program} & Pointer to reentrant function for the process to run. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Process ID of the allocated process. P\+R\+O\+C\+\_\+\+E\+RR if a process failed to be allocated. 
+\end{DoxyReturn}
+
+
+Definition at line 36 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 12
+Here is the caller graph for this function\+:
+% FIG 13
+\mbox{\Hypertarget{calls_8c_a19517e048e33085f0511109325b10392}\label{calls_8c_a19517e048e33085f0511109325b10392}} 
+\index{calls.c@{calls.c}!recv@{recv}}
+\index{recv@{recv}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{recv()}{recv()}}
+{\footnotesize\ttfamily size\+\_\+t recv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{dst,  }\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{src,  }\item[{uint8\+\_\+t $\ast$}]{data,  }\item[{uint32\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Recieves a message from a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em dst} & Destination message box for the message. \\
+\hline
+\mbox{\texttt{ in}}  & {\em src} & Source message box for the message. \\
+\hline
+\mbox{\texttt{ out}}  & {\em data} & Pointer to location where message data will be sent to. \\
+\hline
+\mbox{\texttt{ in}}  & {\em size} & Maximum message size supported. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Amount of bytes received.
+\end{DoxyReturn}
+This is a preemptive call. The process will block if no messages can be received at the time of the kernel call. 
+
+Definition at line 138 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 14
+Here is the caller graph for this function\+:
+% FIG 15
+\mbox{\Hypertarget{calls_8c_a67cfc95199f6a35287de875c59178767}\label{calls_8c_a67cfc95199f6a35287de875c59178767}} 
+\index{calls.c@{calls.c}!recv\_user@{recv\_user}}
+\index{recv\_user@{recv\_user}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{recv\_user()}{recv\_user()}}
+{\footnotesize\ttfamily size\+\_\+t recv\+\_\+user (\begin{DoxyParamCaption}\item[{char $\ast$}]{buf,  }\item[{uint32\+\_\+t}]{max\+\_\+size }\end{DoxyParamCaption})}
+
+
+
+Receives a character string from the IO server (generated by the user). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em str} & pointer to character string to copy string t. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of bytes successfully received from the IO server.
+\end{DoxyReturn}
+This isn\textquotesingle{}t a inherent kernel call, it is simply a \char`\"{}wrapper\char`\"{} function to a request kernel call where the transaction\textquotesingle{}s parameter/requirements are taken care of. It is an \char`\"{}expensive\char`\"{} operation though, which has 3 to 4 kernel calls in it in order to get all the parameters (valid message box \& process ID). Function is useful though as it takes care of filling out the request data for a valid \char`\"{}get user input\char`\"{} interaction with the IO server. 
+
+Definition at line 222 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 16
+Here is the caller graph for this function\+:
+% FIG 17
+\mbox{\Hypertarget{calls_8c_a8e195efd858e3f28f50199e071df9f87}\label{calls_8c_a8e195efd858e3f28f50199e071df9f87}} 
+\index{calls.c@{calls.c}!request@{request}}
+\index{request@{request}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{request()}{request()}}
+{\footnotesize\ttfamily size\+\_\+t request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{dst,  }\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{src,  }\item[{uint8\+\_\+t $\ast$}]{req,  }\item[{size\+\_\+t}]{req\+\_\+size,  }\item[{uint8\+\_\+t $\ast$}]{ret,  }\item[{size\+\_\+t}]{ret\+\_\+max }\end{DoxyParamCaption})}
+
+
+
+Performs a request transaction to a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em dst} & Message box to perform the request transaction. \\
+\hline
+\mbox{\texttt{ in}}  & {\em src} & Source message box where the request transaction will be engaged from. \\
+\hline
+\mbox{\texttt{ in}}  & {\em req} & Request message data to be sent. \\
+\hline
+\mbox{\texttt{ in}}  & {\em req\+\_\+size} & Size of the request message data. \\
+\hline
+\mbox{\texttt{ out}}  & {\em ret} & Pointer to location where reply message data will be sent to. \\
+\hline
+\mbox{\texttt{ in}}  & {\em ret\+\_\+max} & Maximum size allowed for the reply message data. \\
+\hline
+ & {\em Number} & of bytes received by the return message.\\
+\hline
+\end{DoxyParams}
+A request transation simply consists of a send+recv to a particular process. This call simply does it both in kernel space to improve performance, as it is a common interaction between processes. 
+
+Definition at line 161 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 18
+Here is the caller graph for this function\+:
+% FIG 19
+\mbox{\Hypertarget{calls_8c_a89d7c5e892dc1998d7663efa98d9f487}\label{calls_8c_a89d7c5e892dc1998d7663efa98d9f487}} 
+\index{calls.c@{calls.c}!send@{send}}
+\index{send@{send}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{send()}{send()}}
+{\footnotesize\ttfamily size\+\_\+t send (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{dst,  }\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{src,  }\item[{uint8\+\_\+t $\ast$}]{data,  }\item[{uint32\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Send a message to a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em dst} & Destination message box for the message. \\
+\hline
+\mbox{\texttt{ in}}  & {\em src} & Source message box for the message. \\
+\hline
+\mbox{\texttt{ in}}  & {\em data} & Message data to be sent. \\
+\hline
+\mbox{\texttt{ in}}  & {\em size} & Size of the message data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Amount of bytes able to send to destination. This does not guarantee that all bytes will be received however, as message can be placed on hold until the receiver asks for a message, and cannot take all the contents of the message. 
+\end{DoxyReturn}
+
+
+Definition at line 121 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 20
+Here is the caller graph for this function\+:
+% FIG 21
+\mbox{\Hypertarget{calls_8c_a3db582ffbfa51b05d8c8d1fba49f58b1}\label{calls_8c_a3db582ffbfa51b05d8c8d1fba49f58b1}} 
+\index{calls.c@{calls.c}!send\_user@{send\_user}}
+\index{send\_user@{send\_user}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{send\_user()}{send\_user()}}
+{\footnotesize\ttfamily size\+\_\+t send\+\_\+user (\begin{DoxyParamCaption}\item[{char $\ast$}]{str }\end{DoxyParamCaption})}
+
+
+
+Send a character string to IO server to be displayed to user. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em str} & pointer to character string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of bytes successfully displayed to the user.
+\end{DoxyReturn}
+This isn\textquotesingle{}t a inherent kernel call, it is simply a \char`\"{}wrapper\char`\"{} function to a request kernel call where the transaction\textquotesingle{}s parameter/requirements are taken care of. It is an \char`\"{}expensive\char`\"{} operation though, which has 3 to 4 kernel calls in it in order to get all the parameters (valid message box \& process ID). Function is useful though as it takes care of filling out the request data for a valid \char`\"{}output to user\char`\"{} interaction with the IO server. 
+
+Definition at line 184 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 22
+Here is the caller graph for this function\+:
+% FIG 23
+\mbox{\Hypertarget{calls_8c_a9013a2d8fef03e41dd58b43810829450}\label{calls_8c_a9013a2d8fef03e41dd58b43810829450}} 
+\index{calls.c@{calls.c}!set\_name@{set\_name}}
+\index{set\_name@{set\_name}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{set\_name()}{set\_name()}}
+{\footnotesize\ttfamily void set\+\_\+name (\begin{DoxyParamCaption}\item[{char $\ast$}]{src\+\_\+str }\end{DoxyParamCaption})}
+
+
+
+Sets the process name. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em src\+\_\+str} & pointer to character string to set the process\textquotesingle{} name to. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 261 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 24
+Here is the caller graph for this function\+:
+% FIG 25
+\mbox{\Hypertarget{calls_8c_a5354b26c0e92bc241bbaf8daedc5a28c}\label{calls_8c_a5354b26c0e92bc241bbaf8daedc5a28c}} 
+\index{calls.c@{calls.c}!terminate@{terminate}}
+\index{terminate@{terminate}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{terminate()}{terminate()}}
+{\footnotesize\ttfamily void terminate (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Requests the termination of the running process. 
+
+
+
+Definition at line 45 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 26
+Here is the caller graph for this function\+:
+% FIG 27
+\mbox{\Hypertarget{calls_8c_abb48d8ef7218b489ff9322ec9d0e53ff}\label{calls_8c_abb48d8ef7218b489ff9322ec9d0e53ff}} 
+\index{calls.c@{calls.c}!unbind@{unbind}}
+\index{unbind@{unbind}!calls.c@{calls.c}}
+\doxysubsubsection{\texorpdfstring{unbind()}{unbind()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} unbind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{box }\end{DoxyParamCaption})}
+
+
+
+Unbinds a message box from the running process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Box} & ID to unbind from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the unbind process was successful, else it\textquotesingle{}ll return the box ID attempted to be unbound. 
+\end{DoxyReturn}
+
+
+Definition at line 95 of file calls.\+c.
+
+Here is the call graph for this function\+:
+% FIG 28

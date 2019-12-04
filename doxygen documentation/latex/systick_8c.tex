@@ -1,0 +1,75 @@
+\hypertarget{systick_8c}{}\doxysection{drivers/systick.c File Reference}
+\label{systick_8c}\index{drivers/systick.c@{drivers/systick.c}}
+
+
+Contains all functionality of the Sys\+Tick driver.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Sys\+Tick.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{systick_8c_a85802a1f05abf407fe1fff1021be6a5e}{Sys\+Tick\+\_\+\+Init}} (uint32\+\_\+t rate)
+\begin{DoxyCompactList}\small\item\em Initializes the sys\+Tick driver \& sets up the descriptor for the driver. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{systick_8c_acd018ca7f595921b0c6a2928ee15bb2d}{Sys\+Tick\+\_\+\+Set\+Period}} (uint32\+\_\+t Period)
+\begin{DoxyCompactList}\small\item\em Sets the Sys\+Tick period. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{systick_8c_ad51fa075a406920a9d116e2b9ee90897}{Sys\+Tick\+\_\+\+Reset}} ()
+\begin{DoxyCompactList}\small\item\em Resets the Sys\+Tick current value register and time count. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all functionality of the Sys\+Tick driver. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+09.\+26 (Created) 
+
+2019.\+10.\+04 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{systick_8c_a85802a1f05abf407fe1fff1021be6a5e}\label{systick_8c_a85802a1f05abf407fe1fff1021be6a5e}} 
+\index{systick.c@{systick.c}!SysTick\_Init@{SysTick\_Init}}
+\index{SysTick\_Init@{SysTick\_Init}!systick.c@{systick.c}}
+\doxysubsubsection{\texorpdfstring{SysTick\_Init()}{SysTick\_Init()}}
+{\footnotesize\ttfamily void Sys\+Tick\+\_\+\+Init (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{rate }\end{DoxyParamCaption})}
+
+
+
+Initializes the sys\+Tick driver \& sets up the descriptor for the driver. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em rate} & Frequency that Sys\+Tick should trigger (in Hz).\\
+\hline
+\end{DoxyParams}
+The descriptor\textquotesingle{}s pointer will be saved internally into the driver module so the interrupt handler can have access to it. \mbox{\Hypertarget{systick_8c_ad51fa075a406920a9d116e2b9ee90897}\label{systick_8c_ad51fa075a406920a9d116e2b9ee90897}} 
+\index{systick.c@{systick.c}!SysTick\_Reset@{SysTick\_Reset}}
+\index{SysTick\_Reset@{SysTick\_Reset}!systick.c@{systick.c}}
+\doxysubsubsection{\texorpdfstring{SysTick\_Reset()}{SysTick\_Reset()}}
+{\footnotesize\ttfamily void Sys\+Tick\+\_\+\+Reset (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Resets the Sys\+Tick current value register and time count. 
+
+\mbox{\Hypertarget{systick_8c_acd018ca7f595921b0c6a2928ee15bb2d}\label{systick_8c_acd018ca7f595921b0c6a2928ee15bb2d}} 
+\index{systick.c@{systick.c}!SysTick\_SetPeriod@{SysTick\_SetPeriod}}
+\index{SysTick\_SetPeriod@{SysTick\_SetPeriod}!systick.c@{systick.c}}
+\doxysubsubsection{\texorpdfstring{SysTick\_SetPeriod()}{SysTick\_SetPeriod()}}
+{\footnotesize\ttfamily void Sys\+Tick\+\_\+\+Set\+Period (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{Period }\end{DoxyParamCaption})}
+
+
+
+Sets the Sys\+Tick period. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Period} & Number of clock cycles between interrupt triggers, i.\+e. period. \\
+\hline
+\end{DoxyParams}

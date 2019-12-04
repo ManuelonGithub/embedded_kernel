@@ -1,0 +1,45 @@
+digraph "LinkPCB"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="LinkPCB",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Links a PCB into a specific priority queue."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ChangeProcessPriority",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html#a3516c38f02e3664cc6db527c4bf33c03",tooltip="Changes the priority of a process."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="init_term",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a3cbd88ed10b5fb037f3a043d3513cbf3",tooltip="Initializes the terminal settings."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="terminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aadb0857d6d4bedf44cea1a4d10b01947",tooltip="Terminal process."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="kernel_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a3f19ffb1e6c83b6c0203fd69c0534437",tooltip="Initializes kernel data structures, drivers, and critical processes."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe",tooltip="main.c"];
+  Node2 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="ResetTerminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a82fdf1845852f11bd394d7ff4a6be0c4",tooltip="Resets the terminal settings."];
+  Node7 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="run",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a278dcd638c1669d47cac62d07ceafc39",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="k_MsgSend",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a4102c8314e622c810fd8520210a4aa39",tooltip="Sends a message from one process to another."];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="k_requestCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a868c3d8f4b853b0704586dc61488138e",tooltip="Performs all operations required to perform the request transaction between a message box belonging t..."];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="KernelCall_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a53c69e53135737e747747a3a6eb8dd69",tooltip="Kernel Call Handler function."];
+  Node11 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="SVC_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8c.html#a5703d8fe19774bd873f7d7db5cd60242",tooltip="Supervisor Call trap handler."];
+  Node9 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="k_sendCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a1130306eda0cd5c78882a05d20d59831",tooltip="Performs all operations required to send a message from a message box belonging to the running proces..."];
+  Node13 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="k_pcreate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html#a9ea70364f7d015c8df1b31ddeee0b13c",tooltip="Creates a process and registers it in kernel space."];
+  Node14 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="k_pcreateCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a727e88ff2dee6e3988e3887f8fc82d38",tooltip="Performs all operations required for process allocation."];
+  Node15 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="niceCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a95f66b90fdb1b7c744e8a1f3322c525a",tooltip="Performs all operations required for changing the user process' priority."];
+  Node16 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

@@ -1,0 +1,21 @@
+digraph "kernel/k_cpu.h"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="kernel/k_cpu.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Contains all definitions and entities regarding the cpu-specific operations that the embedded kernel ..."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="calls.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html",tooltip="Contains all the kernel call functions that user programs have access to."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="drivers/uart.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8c.html",tooltip="Contains functionality to operate the UART0 driver for the tiva board."];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="kernel/k_calls.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__calls_8h.html",tooltip="Defines all priviledged functions and entities regarding kernel calls."];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="kernel/k_cpu.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html",tooltip="Contains the implementations of all CPU specific functionality that the kernel requires to operate."];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="kernel/k_handlers.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8c.html",tooltip="Contains all functions pertaining towards the kernel's trap handlers and initializer functions."];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="kernel/k_messaging.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html",tooltip="Contains all message and message box allocation management and all supporting functionality regarding..."];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="kernel/k_processes.c",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8c.html",tooltip="Contains the process allocation management and all supporting functionality related to the kernel pro..."];
+}

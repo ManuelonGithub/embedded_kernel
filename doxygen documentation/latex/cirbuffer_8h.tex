@@ -1,0 +1,323 @@
+\hypertarget{cirbuffer_8h}{}\doxysection{utils/cirbuffer.h File Reference}
+\label{cirbuffer_8h}\index{utils/cirbuffer.h@{utils/cirbuffer.h}}
+
+
+Header file with definitions, macros and function prototypes used to operate a circular buffer.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structcircular__buffer__}{circular\+\_\+buffer\+\_\+}}
+\begin{DoxyCompactList}\small\item\em circular buffer structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_a501f5c21d6fe4e60dc984cdaba5e892f}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}}~128
+\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}}~(\mbox{\hyperlink{cirbuffer_8h_a501f5c21d6fe4e60dc984cdaba5e892f}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}}-\/1)
+\begin{DoxyCompactList}\small\item\em Circular buffer size mask. Used to constrain the pointers within the buffer array. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_a93e24ce26b2add0aaf79039a95154c14}{B\+U\+F\+F\+E\+R\+\_\+\+F\+U\+LL}}~\mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}}
+\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_acaccc220c461e6f2f1d677be8359d758}{B\+U\+F\+F\+E\+R\+\_\+\+E\+M\+P\+TY}}~0
+\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_a5ab8256e7239d2647934e0afaf977b9a}{I\+N\+C\+\_\+\+P\+TR}}(ptr)~(ptr = (ptr + 1) \& \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}})
+\begin{DoxyCompactList}\small\item\em Pointer increment macro. Safely increments a circular buffer pointer \& wraps it to the beginning when overflowing at the end of the buffer size. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_ae50b1c9bad949ad725f7632856ec9b9f}{D\+E\+C\+\_\+\+P\+TR}}(ptr)~(ptr = (ptr -\/ 1) \& \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}})
+\begin{DoxyCompactList}\small\item\em Pointer decrement macro. Safely decrements a circular buffer pointer \& wraps it to the beginning when \textquotesingle{}overflowing\textquotesingle{} at the beginning of the buffer size. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{cirbuffer_8h_ad0d2ecd179122898cce21c005975678c}{M\+O\+V\+\_\+\+P\+TR}}(ptr,  i)~(ptr = (ptr + i) \& \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}})
+\begin{DoxyCompactList}\small\item\em Pointer move macro. Safely move a circular buffer pointer \& wraps it to the beginning when \textquotesingle{}overflowing\textquotesingle{} either at the end or beginning of the buffer size. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structcircular__buffer__}{circular\+\_\+buffer\+\_\+}} \mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em circular buffer structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{cirbuffer_8h_ac138af4ee84216ca1619d46ab34ba4b9}{circular\+\_\+buffer\+\_\+init}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Initializes a circular buffer structure. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cirbuffer_8h_af382c1e66957b4474e1a3ed0ed882ee8}{enqueuec}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer, char c)
+\begin{DoxyCompactList}\small\item\em Queues a char/byte into a circular buffer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{cirbuffer_8h_a714b70e22e9cbbf8a456f8d745ac2399}{enqueuec\+\_\+s}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer, char c, bool O\+V\+E\+R\+W\+R\+I\+TE)
+\begin{DoxyCompactList}\small\item\em Safely Queues a char/byte into a circular buffer. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cirbuffer_8h_a84fd87fd2dbf0d62e814ea57b0ab08ff}{enqueues}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Enqueues a string into a circular buffer. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cirbuffer_8h_a83992d4464ed839807002c80786085e6}{enqueue}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer, char $\ast$src\+\_\+buf, uint32\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Enqueues a length of bytes into a circular buffer. \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{cirbuffer_8h_ae035d3b8038562cb34b285235613fe89}{dequeuec}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Dequeues a character from a circular buffer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{cirbuffer_8h_a69d91b7ec025e644b6dce0965813e986}{dequeuec\+\_\+s}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer, char $\ast$dst)
+\begin{DoxyCompactList}\small\item\em Safely dequeues a character from a circular buffer. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cirbuffer_8h_a7eb543f614cc99d572b6c25672c9dde7}{dequeue}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer, uint8\+\_\+t $\ast$dst\+\_\+buf, uint32\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Dequeues a length of bytes. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{cirbuffer_8h_a2f814236dddb19be2d91c62b2f2c90ce}{buffer\+\_\+size}} (\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Get the size of the buffer/\+How many characters are currently queued. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Header file with definitions, macros and function prototypes used to operate a circular buffer. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+09.\+17 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cirbuffer_8h_acaccc220c461e6f2f1d677be8359d758}\label{cirbuffer_8h_acaccc220c461e6f2f1d677be8359d758}} 
+\index{cirbuffer.h@{cirbuffer.h}!BUFFER\_EMPTY@{BUFFER\_EMPTY}}
+\index{BUFFER\_EMPTY@{BUFFER\_EMPTY}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{BUFFER\_EMPTY}{BUFFER\_EMPTY}}
+{\footnotesize\ttfamily \#define B\+U\+F\+F\+E\+R\+\_\+\+E\+M\+P\+TY~0}
+
+\mbox{\Hypertarget{cirbuffer_8h_a93e24ce26b2add0aaf79039a95154c14}\label{cirbuffer_8h_a93e24ce26b2add0aaf79039a95154c14}} 
+\index{cirbuffer.h@{cirbuffer.h}!BUFFER\_FULL@{BUFFER\_FULL}}
+\index{BUFFER\_FULL@{BUFFER\_FULL}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{BUFFER\_FULL}{BUFFER\_FULL}}
+{\footnotesize\ttfamily \#define B\+U\+F\+F\+E\+R\+\_\+\+F\+U\+LL~\mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}}}
+
+\mbox{\Hypertarget{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}\label{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}} 
+\index{cirbuffer.h@{cirbuffer.h}!CIRCULAR\_BUFFER\_MASK@{CIRCULAR\_BUFFER\_MASK}}
+\index{CIRCULAR\_BUFFER\_MASK@{CIRCULAR\_BUFFER\_MASK}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{CIRCULAR\_BUFFER\_MASK}{CIRCULAR\_BUFFER\_MASK}}
+{\footnotesize\ttfamily \#define C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK~(\mbox{\hyperlink{cirbuffer_8h_a501f5c21d6fe4e60dc984cdaba5e892f}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE}}-\/1)}
+
+
+
+Circular buffer size mask. Used to constrain the pointers within the buffer array. 
+
+\mbox{\Hypertarget{cirbuffer_8h_a501f5c21d6fe4e60dc984cdaba5e892f}\label{cirbuffer_8h_a501f5c21d6fe4e60dc984cdaba5e892f}} 
+\index{cirbuffer.h@{cirbuffer.h}!CIRCULAR\_BUFFER\_SIZE@{CIRCULAR\_BUFFER\_SIZE}}
+\index{CIRCULAR\_BUFFER\_SIZE@{CIRCULAR\_BUFFER\_SIZE}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{CIRCULAR\_BUFFER\_SIZE}{CIRCULAR\_BUFFER\_SIZE}}
+{\footnotesize\ttfamily \#define C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE~128}
+
+\mbox{\Hypertarget{cirbuffer_8h_ae50b1c9bad949ad725f7632856ec9b9f}\label{cirbuffer_8h_ae50b1c9bad949ad725f7632856ec9b9f}} 
+\index{cirbuffer.h@{cirbuffer.h}!DEC\_PTR@{DEC\_PTR}}
+\index{DEC\_PTR@{DEC\_PTR}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{DEC\_PTR}{DEC\_PTR}}
+{\footnotesize\ttfamily \#define D\+E\+C\+\_\+\+P\+TR(\begin{DoxyParamCaption}\item[{}]{ptr }\end{DoxyParamCaption})~(ptr = (ptr -\/ 1) \& \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}})}
+
+
+
+Pointer decrement macro. Safely decrements a circular buffer pointer \& wraps it to the beginning when \textquotesingle{}overflowing\textquotesingle{} at the beginning of the buffer size. 
+
+\mbox{\Hypertarget{cirbuffer_8h_a5ab8256e7239d2647934e0afaf977b9a}\label{cirbuffer_8h_a5ab8256e7239d2647934e0afaf977b9a}} 
+\index{cirbuffer.h@{cirbuffer.h}!INC\_PTR@{INC\_PTR}}
+\index{INC\_PTR@{INC\_PTR}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{INC\_PTR}{INC\_PTR}}
+{\footnotesize\ttfamily \#define I\+N\+C\+\_\+\+P\+TR(\begin{DoxyParamCaption}\item[{}]{ptr }\end{DoxyParamCaption})~(ptr = (ptr + 1) \& \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}})}
+
+
+
+Pointer increment macro. Safely increments a circular buffer pointer \& wraps it to the beginning when overflowing at the end of the buffer size. 
+
+\mbox{\Hypertarget{cirbuffer_8h_ad0d2ecd179122898cce21c005975678c}\label{cirbuffer_8h_ad0d2ecd179122898cce21c005975678c}} 
+\index{cirbuffer.h@{cirbuffer.h}!MOV\_PTR@{MOV\_PTR}}
+\index{MOV\_PTR@{MOV\_PTR}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{MOV\_PTR}{MOV\_PTR}}
+{\footnotesize\ttfamily \#define M\+O\+V\+\_\+\+P\+TR(\begin{DoxyParamCaption}\item[{}]{ptr,  }\item[{}]{i }\end{DoxyParamCaption})~(ptr = (ptr + i) \& \mbox{\hyperlink{cirbuffer_8h_ada36ee5b10db2bf3abeb888f462a83f4}{C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+M\+A\+SK}})}
+
+
+
+Pointer move macro. Safely move a circular buffer pointer \& wraps it to the beginning when \textquotesingle{}overflowing\textquotesingle{} either at the end or beginning of the buffer size. 
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}\label{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}} 
+\index{cirbuffer.h@{cirbuffer.h}!circular\_buffer\_t@{circular\_buffer\_t}}
+\index{circular\_buffer\_t@{circular\_buffer\_t}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{circular\_buffer\_t}{circular\_buffer\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structcircular__buffer__}{circular\+\_\+buffer\+\_\+}}  \mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}}}
+
+
+
+circular buffer structure. 
+
+The size of the buffer is determined by the C\+I\+R\+C\+U\+L\+A\+R\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+ZE 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{cirbuffer_8h_a2f814236dddb19be2d91c62b2f2c90ce}\label{cirbuffer_8h_a2f814236dddb19be2d91c62b2f2c90ce}} 
+\index{cirbuffer.h@{cirbuffer.h}!buffer\_size@{buffer\_size}}
+\index{buffer\_size@{buffer\_size}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{buffer\_size()}{buffer\_size()}}
+{\footnotesize\ttfamily uint32\+\_\+t buffer\+\_\+size (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the size of the buffer/\+How many characters are currently queued. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Size of the buffer. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{cirbuffer_8h_ac138af4ee84216ca1619d46ab34ba4b9}\label{cirbuffer_8h_ac138af4ee84216ca1619d46ab34ba4b9}} 
+\index{cirbuffer.h@{cirbuffer.h}!circular\_buffer\_init@{circular\_buffer\_init}}
+\index{circular\_buffer\_init@{circular\_buffer\_init}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{circular\_buffer\_init()}{circular\_buffer\_init()}}
+{\footnotesize\ttfamily void circular\+\_\+buffer\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Initializes a circular buffer structure. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em buffer} & pointer to circular buffer structure being initialized \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cirbuffer_8h_a7eb543f614cc99d572b6c25672c9dde7}\label{cirbuffer_8h_a7eb543f614cc99d572b6c25672c9dde7}} 
+\index{cirbuffer.h@{cirbuffer.h}!dequeue@{dequeue}}
+\index{dequeue@{dequeue}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{dequeue()}{dequeue()}}
+{\footnotesize\ttfamily uint32\+\_\+t dequeue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer,  }\item[{uint8\+\_\+t $\ast$}]{dst\+\_\+buf,  }\item[{uint32\+\_\+t}]{length }\end{DoxyParamCaption})}
+
+
+
+Dequeues a length of bytes. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\mbox{\texttt{ out}}  & {\em dst} & pointer to byte buffer where the dequeued characters will be copied to. \\
+\hline
+\mbox{\texttt{ in}}  & {\em length} & Amount of bytes to be queued. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}uint32\+\_\+t\mbox{]} Amount of bytes dequeued.
+\end{DoxyReturn}
+This function will only dequeue bytes until the buffer is empty. \mbox{\Hypertarget{cirbuffer_8h_ae035d3b8038562cb34b285235613fe89}\label{cirbuffer_8h_ae035d3b8038562cb34b285235613fe89}} 
+\index{cirbuffer.h@{cirbuffer.h}!dequeuec@{dequeuec}}
+\index{dequeuec@{dequeuec}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{dequeuec()}{dequeuec()}}
+{\footnotesize\ttfamily char dequeuec (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Dequeues a character from a circular buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+char/byte that was dequeued from buffer.
+\end{DoxyReturn}
+This function may corrupt the buffer if the buffer is empty. Always make sure to check if buffer contains data before using this function, or use dequeue\+\_\+s(), which will dequeue from the buffer safely, albeit with added overhead. \mbox{\Hypertarget{cirbuffer_8h_a69d91b7ec025e644b6dce0965813e986}\label{cirbuffer_8h_a69d91b7ec025e644b6dce0965813e986}} 
+\index{cirbuffer.h@{cirbuffer.h}!dequeuec\_s@{dequeuec\_s}}
+\index{dequeuec\_s@{dequeuec\_s}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{dequeuec\_s()}{dequeuec\_s()}}
+{\footnotesize\ttfamily bool dequeuec\+\_\+s (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer,  }\item[{char $\ast$}]{dst }\end{DoxyParamCaption})}
+
+
+
+Safely dequeues a character from a circular buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\mbox{\texttt{ out}}  & {\em dst} & pointer to char where the dequeued character will be placed if a dequeue can take place. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}bool\mbox{]} True if a dequeue was taken place, False if not.
+\end{DoxyReturn}
+dst can be N\+U\+LL if you don\textquotesingle{}t wish to retain the dequeued entry. \mbox{\Hypertarget{cirbuffer_8h_a83992d4464ed839807002c80786085e6}\label{cirbuffer_8h_a83992d4464ed839807002c80786085e6}} 
+\index{cirbuffer.h@{cirbuffer.h}!enqueue@{enqueue}}
+\index{enqueue@{enqueue}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{enqueue()}{enqueue()}}
+{\footnotesize\ttfamily uint32\+\_\+t enqueue (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer,  }\item[{char $\ast$}]{src\+\_\+buf,  }\item[{uint32\+\_\+t}]{length }\end{DoxyParamCaption})}
+
+
+
+Enqueues a length of bytes into a circular buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\mbox{\texttt{ in}}  & {\em data} & pointer to start of the byte stream being enqueued. \\
+\hline
+\mbox{\texttt{ in}}  & {\em length} & length of byte stream being enqueued. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Amount of bytes queued to buffer.
+\end{DoxyReturn}
+It will only enqueue bytes until the buffer is full. (truncates length if it exceeds available space). It\textquotesingle{}ll always queue string in order. Byte 0 -\/$>$ length. \mbox{\Hypertarget{cirbuffer_8h_af382c1e66957b4474e1a3ed0ed882ee8}\label{cirbuffer_8h_af382c1e66957b4474e1a3ed0ed882ee8}} 
+\index{cirbuffer.h@{cirbuffer.h}!enqueuec@{enqueuec}}
+\index{enqueuec@{enqueuec}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{enqueuec()}{enqueuec()}}
+{\footnotesize\ttfamily void enqueuec (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer,  }\item[{char}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Queues a char/byte into a circular buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\mbox{\texttt{ in}}  & {\em data} & char data being queued.\\
+\hline
+\end{DoxyParams}
+This method of enqueuing can corrupt the buffer if it\textquotesingle{}s full. Always check if the queue if full or use enqueuec\+\_\+s, which queues into the buffer safely albeit at cost of some overhead. \mbox{\Hypertarget{cirbuffer_8h_a714b70e22e9cbbf8a456f8d745ac2399}\label{cirbuffer_8h_a714b70e22e9cbbf8a456f8d745ac2399}} 
+\index{cirbuffer.h@{cirbuffer.h}!enqueuec\_s@{enqueuec\_s}}
+\index{enqueuec\_s@{enqueuec\_s}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{enqueuec\_s()}{enqueuec\_s()}}
+{\footnotesize\ttfamily bool enqueuec\+\_\+s (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer,  }\item[{char}]{c,  }\item[{bool}]{O\+V\+E\+R\+W\+R\+I\+TE }\end{DoxyParamCaption})}
+
+
+
+Safely Queues a char/byte into a circular buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\mbox{\texttt{ in}}  & {\em data} & char data being queued. \\
+\hline
+\mbox{\texttt{ in}}  & {\em O\+V\+E\+R\+W\+R\+I\+TE} & This flag determines the enqueuing behaviour if the queue is full. If true, the enqueuing takes place (overwrites the oldest entry), If false, the enqueuing will not take place. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}bool\mbox{]} True if an enqueue was taken place, False if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{cirbuffer_8h_a84fd87fd2dbf0d62e814ea57b0ab08ff}\label{cirbuffer_8h_a84fd87fd2dbf0d62e814ea57b0ab08ff}} 
+\index{cirbuffer.h@{cirbuffer.h}!enqueues@{enqueues}}
+\index{enqueues@{enqueues}!cirbuffer.h@{cirbuffer.h}}
+\doxysubsubsection{\texorpdfstring{enqueues()}{enqueues()}}
+{\footnotesize\ttfamily uint32\+\_\+t enqueues (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} $\ast$}]{buffer,  }\item[{char $\ast$}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Enqueues a string into a circular buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em buffer} & pointer to circular buffer being used. \\
+\hline
+\mbox{\texttt{ in}}  & {\em s} & null terminated string pointer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}uint32\+\_\+t\mbox{]} Amount of bytes enqueued to buffer. @detais this is simply a wrapper function for \mbox{\hyperlink{cirbuffer_8c_a83992d4464ed839807002c80786085e6}{enqueue()}}, where the string length is obtained and \mbox{\hyperlink{cirbuffer_8c_a83992d4464ed839807002c80786085e6}{enqueue()}} is then called. 
+\end{DoxyReturn}

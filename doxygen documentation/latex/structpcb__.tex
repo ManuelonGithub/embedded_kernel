@@ -1,0 +1,122 @@
+\hypertarget{structpcb__}{}\doxysection{pcb\+\_\+ Struct Reference}
+\label{structpcb__}\index{pcb\_@{pcb\_}}
+
+
+Process control block structure.  
+
+
+
+
+{\ttfamily \#include $<$k\+\_\+types.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>struct \{\\
+\>\>struct \mbox{\hyperlink{structpcb__}{pcb\_}} $\ast$ \mbox{\hyperlink{structpcb___a1fcac09c8d8742a70b07efd5356d9210}{next}}\\
+\>\>struct \mbox{\hyperlink{structpcb__}{pcb\_}} $\ast$ \mbox{\hyperlink{structpcb___a1ce28540036341ca10cdb001f5838722}{prev}}\\
+\>\} \\
+\>\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\_t}} \mbox{\hyperlink{structpcb___a1d708e4b6da4c12e0272e2db4ffb83af}{list}}\\
+\}; \\
+
+\end{tabbing}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{structpcb___a4a286477da152596182a2eb0e8a64cc1}{id}}
+\item 
+\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} \mbox{\hyperlink{structpcb___ac93cab7e6a1937946f2860d479755692}{priority}}
+\item 
+char \mbox{\hyperlink{structpcb___abc1e86d7c344fe34ff09e72d4595ab7e}{name}} \mbox{[}32\mbox{]}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structpcb___aaf61e505b6f3215784e92d6f216aa59f}{sp\+\_\+top}} \mbox{[}\mbox{\hyperlink{k__defs_8h_a21d9543c516fffee84a7963224271f95}{S\+T\+A\+C\+K\+S\+I\+ZE}}/sizeof(uint32\+\_\+t)\mbox{]}
+\item 
+uint32\+\_\+t $\ast$ \mbox{\hyperlink{structpcb___a80a5f386a0f7e3ce5babe362e78ac70e}{sp}}
+\item 
+int32\+\_\+t \mbox{\hyperlink{structpcb___a4b76ad35aa7fc1f857dec19b4824db7e}{timer}}
+\item 
+\mbox{\hyperlink{k__defs_8h_af61430b5435d93be57b4fdbe9782a516}{proc\+\_\+state}} \mbox{\hyperlink{structpcb___a3a2718447c72cc72bb4a28077147aa2a}{state}}
+\item 
+\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} \mbox{\hyperlink{structpcb___a374ad3695774ebd2724d93889dbb12ab}{owned\+\_\+box}} \mbox{[}\mbox{\hyperlink{k__defs_8h_afc673d12a10de2c32e1e87f49b5716b9}{M\+S\+G\+B\+O\+X\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Process control block structure. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structpcb___a8e9fac53afcef0e2542c2d521adb795b}\label{structpcb___a8e9fac53afcef0e2542c2d521adb795b}} 
+\doxysubsubsection{\texorpdfstring{"@5}{@5}}
+{\footnotesize\ttfamily union \{ ... \} }
+
+\mbox{\Hypertarget{structpcb___a4a286477da152596182a2eb0e8a64cc1}\label{structpcb___a4a286477da152596182a2eb0e8a64cc1}} 
+\index{pcb\_@{pcb\_}!id@{id}}
+\index{id@{id}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} id}
+
+Process ID. \mbox{\Hypertarget{structpcb___a1d708e4b6da4c12e0272e2db4ffb83af}\label{structpcb___a1d708e4b6da4c12e0272e2db4ffb83af}} 
+\index{pcb\_@{pcb\_}!list@{list}}
+\index{list@{list}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{list}{list}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} list}
+
+List node used for priority queuing. \mbox{\Hypertarget{structpcb___abc1e86d7c344fe34ff09e72d4595ab7e}\label{structpcb___abc1e86d7c344fe34ff09e72d4595ab7e}} 
+\index{pcb\_@{pcb\_}!name@{name}}
+\index{name@{name}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily char name\mbox{[}32\mbox{]}}
+
+Process name. \mbox{\Hypertarget{structpcb___a1fcac09c8d8742a70b07efd5356d9210}\label{structpcb___a1fcac09c8d8742a70b07efd5356d9210}} 
+\index{pcb\_@{pcb\_}!next@{next}}
+\index{next@{next}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{next}{next}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}}$\ast$ next}
+
+\mbox{\Hypertarget{structpcb___a374ad3695774ebd2724d93889dbb12ab}\label{structpcb___a374ad3695774ebd2724d93889dbb12ab}} 
+\index{pcb\_@{pcb\_}!owned\_box@{owned\_box}}
+\index{owned\_box@{owned\_box}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{owned\_box}{owned\_box}}
+{\footnotesize\ttfamily \mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} owned\+\_\+box\mbox{[}\mbox{\hyperlink{k__defs_8h_afc673d12a10de2c32e1e87f49b5716b9}{M\+S\+G\+B\+O\+X\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}\mbox{]}}
+
+Process owned box\textquotesingle{} bitmap. \mbox{\Hypertarget{structpcb___a1ce28540036341ca10cdb001f5838722}\label{structpcb___a1ce28540036341ca10cdb001f5838722}} 
+\index{pcb\_@{pcb\_}!prev@{prev}}
+\index{prev@{prev}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{prev}{prev}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}}$\ast$ prev}
+
+\mbox{\Hypertarget{structpcb___ac93cab7e6a1937946f2860d479755692}\label{structpcb___ac93cab7e6a1937946f2860d479755692}} 
+\index{pcb\_@{pcb\_}!priority@{priority}}
+\index{priority@{priority}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{priority}{priority}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} priority}
+
+Process priority. \mbox{\Hypertarget{structpcb___a80a5f386a0f7e3ce5babe362e78ac70e}\label{structpcb___a80a5f386a0f7e3ce5babe362e78ac70e}} 
+\index{pcb\_@{pcb\_}!sp@{sp}}
+\index{sp@{sp}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{sp}{sp}}
+{\footnotesize\ttfamily uint32\+\_\+t$\ast$ sp}
+
+Process stack pointer. \mbox{\Hypertarget{structpcb___aaf61e505b6f3215784e92d6f216aa59f}\label{structpcb___aaf61e505b6f3215784e92d6f216aa59f}} 
+\index{pcb\_@{pcb\_}!sp\_top@{sp\_top}}
+\index{sp\_top@{sp\_top}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{sp\_top}{sp\_top}}
+{\footnotesize\ttfamily uint32\+\_\+t sp\+\_\+top\mbox{[}\mbox{\hyperlink{k__defs_8h_a21d9543c516fffee84a7963224271f95}{S\+T\+A\+C\+K\+S\+I\+ZE}}/sizeof(uint32\+\_\+t)\mbox{]}}
+
+Process stack. \mbox{\Hypertarget{structpcb___a3a2718447c72cc72bb4a28077147aa2a}\label{structpcb___a3a2718447c72cc72bb4a28077147aa2a}} 
+\index{pcb\_@{pcb\_}!state@{state}}
+\index{state@{state}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__defs_8h_af61430b5435d93be57b4fdbe9782a516}{proc\+\_\+state}} state}
+
+Process state \mbox{\Hypertarget{structpcb___a4b76ad35aa7fc1f857dec19b4824db7e}\label{structpcb___a4b76ad35aa7fc1f857dec19b4824db7e}} 
+\index{pcb\_@{pcb\_}!timer@{timer}}
+\index{timer@{timer}!pcb\_@{pcb\_}}
+\doxysubsubsection{\texorpdfstring{timer}{timer}}
+{\footnotesize\ttfamily int32\+\_\+t timer}
+
+Process timer. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+kernel/\mbox{\hyperlink{k__types_8h}{k\+\_\+types.\+h}}\end{DoxyCompactItemize}

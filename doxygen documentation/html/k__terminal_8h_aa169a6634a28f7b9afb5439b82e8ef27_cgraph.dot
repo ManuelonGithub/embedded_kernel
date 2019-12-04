@@ -1,0 +1,18 @@
+digraph "SystemView"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="SystemView",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Displays information about the system and allocated processes."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="GetBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#aea47b36efa670baedacd8eb1c8cefed9",tooltip="Gets thevalue of a specific bit in a bitmap."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="GetPCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8c.html#a71c896af93e05e040e63ab29272a15ed",tooltip="Gets pointer to PCB."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="itoa",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cstr__utils_8c.html#a6be047b16875816417040dcd4168ea82",tooltip="Converts a signed integer into a string in base10."];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="UART0_puts",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8c.html#a2d797721c4a028583e8a104199f9075d",tooltip="Sends char string to UART 0."];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="buffer_size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8c.html#a2f814236dddb19be2d91c62b2f2c90ce",tooltip="Get the size of the buffer/How many characters are currently queued."];
+}

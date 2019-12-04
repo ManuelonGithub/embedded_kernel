@@ -1,0 +1,65 @@
+\hypertarget{struct_i_o__metadata__}{}\doxysection{I\+O\+\_\+metadata\+\_\+ Struct Reference}
+\label{struct_i_o__metadata__}\index{IO\_metadata\_@{IO\_metadata\_}}
+
+
+IO request metadata structure. Data structure used to perform requests to the IO server. for both input and output.  
+
+
+
+
+{\ttfamily \#include $<$k\+\_\+types.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{struct_i_o__metadata___a16fc83567783066dbbc0efaa022132ac}{box\+\_\+id}}
+\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{struct_i_o__metadata___af09303e6fb5905111d6131f7cd016bf0}{proc\+\_\+id}}
+\item 
+bool \mbox{\hyperlink{struct_i_o__metadata___a75c29a7e3830b097f92b5c954a2b4998}{is\+\_\+send}}
+\item 
+size\+\_\+t \mbox{\hyperlink{struct_i_o__metadata___a854352f53b148adc24983a58a1866d66}{size}}
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{struct_i_o__metadata___add1fa76432b5a682cdaaf91f1869e9c2}{send\+\_\+data}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+IO request metadata structure. Data structure used to perform requests to the IO server. for both input and output. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{struct_i_o__metadata___a16fc83567783066dbbc0efaa022132ac}\label{struct_i_o__metadata___a16fc83567783066dbbc0efaa022132ac}} 
+\index{IO\_metadata\_@{IO\_metadata\_}!box\_id@{box\_id}}
+\index{box\_id@{box\_id}!IO\_metadata\_@{IO\_metadata\_}}
+\doxysubsubsection{\texorpdfstring{box\_id}{box\_id}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} box\+\_\+id}
+
+Msg box that the request originated from. \mbox{\Hypertarget{struct_i_o__metadata___a75c29a7e3830b097f92b5c954a2b4998}\label{struct_i_o__metadata___a75c29a7e3830b097f92b5c954a2b4998}} 
+\index{IO\_metadata\_@{IO\_metadata\_}!is\_send@{is\_send}}
+\index{is\_send@{is\_send}!IO\_metadata\_@{IO\_metadata\_}}
+\doxysubsubsection{\texorpdfstring{is\_send}{is\_send}}
+{\footnotesize\ttfamily bool is\+\_\+send}
+
+True if the request is to output data. \mbox{\Hypertarget{struct_i_o__metadata___af09303e6fb5905111d6131f7cd016bf0}\label{struct_i_o__metadata___af09303e6fb5905111d6131f7cd016bf0}} 
+\index{IO\_metadata\_@{IO\_metadata\_}!proc\_id@{proc\_id}}
+\index{proc\_id@{proc\_id}!IO\_metadata\_@{IO\_metadata\_}}
+\doxysubsubsection{\texorpdfstring{proc\_id}{proc\_id}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} proc\+\_\+id}
+
+Process ID that made the request. \mbox{\Hypertarget{struct_i_o__metadata___add1fa76432b5a682cdaaf91f1869e9c2}\label{struct_i_o__metadata___add1fa76432b5a682cdaaf91f1869e9c2}} 
+\index{IO\_metadata\_@{IO\_metadata\_}!send\_data@{send\_data}}
+\index{send\_data@{send\_data}!IO\_metadata\_@{IO\_metadata\_}}
+\doxysubsubsection{\texorpdfstring{send\_data}{send\_data}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ send\+\_\+data}
+
+Pointer to output data buffer \mbox{\Hypertarget{struct_i_o__metadata___a854352f53b148adc24983a58a1866d66}\label{struct_i_o__metadata___a854352f53b148adc24983a58a1866d66}} 
+\index{IO\_metadata\_@{IO\_metadata\_}!size@{size}}
+\index{size@{size}!IO\_metadata\_@{IO\_metadata\_}}
+\doxysubsubsection{\texorpdfstring{size}{size}}
+{\footnotesize\ttfamily size\+\_\+t size}
+
+Size of request data (for both input and output) 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+kernel/\mbox{\hyperlink{k__types_8h}{k\+\_\+types.\+h}}\end{DoxyCompactItemize}

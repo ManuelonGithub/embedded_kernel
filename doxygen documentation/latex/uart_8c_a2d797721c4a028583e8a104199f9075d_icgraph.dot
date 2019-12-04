@@ -1,0 +1,38 @@
+digraph "UART0_puts"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="UART0_puts",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Sends char string to UART 0."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="ClearIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aaa27a5cf4effb4de9793dbc5d8485251",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="CommandCheck",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a17d4e3cec6e8979d90f76e0c1c8ed02b",tooltip="Checks terminal's buffer for valid commands and calls their respective handler functions."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="ProcessInput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a64ca3a424dd85aa6cbdd6600f59a3780",tooltip="Processes an input character sent from UART."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="terminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aadb0857d6d4bedf44cea1a4d10b01947",tooltip="Terminal process."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="kernel_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a3f19ffb1e6c83b6c0203fd69c0534437",tooltip="Initializes kernel data structures, drivers, and critical processes."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe",tooltip="main.c"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="ResetScreen",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a5f6047bae9bf82be7be019edf176fdba",tooltip="Resets the computer terminal settings and cursor position."];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="ResetTerminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a82fdf1845852f11bd394d7ff4a6be0c4",tooltip="Resets the terminal settings."];
+  Node9 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="run",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a278dcd638c1669d47cac62d07ceafc39",tooltip=" "];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="send_header",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a54c8e2feafb5a3efa9c223ea1d87b2b9",tooltip="Sends the header line to computer terminal."];
+  Node11 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="SetIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a2b892bb8fbb3ea3eae878299e47bbb6c",tooltip=" "];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="SystemView",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aa169a6634a28f7b9afb5439b82e8ef27",tooltip="Displays information about the system and allocated processes."];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+}

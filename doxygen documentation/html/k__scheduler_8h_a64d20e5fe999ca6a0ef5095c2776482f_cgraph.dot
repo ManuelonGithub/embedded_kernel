@@ -1,0 +1,14 @@
+digraph "LinkPCB"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="LinkPCB",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Links a PCB into a specific priority queue."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="dLink",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8c.html#af800d7b4d997230f7d590c452dcb1ea3",tooltip="Links a node into the back of another."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="UnlinkPCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#a020cd5ae59a5fa38146a31260f17ee30",tooltip="Unlinks PCB from its Process queue."];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="dUnlink",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8c.html#a4ac5bcc32a4b91f514e4eeff11361b61",tooltip="Unlinks a node from its current list."];
+}

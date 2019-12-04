@@ -1,0 +1,10 @@
+var searchData=
+[
+  ['changeprocesspriority_470',['ChangeProcessPriority',['../k__processes_8c.html#a3516c38f02e3664cc6db527c4bf33c03',1,'ChangeProcessPriority(pid_t id, priority_t new):&#160;k_processes.c'],['../k__processes_8h.html#a3516c38f02e3664cc6db527c4bf33c03',1,'ChangeProcessPriority(pid_t id, priority_t new):&#160;k_processes.c']]],
+  ['circular_5fbuffer_5finit_471',['circular_buffer_init',['../cirbuffer_8c.html#ac138af4ee84216ca1619d46ab34ba4b9',1,'circular_buffer_init(circular_buffer_t *buffer):&#160;cirbuffer.c'],['../cirbuffer_8h.html#ac138af4ee84216ca1619d46ab34ba4b9',1,'circular_buffer_init(circular_buffer_t *buffer):&#160;cirbuffer.c']]],
+  ['clearbit_472',['ClearBit',['../bitmap_8c.html#a1450145a97ea1efa0f35f6aaf05dbcd9',1,'ClearBit(bitmap_t *bitmap, uint32_t bit):&#160;bitmap.c'],['../bitmap_8h.html#a1450145a97ea1efa0f35f6aaf05dbcd9',1,'ClearBit(bitmap_t *bitmap, uint32_t bit):&#160;bitmap.c']]],
+  ['clearbitrange_473',['ClearBitRange',['../bitmap_8c.html#ac411bcde8500dba1cd5b676d8f02c230',1,'ClearBitRange(bitmap_t *bitmap, uint32_t start, uint32_t end):&#160;bitmap.c'],['../bitmap_8h.html#ac411bcde8500dba1cd5b676d8f02c230',1,'ClearBitRange(bitmap_t *bitmap, uint32_t start, uint32_t end):&#160;bitmap.c']]],
+  ['cleario_474',['ClearIO',['../k__terminal_8c.html#aaa27a5cf4effb4de9793dbc5d8485251',1,'ClearIO(char *attr, terminal_t *term):&#160;k_terminal.c'],['../k__terminal_8h.html#aaa27a5cf4effb4de9793dbc5d8485251',1,'ClearIO(char *attr, terminal_t *term):&#160;k_terminal.c']]],
+  ['commandcheck_475',['CommandCheck',['../k__terminal_8c.html#a17d4e3cec6e8979d90f76e0c1c8ed02b',1,'CommandCheck(terminal_t *term):&#160;k_terminal.c'],['../k__terminal_8h.html#a17d4e3cec6e8979d90f76e0c1c8ed02b',1,'CommandCheck(terminal_t *term):&#160;k_terminal.c']]],
+  ['configureinputcapture_476',['ConfigureInputCapture',['../k__terminal_8c.html#a5ce9f04f34a42384329c6b8950731295',1,'ConfigureInputCapture(input_capture_t *cap, IO_metadata_t *meta):&#160;k_terminal.c'],['../k__terminal_8h.html#a5ce9f04f34a42384329c6b8950731295',1,'ConfigureInputCapture(input_capture_t *cap, IO_metadata_t *meta):&#160;k_terminal.c']]]
+];

@@ -1,0 +1,21 @@
+digraph "SetIO"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="SetIO",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ClearBitRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#ac411bcde8500dba1cd5b676d8f02c230",tooltip="Clears a range of bits from start to end."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="ClearBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a1450145a97ea1efa0f35f6aaf05dbcd9",tooltip="Clears a specific bit in a bitmap."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="SetBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#ae4c722d65f629e093f97656cf1beb049",tooltip="Sets a specific bit in a bitmap."];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="SetBitRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#aaa476591463736beac3f664c13950dc3",tooltip="Sets a range of bits from start to end."];
+  Node5 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="UART0_puts",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8c.html#a2d797721c4a028583e8a104199f9075d",tooltip="Sends char string to UART 0."];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="buffer_size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8c.html#a2f814236dddb19be2d91c62b2f2c90ce",tooltip="Get the size of the buffer/How many characters are currently queued."];
+}

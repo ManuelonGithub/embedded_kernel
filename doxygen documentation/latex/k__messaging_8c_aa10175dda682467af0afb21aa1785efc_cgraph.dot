@@ -1,0 +1,21 @@
+digraph "k_MsgBoxUnbindAll"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="k_MsgBoxUnbindAll",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Unbinds all message boxes bound to a process."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="FindSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a2b442817bc15cbc0c86a872e1c3ce95b",tooltip="Finds The earliest set bit in bitmap."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="GetBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#aea47b36efa670baedacd8eb1c8cefed9",tooltip="Gets thevalue of a specific bit in a bitmap."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="k_MsgBoxUnbind",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a634e8b22ad815f934aa721f3bffc5630",tooltip="Unbinds a message box from a process."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="ClearBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a1450145a97ea1efa0f35f6aaf05dbcd9",tooltip="Clears a specific bit in a bitmap."];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="k_MsgClearAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a343391f72abbf77fc8d2958500298af1",tooltip="Clears all Messages currently in the message box."];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="k_pMsgDeallocate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a1f49ca1a455ee48b9566a2c6257aab49",tooltip="De-allocates a message."];
+  Node7 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+}

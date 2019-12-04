@@ -1,0 +1,57 @@
+digraph "ClearBit"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="ClearBit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Clears a specific bit in a bitmap."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="ClearBitRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8h.html#ac411bcde8500dba1cd5b676d8f02c230",tooltip="Clears a range of bits from start to end."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="ClearIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aaa27a5cf4effb4de9793dbc5d8485251",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="init_term",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a3cbd88ed10b5fb037f3a043d3513cbf3",tooltip="Initializes the terminal settings."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="terminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aadb0857d6d4bedf44cea1a4d10b01947",tooltip="Terminal process."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="kernel_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a3f19ffb1e6c83b6c0203fd69c0534437",tooltip="Initializes kernel data structures, drivers, and critical processes."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe",tooltip="main.c"];
+  Node2 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="k_MsgInit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a131bebb939c80d50ad16a2d5a9c43b1d",tooltip="Initalizes the Messaging Module."];
+  Node8 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="process_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html#aae4d3240509e9d67a749da3ea506522a",tooltip="Initializes the kernel's process data structures and parameters."];
+  Node9 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="SetIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a2b892bb8fbb3ea3eae878299e47bbb6c",tooltip=" "];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="k_DeallocatePCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html#ae25db96c8981472d79072a8697d22a27",tooltip="De-allocates a PCB."];
+  Node11 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="k_Terminate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#aadffaeb748922aa217329a31c4663a95",tooltip="Terminates the running process."];
+  Node12 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="KernelCall_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a53c69e53135737e747747a3a6eb8dd69",tooltip="Kernel Call Handler function."];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node14 [label="SVC_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8c.html#a5703d8fe19774bd873f7d7db5cd60242",tooltip="Supervisor Call trap handler."];
+  Node1 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node15 [label="k_MsgBoxUnbind",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a634e8b22ad815f934aa721f3bffc5630",tooltip="Unbinds a message box from a process."];
+  Node15 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node16 [label="k_MsgBoxUnbindAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#aa10175dda682467af0afb21aa1785efc",tooltip="Unbinds all message boxes bound to a process."];
+  Node16 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node15 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node17 [label="k_unbindCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a276094c1bdb99ff7f5fad586760f28d1",tooltip="Performs all operations required for unbinding a message box to running process."];
+  Node17 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node18 [label="k_pMsgDeallocate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a1f49ca1a455ee48b9566a2c6257aab49",tooltip="De-allocates a message."];
+  Node18 -> Node19 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node19 [label="k_MsgClearAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a343391f72abbf77fc8d2958500298af1",tooltip="Clears all Messages currently in the message box."];
+  Node19 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node18 -> Node20 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node20 [label="k_MsgRecv",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a410b0e1c8cc0056a178c1ef49ad45bc4",tooltip="Recieves a message from a process to another."];
+  Node20 -> Node21 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node21 [label="k_recvCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#ae6d9745010d84afa874ab46ec9a85790",tooltip="Performs all operations required to receive a message from a message box to a message box belonging t..."];
+  Node21 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node20 -> Node22 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node22 [label="k_requestCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a868c3d8f4b853b0704586dc61488138e",tooltip="Performs all operations required to perform the request transaction between a message box belonging t..."];
+  Node22 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+}

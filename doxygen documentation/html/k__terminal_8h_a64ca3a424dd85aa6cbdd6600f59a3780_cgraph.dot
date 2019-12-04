@@ -1,0 +1,33 @@
+digraph "ProcessInput"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="ProcessInput",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Processes an input character sent from UART."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="CommandCheck",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8c.html#a17d4e3cec6e8979d90f76e0c1c8ed02b",tooltip="Checks terminal's buffer for valid commands and calls their respective handler functions."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="enqueuec_s",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8c.html#a714b70e22e9cbbf8a456f8d745ac2399",tooltip="Safely Queues a char/byte into a circular buffer."];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="UART0_puts",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8c.html#a2d797721c4a028583e8a104199f9075d",tooltip="Sends char string to UART 0."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="buffer_size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8c.html#a2f814236dddb19be2d91c62b2f2c90ce",tooltip="Get the size of the buffer/How many characters are currently queued."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="SendUserInput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8c.html#a1b445477a235c3a0764638e73c8025a8",tooltip="Sends captured input to process that requested it."];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="ResetInputCapture",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8c.html#a09406fe2c7ef6d8a6ee586f645c27f1f",tooltip="Resets the terminal's input capture settings."];
+  Node6 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="send",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#a89d7c5e892dc1998d7663efa98d9f487",tooltip="Send a message to a process."];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="kcall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#a84f7c9fb55cbe7f8924be7b30eef3926",tooltip="Sets up the kernel call and gives CPU control to the kernel to service the call."];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="SetCallReg",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#a49e8ab7828a8458da2c0a7115ceb5076",tooltip="Sets the designated kernel call register with a pointer to a kernel call structure."];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="UART0_put",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8c.html#a60a498bb600eed8421130f6c7e7e19ae",tooltip="Sends byte stream to UART 0."];
+  Node11 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="enqueue",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8c.html#a83992d4464ed839807002c80786085e6",tooltip="Enqueues a length of bytes into a circular buffer."];
+  Node12 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

@@ -1,0 +1,19 @@
+digraph "FindSet"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="FindSet",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Finds The earliest set bit in bitmap."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="k_getboxCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#abba44a3b1b08d596cf3f23f072c41abf",tooltip="Performs all operations required to retrieve a bound message box to the running process."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="KernelCall_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a53c69e53135737e747747a3a6eb8dd69",tooltip="Kernel Call Handler function."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="SVC_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8c.html#a5703d8fe19774bd873f7d7db5cd60242",tooltip="Supervisor Call trap handler."];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="k_MsgBoxUnbindAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#aa10175dda682467af0afb21aa1785efc",tooltip="Unbinds all message boxes bound to a process."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="k_Terminate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#aadffaeb748922aa217329a31c4663a95",tooltip="Terminates the running process."];
+  Node6 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

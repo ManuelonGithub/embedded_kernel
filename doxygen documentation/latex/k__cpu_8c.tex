@@ -1,0 +1,200 @@
+\hypertarget{k__cpu_8c}{}\doxysection{kernel/k\+\_\+cpu.c File Reference}
+\label{k__cpu_8c}\index{kernel/k\_cpu.c@{kernel/k\_cpu.c}}
+
+
+Contains the implementations of all C\+PU specific functionality that the kernel requires to operate.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+cpu.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{k__cpu_8c_a1f9c3e50641d38b2988c051bc702a00d}{Pend\+S\+V\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initializes the C\+PU to support the Pending Supervisor trap. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__cpu_8h_afbeb5c4073ff7f8232fa698753426263}{trap\+\_\+sources\+\_\+t}} \mbox{\hyperlink{k__cpu_8c_a89bc557be3fc982e00f4e0ed3db11f40}{Trap\+Source}} ()
+\begin{DoxyCompactList}\small\item\em Determines the source of a trap call. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_afdcf7937c69cc29ad1385ef2b536f635}{Save\+Context}} ()
+\begin{DoxyCompactList}\small\item\em Saves the current C\+PU context onto the running stack. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_a3cf87ce2ba0c214e8beaba41915d6ce2}{Restore\+Context}} ()
+\begin{DoxyCompactList}\small\item\em Restores the current C\+PU context from the running stack. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_a758b6867fcdfa9213400084ae53c4dd6}{Save\+Process\+Context}} ()
+\begin{DoxyCompactList}\small\item\em Saves the C\+PU context of the process that was running before. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_ad1f81d8122738b1af35ea336cef53076}{Restore\+Process\+Context}} ()
+\begin{DoxyCompactList}\small\item\em Restores the C\+PU context of the process that was running before. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_a49e8ab7828a8458da2c0a7115ceb5076}{Set\+Call\+Reg}} (volatile \mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}} $\ast$call)
+\begin{DoxyCompactList}\small\item\em Sets the designated kernel call register with a pointer to a kernel call structure. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}} $\ast$ \mbox{\hyperlink{k__cpu_8c_a9ec4ea572996c2daa252cb2b35020312}{Get\+Call\+Reg}} ()
+\begin{DoxyCompactList}\small\item\em Gets the pointer to a kernel call structure out of the designated kernel call register. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}} $\ast$ \mbox{\hyperlink{k__cpu_8c_a220958f1d11aebc9f0a24cd0d05af874}{Get\+Process\+Call}} (uint32\+\_\+t $\ast$psp)
+\begin{DoxyCompactList}\small\item\em Gets a process\textquotesingle{} kernel call structure based on its program memory. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_a2396f2c90f77dde8eeaf05615344fea6}{Init\+Process\+Context}} (uint32\+\_\+t $\ast$$\ast$sp, void($\ast$proc\+\_\+program)(), void($\ast$exit\+\_\+program)())
+\begin{DoxyCompactList}\small\item\em Initializes the C\+PU context of a process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_afb3eb72ecc6d3ee1f700c12a89e0ff3e}{Set\+P\+SP}} (volatile uint32\+\_\+t Process\+Stack)
+\begin{DoxyCompactList}\small\item\em Sets the current process stack pointer value. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{k__cpu_8c_a66b20719d7034c47a337106523fa754b}{Get\+P\+SP}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the current process\textquotesingle{} stack pointer value. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__cpu_8c_ae69531012bb21cdd93fbc4b43c0a341f}{Start\+Process}} ()
+\begin{DoxyCompactList}\small\item\em Forces the machine to switch to a process\textquotesingle{} context when in handler mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains the implementations of all C\+PU specific functionality that the kernel requires to operate. 
+
+This is the module that opens the kernel to the C\+PU it runs on. \begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+02 (Created) 
+
+2019.\+11.\+03 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{k__cpu_8c_a9ec4ea572996c2daa252cb2b35020312}\label{k__cpu_8c_a9ec4ea572996c2daa252cb2b35020312}} 
+\index{k\_cpu.c@{k\_cpu.c}!GetCallReg@{GetCallReg}}
+\index{GetCallReg@{GetCallReg}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{GetCallReg()}{GetCallReg()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}}$\ast$ Get\+Call\+Reg (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the pointer to a kernel call structure out of the designated kernel call register. 
+
+\mbox{\Hypertarget{k__cpu_8c_a220958f1d11aebc9f0a24cd0d05af874}\label{k__cpu_8c_a220958f1d11aebc9f0a24cd0d05af874}} 
+\index{k\_cpu.c@{k\_cpu.c}!GetProcessCall@{GetProcessCall}}
+\index{GetProcessCall@{GetProcessCall}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{GetProcessCall()}{GetProcessCall()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}}$\ast$ Get\+Process\+Call (\begin{DoxyParamCaption}\item[{uint32\+\_\+t $\ast$}]{psp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets a process\textquotesingle{} kernel call structure based on its program memory. 
+
+This function assumes the process\textquotesingle{} C\+PU context was pushed onto its stack prior to this call. \mbox{\Hypertarget{k__cpu_8c_a66b20719d7034c47a337106523fa754b}\label{k__cpu_8c_a66b20719d7034c47a337106523fa754b}} 
+\index{k\_cpu.c@{k\_cpu.c}!GetPSP@{GetPSP}}
+\index{GetPSP@{GetPSP}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{GetPSP()}{GetPSP()}}
+{\footnotesize\ttfamily uint32\+\_\+t Get\+P\+SP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves the current process\textquotesingle{} stack pointer value. 
+
+\begin{DoxyReturn}{Returns}
+The current stack pointer\textquotesingle{}s value. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__cpu_8c_a2396f2c90f77dde8eeaf05615344fea6}\label{k__cpu_8c_a2396f2c90f77dde8eeaf05615344fea6}} 
+\index{k\_cpu.c@{k\_cpu.c}!InitProcessContext@{InitProcessContext}}
+\index{InitProcessContext@{InitProcessContext}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{InitProcessContext()}{InitProcessContext()}}
+{\footnotesize\ttfamily void Init\+Process\+Context (\begin{DoxyParamCaption}\item[{uint32\+\_\+t $\ast$$\ast$}]{sp,  }\item[{void($\ast$)()}]{proc\+\_\+program,  }\item[{void($\ast$)()}]{exit\+\_\+program }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Initializes the C\+PU context of a process. 
+
+\mbox{\Hypertarget{k__cpu_8c_a1f9c3e50641d38b2988c051bc702a00d}\label{k__cpu_8c_a1f9c3e50641d38b2988c051bc702a00d}} 
+\index{k\_cpu.c@{k\_cpu.c}!PendSV\_init@{PendSV\_init}}
+\index{PendSV\_init@{PendSV\_init}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{PendSV\_init()}{PendSV\_init()}}
+{\footnotesize\ttfamily void Pend\+S\+V\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Initializes the C\+PU to support the Pending Supervisor trap. 
+
+A Pending Supervisor Trap is configured to be the lowest-\/priority trap. \mbox{\Hypertarget{k__cpu_8c_a3cf87ce2ba0c214e8beaba41915d6ce2}\label{k__cpu_8c_a3cf87ce2ba0c214e8beaba41915d6ce2}} 
+\index{k\_cpu.c@{k\_cpu.c}!RestoreContext@{RestoreContext}}
+\index{RestoreContext@{RestoreContext}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{RestoreContext()}{RestoreContext()}}
+{\footnotesize\ttfamily void Restore\+Context (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Restores the current C\+PU context from the running stack. 
+
+\mbox{\Hypertarget{k__cpu_8c_ad1f81d8122738b1af35ea336cef53076}\label{k__cpu_8c_ad1f81d8122738b1af35ea336cef53076}} 
+\index{k\_cpu.c@{k\_cpu.c}!RestoreProcessContext@{RestoreProcessContext}}
+\index{RestoreProcessContext@{RestoreProcessContext}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{RestoreProcessContext()}{RestoreProcessContext()}}
+{\footnotesize\ttfamily void Restore\+Process\+Context (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Restores the C\+PU context of the process that was running before. 
+
+\mbox{\Hypertarget{k__cpu_8c_afdcf7937c69cc29ad1385ef2b536f635}\label{k__cpu_8c_afdcf7937c69cc29ad1385ef2b536f635}} 
+\index{k\_cpu.c@{k\_cpu.c}!SaveContext@{SaveContext}}
+\index{SaveContext@{SaveContext}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{SaveContext()}{SaveContext()}}
+{\footnotesize\ttfamily void Save\+Context (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Saves the current C\+PU context onto the running stack. 
+
+\mbox{\Hypertarget{k__cpu_8c_a758b6867fcdfa9213400084ae53c4dd6}\label{k__cpu_8c_a758b6867fcdfa9213400084ae53c4dd6}} 
+\index{k\_cpu.c@{k\_cpu.c}!SaveProcessContext@{SaveProcessContext}}
+\index{SaveProcessContext@{SaveProcessContext}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{SaveProcessContext()}{SaveProcessContext()}}
+{\footnotesize\ttfamily void Save\+Process\+Context (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Saves the C\+PU context of the process that was running before. 
+
+\mbox{\Hypertarget{k__cpu_8c_a49e8ab7828a8458da2c0a7115ceb5076}\label{k__cpu_8c_a49e8ab7828a8458da2c0a7115ceb5076}} 
+\index{k\_cpu.c@{k\_cpu.c}!SetCallReg@{SetCallReg}}
+\index{SetCallReg@{SetCallReg}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{SetCallReg()}{SetCallReg()}}
+{\footnotesize\ttfamily void Set\+Call\+Reg (\begin{DoxyParamCaption}\item[{volatile \mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}} $\ast$}]{call }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the designated kernel call register with a pointer to a kernel call structure. 
+
+\mbox{\Hypertarget{k__cpu_8c_afb3eb72ecc6d3ee1f700c12a89e0ff3e}\label{k__cpu_8c_afb3eb72ecc6d3ee1f700c12a89e0ff3e}} 
+\index{k\_cpu.c@{k\_cpu.c}!SetPSP@{SetPSP}}
+\index{SetPSP@{SetPSP}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{SetPSP()}{SetPSP()}}
+{\footnotesize\ttfamily void Set\+P\+SP (\begin{DoxyParamCaption}\item[{volatile uint32\+\_\+t}]{Process\+Stack }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the current process stack pointer value. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Process\+Stack} & Stack pointer value to set the current process stack to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__cpu_8c_ae69531012bb21cdd93fbc4b43c0a341f}\label{k__cpu_8c_ae69531012bb21cdd93fbc4b43c0a341f}} 
+\index{k\_cpu.c@{k\_cpu.c}!StartProcess@{StartProcess}}
+\index{StartProcess@{StartProcess}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{StartProcess()}{StartProcess()}}
+{\footnotesize\ttfamily void Start\+Process (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Forces the machine to switch to a process\textquotesingle{} context when in handler mode. 
+
+This does require the process stack to already be set up And with the proper register values in it. \mbox{\Hypertarget{k__cpu_8c_a89bc557be3fc982e00f4e0ed3db11f40}\label{k__cpu_8c_a89bc557be3fc982e00f4e0ed3db11f40}} 
+\index{k\_cpu.c@{k\_cpu.c}!TrapSource@{TrapSource}}
+\index{TrapSource@{TrapSource}!k\_cpu.c@{k\_cpu.c}}
+\doxysubsubsection{\texorpdfstring{TrapSource()}{TrapSource()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__cpu_8h_afbeb5c4073ff7f8232fa698753426263}{trap\+\_\+sources\+\_\+t}} Trap\+Source (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Determines the source of a trap call. 
+
+Possible Sources of the trap call.
+
+
+\begin{DoxyRetVals}{Return values}
+{\em A} & code value related to the the source. See trap\+\_\+souces\+\_\+t for more information.\\
+\hline
+\end{DoxyRetVals}
+This function relies on the trap return address to be saved in the kernel stack. 

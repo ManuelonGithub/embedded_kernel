@@ -1,0 +1,178 @@
+\hypertarget{bitmap_8c}{}\doxysection{utils/bitmap.c File Reference}
+\label{bitmap_8c}\index{utils/bitmap.c@{utils/bitmap.c}}
+
+
+Contains all functionality related to operating a bitmap.  
+
+
+{\ttfamily \#include \char`\"{}bitmap.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{bitmap_8c_ae4c722d65f629e093f97656cf1beb049}{Set\+Bit}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t bit)
+\begin{DoxyCompactList}\small\item\em Sets a specific bit in a bitmap. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bitmap_8c_a1450145a97ea1efa0f35f6aaf05dbcd9}{Clear\+Bit}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t bit)
+\begin{DoxyCompactList}\small\item\em Clears a specific bit in a bitmap. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bitmap_8c_aaa476591463736beac3f664c13950dc3}{Set\+Bit\+Range}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t start, uint32\+\_\+t end)
+\begin{DoxyCompactList}\small\item\em Sets a range of bits from start to end. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{bitmap_8c_ac411bcde8500dba1cd5b676d8f02c230}{Clear\+Bit\+Range}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t start, uint32\+\_\+t end)
+\begin{DoxyCompactList}\small\item\em Clears a range of bits from start to end. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{bitmap_8c_aea47b36efa670baedacd8eb1c8cefed9}{Get\+Bit}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t bit)
+\begin{DoxyCompactList}\small\item\em Gets thevalue of a specific bit in a bitmap. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{bitmap_8c_a2b442817bc15cbc0c86a872e1c3ce95b}{Find\+Set}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t start, uint32\+\_\+t end)
+\begin{DoxyCompactList}\small\item\em Finds The earliest set bit in bitmap. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{bitmap_8c_a5ab161451e79c2d40ca343c8b34db724}{Find\+Clear}} (\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$bitmap, uint32\+\_\+t start, uint32\+\_\+t end)
+\begin{DoxyCompactList}\small\item\em Finds The earliest cleared bit in bitmap. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all functionality related to operating a bitmap. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+22 (Created) 
+
+2019.\+11.\+25 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{bitmap_8c_a1450145a97ea1efa0f35f6aaf05dbcd9}\label{bitmap_8c_a1450145a97ea1efa0f35f6aaf05dbcd9}} 
+\index{bitmap.c@{bitmap.c}!ClearBit@{ClearBit}}
+\index{ClearBit@{ClearBit}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{ClearBit()}{ClearBit()}}
+{\footnotesize\ttfamily void Clear\+Bit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{bit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Clears a specific bit in a bitmap. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em bitmap} & bitmap to be modified. \\
+\hline
+\mbox{\texttt{ in}}  & {\em bit} & Bit in bitmap to be cleared.\\
+\hline
+\end{DoxyParams}
+This function does not perform boundary checks, That is up to the caller to pre-\/check. \mbox{\Hypertarget{bitmap_8c_ac411bcde8500dba1cd5b676d8f02c230}\label{bitmap_8c_ac411bcde8500dba1cd5b676d8f02c230}} 
+\index{bitmap.c@{bitmap.c}!ClearBitRange@{ClearBitRange}}
+\index{ClearBitRange@{ClearBitRange}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{ClearBitRange()}{ClearBitRange()}}
+{\footnotesize\ttfamily void Clear\+Bit\+Range (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{start,  }\item[{uint32\+\_\+t}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Clears a range of bits from start to end. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em bitmap} & bitmap array to be modified. \\
+\hline
+\mbox{\texttt{ in}}  & {\em start} & first bit position to be cleared. \\
+\hline
+\mbox{\texttt{ in}}  & {\em end} & Bit position to reach when clearing bits.\\
+\hline
+\end{DoxyParams}
+Bits will be cleared up to end-\/1. \mbox{\Hypertarget{bitmap_8c_a5ab161451e79c2d40ca343c8b34db724}\label{bitmap_8c_a5ab161451e79c2d40ca343c8b34db724}} 
+\index{bitmap.c@{bitmap.c}!FindClear@{FindClear}}
+\index{FindClear@{FindClear}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{FindClear()}{FindClear()}}
+{\footnotesize\ttfamily uint32\+\_\+t Find\+Clear (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{start,  }\item[{uint32\+\_\+t}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Finds The earliest cleared bit in bitmap. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em bitmap} & bitmap to be searched. \\
+\hline
+\mbox{\texttt{ in}}  & {\em start} & Starting bit-\/index to check the bitmap. \\
+\hline
+\mbox{\texttt{ in}}  & {\em end} & End bit position of search. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\textquotesingle{}end\textquotesingle{} if no bit in range was cleared, index of cleared bit otherwise.
+\end{DoxyReturn}
+Search will only go up to end-\/1. \mbox{\Hypertarget{bitmap_8c_a2b442817bc15cbc0c86a872e1c3ce95b}\label{bitmap_8c_a2b442817bc15cbc0c86a872e1c3ce95b}} 
+\index{bitmap.c@{bitmap.c}!FindSet@{FindSet}}
+\index{FindSet@{FindSet}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{FindSet()}{FindSet()}}
+{\footnotesize\ttfamily uint32\+\_\+t Find\+Set (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{start,  }\item[{uint32\+\_\+t}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Finds The earliest set bit in bitmap. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em bitmap} & bitmap to be checked. \\
+\hline
+\mbox{\texttt{ in}}  & {\em start} & Starting bit position to check the bitmap. \\
+\hline
+\mbox{\texttt{ in}}  & {\em end} & End bit position of search. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\textquotesingle{}end\textquotesingle{} if no bit in range was set, index of set bit otherwise.
+\end{DoxyReturn}
+Search will only go up to end-\/1. \mbox{\Hypertarget{bitmap_8c_aea47b36efa670baedacd8eb1c8cefed9}\label{bitmap_8c_aea47b36efa670baedacd8eb1c8cefed9}} 
+\index{bitmap.c@{bitmap.c}!GetBit@{GetBit}}
+\index{GetBit@{GetBit}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{GetBit()}{GetBit()}}
+{\footnotesize\ttfamily bool Get\+Bit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{bit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets thevalue of a specific bit in a bitmap. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em bitmap} & bitmap to be checked. \\
+\hline
+\mbox{\texttt{ in}}  & {\em bit} & Bit in bitmap to be checked. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if bit is set, False if not.
+\end{DoxyReturn}
+This function does not perform boundary checks, That is up to the caller to pre-\/check. \mbox{\Hypertarget{bitmap_8c_ae4c722d65f629e093f97656cf1beb049}\label{bitmap_8c_ae4c722d65f629e093f97656cf1beb049}} 
+\index{bitmap.c@{bitmap.c}!SetBit@{SetBit}}
+\index{SetBit@{SetBit}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{SetBit()}{SetBit()}}
+{\footnotesize\ttfamily void Set\+Bit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{bit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets a specific bit in a bitmap. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em bitmap} & bitmap to be modified. \\
+\hline
+\mbox{\texttt{ in}}  & {\em bit} & Bit in bitmap to be set.\\
+\hline
+\end{DoxyParams}
+This function does not perform boundary checks, That is up to the caller to pre-\/check. \mbox{\Hypertarget{bitmap_8c_aaa476591463736beac3f664c13950dc3}\label{bitmap_8c_aaa476591463736beac3f664c13950dc3}} 
+\index{bitmap.c@{bitmap.c}!SetBitRange@{SetBitRange}}
+\index{SetBitRange@{SetBitRange}!bitmap.c@{bitmap.c}}
+\doxysubsubsection{\texorpdfstring{SetBitRange()}{SetBitRange()}}
+{\footnotesize\ttfamily void Set\+Bit\+Range (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} $\ast$}]{bitmap,  }\item[{uint32\+\_\+t}]{start,  }\item[{uint32\+\_\+t}]{end }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets a range of bits from start to end. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em bitmap} & bitmap array to be modified. \\
+\hline
+\mbox{\texttt{ in}}  & {\em start} & first bit position to be set. \\
+\hline
+\mbox{\texttt{ in}}  & {\em end} & Bit position to reach when setting bits.\\
+\hline
+\end{DoxyParams}
+Bits will be set up to end-\/1. 

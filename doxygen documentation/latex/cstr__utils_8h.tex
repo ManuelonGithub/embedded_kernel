@@ -1,0 +1,53 @@
+\hypertarget{cstr__utils_8h}{}\doxysection{utils/cstr\+\_\+utils.h File Reference}
+\label{cstr__utils_8h}\index{utils/cstr\_utils.h@{utils/cstr\_utils.h}}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cstr__utils_8h_a6b293a3f1ddf0b2dd42c5ed279e245ca}{I\+N\+T\+\_\+\+D\+I\+G\+I\+TS}}~10		/$\ast$ enough for 32 bit integer $\ast$/
+\item 
+\#define \mbox{\hyperlink{cstr__utils_8h_adf375e575c9d8db8b3c7c5333e8038f6}{I\+N\+T\+\_\+\+B\+UF}}~\mbox{\hyperlink{cstr__utils_8h_a6b293a3f1ddf0b2dd42c5ed279e245ca}{I\+N\+T\+\_\+\+D\+I\+G\+I\+TS}}+2
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+char $\ast$ \mbox{\hyperlink{cstr__utils_8h_a6be047b16875816417040dcd4168ea82}{itoa}} (int i, char $\ast$str\+\_\+buf)
+\begin{DoxyCompactList}\small\item\em Converts a signed integer into a string in base10. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cstr__utils_8h_adf375e575c9d8db8b3c7c5333e8038f6}\label{cstr__utils_8h_adf375e575c9d8db8b3c7c5333e8038f6}} 
+\index{cstr\_utils.h@{cstr\_utils.h}!INT\_BUF@{INT\_BUF}}
+\index{INT\_BUF@{INT\_BUF}!cstr\_utils.h@{cstr\_utils.h}}
+\doxysubsubsection{\texorpdfstring{INT\_BUF}{INT\_BUF}}
+{\footnotesize\ttfamily \#define I\+N\+T\+\_\+\+B\+UF~\mbox{\hyperlink{cstr__utils_8h_a6b293a3f1ddf0b2dd42c5ed279e245ca}{I\+N\+T\+\_\+\+D\+I\+G\+I\+TS}}+2}
+
+\mbox{\Hypertarget{cstr__utils_8h_a6b293a3f1ddf0b2dd42c5ed279e245ca}\label{cstr__utils_8h_a6b293a3f1ddf0b2dd42c5ed279e245ca}} 
+\index{cstr\_utils.h@{cstr\_utils.h}!INT\_DIGITS@{INT\_DIGITS}}
+\index{INT\_DIGITS@{INT\_DIGITS}!cstr\_utils.h@{cstr\_utils.h}}
+\doxysubsubsection{\texorpdfstring{INT\_DIGITS}{INT\_DIGITS}}
+{\footnotesize\ttfamily \#define I\+N\+T\+\_\+\+D\+I\+G\+I\+TS~10		/$\ast$ enough for 32 bit integer $\ast$/}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{cstr__utils_8h_a6be047b16875816417040dcd4168ea82}\label{cstr__utils_8h_a6be047b16875816417040dcd4168ea82}} 
+\index{cstr\_utils.h@{cstr\_utils.h}!itoa@{itoa}}
+\index{itoa@{itoa}!cstr\_utils.h@{cstr\_utils.h}}
+\doxysubsubsection{\texorpdfstring{itoa()}{itoa()}}
+{\footnotesize\ttfamily char$\ast$ itoa (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{char $\ast$}]{str\+\_\+buf }\end{DoxyParamCaption})}
+
+
+
+Converts a signed integer into a string in base10. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em i} & Value to convert. \\
+\hline
+\mbox{\texttt{ out}}  & {\em buf} & Character array to write number string to. Must be of size I\+N\+T\+\_\+\+B\+UF.\`{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to start of number in the character array. Function writes to buffer from the last character so the string visual fits wth how we view numbers. (largest decimal case to smallest). this means that the beginning of the buffer string may be invalid, so the returned pointer must be used to analyse the buffer data.
+\end{DoxyReturn}
+This function is based on the itoa implementation found in \href{https://opensource.apple.com/source/groff/groff-10/groff/libgroff/itoa.c}{\texttt{ https\+://opensource.\+apple.\+com/source/groff/groff-\/10/groff/libgroff/itoa.\+c}} 

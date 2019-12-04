@@ -1,0 +1,10 @@
+digraph "enqueuec"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="enqueuec",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Queues a char/byte into a circular buffer."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="UART0_IntHandler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#a7aefa599a6592b9771afc5904662ec5d",tooltip="Interrupt Handler for UART0."];
+}

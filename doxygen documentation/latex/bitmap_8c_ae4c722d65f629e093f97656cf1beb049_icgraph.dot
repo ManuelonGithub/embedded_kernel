@@ -1,0 +1,45 @@
+digraph "SetBit"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="SetBit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Sets a specific bit in a bitmap."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="ClearIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aaa27a5cf4effb4de9793dbc5d8485251",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="k_AllocatePCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html#af43a350d56f1d046a727e4073d79a139",tooltip="Allocates a new PCB."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="k_pcreate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html#a9ea70364f7d015c8df1b31ddeee0b13c",tooltip="Creates a process and registers it in kernel space."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="k_pcreateCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a727e88ff2dee6e3988e3887f8fc82d38",tooltip="Performs all operations required for process allocation."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="KernelCall_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a53c69e53135737e747747a3a6eb8dd69",tooltip="Kernel Call Handler function."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="SVC_handler",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8c.html#a5703d8fe19774bd873f7d7db5cd60242",tooltip="Supervisor Call trap handler."];
+  Node4 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="kernel_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a3f19ffb1e6c83b6c0203fd69c0534437",tooltip="Initializes kernel data structures, drivers, and critical processes."];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe",tooltip="main.c"];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="k_MsgBoxBind",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a5c0fa3b06d0ff458b24630c65eb335bb",tooltip="Binds a message box to a process."];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="k_bindCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#adf47b77fffe9facad2fdacefe28a2991",tooltip="Performs all operations required for binding a message box to running process."];
+  Node11 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="k_pMsgAllocate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a0d9a71fc033e0800851d3fcd1d24a1b4",tooltip="Allocates message and fills its data and size."];
+  Node12 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="k_MsgSend",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8h.html#a4102c8314e622c810fd8520210a4aa39",tooltip="Sends a message from one process to another."];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node14 [label="k_requestCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a868c3d8f4b853b0704586dc61488138e",tooltip="Performs all operations required to perform the request transaction between a message box belonging t..."];
+  Node14 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node13 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node15 [label="k_sendCall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a1130306eda0cd5c78882a05d20d59831",tooltip="Performs all operations required to send a message from a message box belonging to the running proces..."];
+  Node15 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node16 [label="SetBitRange",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8h.html#aaa476591463736beac3f664c13950dc3",tooltip="Sets a range of bits from start to end."];
+  Node16 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node16 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node17 [label="SetIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a2b892bb8fbb3ea3eae878299e47bbb6c",tooltip=" "];
+  Node1 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+}

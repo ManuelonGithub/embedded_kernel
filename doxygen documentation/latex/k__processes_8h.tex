@@ -1,0 +1,141 @@
+\hypertarget{k__processes_8h}{}\doxysection{kernel/k\+\_\+processes.h File Reference}
+\label{k__processes_8h}\index{kernel/k\_processes.h@{kernel/k\_processes.h}}
+
+
+Contains all functions and entities related to processes and process control blocks.  
+
+
+{\ttfamily \#include \char`\"{}k\+\_\+types.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{k__processes_8h_aae4d3240509e9d67a749da3ea506522a}{process\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Initializes the kernel\textquotesingle{}s process data structures and parameters. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{k__processes_8h_a9ea70364f7d015c8df1b31ddeee0b13c}{k\+\_\+pcreate}} (\mbox{\hyperlink{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}{process\+\_\+attr\+\_\+t}} $\ast$attr, void($\ast$program)(), void($\ast$\mbox{\hyperlink{calls_8h_a5354b26c0e92bc241bbaf8daedc5a28c}{terminate}})())
+\begin{DoxyCompactList}\small\item\em Creates a process and registers it in kernel space. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$ \mbox{\hyperlink{k__processes_8h_af43a350d56f1d046a727e4073d79a139}{k\+\_\+\+Allocate\+P\+CB}} (\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} id)
+\begin{DoxyCompactList}\small\item\em Allocates a new P\+CB. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__processes_8h_ae25db96c8981472d79072a8697d22a27}{k\+\_\+\+Deallocate\+P\+CB}} (\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} id)
+\begin{DoxyCompactList}\small\item\em De-\/allocates a P\+CB. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$ \mbox{\hyperlink{k__processes_8h_a71c896af93e05e040e63ab29272a15ed}{Get\+P\+CB}} (\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} id)
+\begin{DoxyCompactList}\small\item\em Gets pointer to P\+CB. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__processes_8h_a3516c38f02e3664cc6db527c4bf33c03}{Change\+Process\+Priority}} (\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} id, \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} new)
+\begin{DoxyCompactList}\small\item\em Changes the priority of a process. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all functions and entities related to processes and process control blocks. 
+
+This module should not be exposed to user programs. \begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+10.\+23 (Created) 
+
+2019.\+10.\+23 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{k__processes_8h_a3516c38f02e3664cc6db527c4bf33c03}\label{k__processes_8h_a3516c38f02e3664cc6db527c4bf33c03}} 
+\index{k\_processes.h@{k\_processes.h}!ChangeProcessPriority@{ChangeProcessPriority}}
+\index{ChangeProcessPriority@{ChangeProcessPriority}!k\_processes.h@{k\_processes.h}}
+\doxysubsubsection{\texorpdfstring{ChangeProcessPriority()}{ChangeProcessPriority()}}
+{\footnotesize\ttfamily void Change\+Process\+Priority (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}}}]{id,  }\item[{\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}}}]{new }\end{DoxyParamCaption})}
+
+
+
+Changes the priority of a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & Process ID of the process whose priority will be changed. \\
+\hline
+\mbox{\texttt{ in}}  & {\em new} & New priority level to set the process to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__processes_8h_a71c896af93e05e040e63ab29272a15ed}\label{k__processes_8h_a71c896af93e05e040e63ab29272a15ed}} 
+\index{k\_processes.h@{k\_processes.h}!GetPCB@{GetPCB}}
+\index{GetPCB@{GetPCB}!k\_processes.h@{k\_processes.h}}
+\doxysubsubsection{\texorpdfstring{GetPCB()}{GetPCB()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}}$\ast$ Get\+P\+CB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}}}]{id }\end{DoxyParamCaption})}
+
+
+
+Gets pointer to P\+CB. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em process} & ID to retrieve its P\+CB location. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to P\+CB if ID is valid, N\+U\+LL if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__processes_8h_af43a350d56f1d046a727e4073d79a139}\label{k__processes_8h_af43a350d56f1d046a727e4073d79a139}} 
+\index{k\_processes.h@{k\_processes.h}!k\_AllocatePCB@{k\_AllocatePCB}}
+\index{k\_AllocatePCB@{k\_AllocatePCB}!k\_processes.h@{k\_processes.h}}
+\doxysubsubsection{\texorpdfstring{k\_AllocatePCB()}{k\_AllocatePCB()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}}$\ast$ k\+\_\+\+Allocate\+P\+CB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}}}]{id }\end{DoxyParamCaption})}
+
+
+
+Allocates a new P\+CB. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & ID of the P\+CB. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to allocated P\+CB. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__processes_8h_ae25db96c8981472d79072a8697d22a27}\label{k__processes_8h_ae25db96c8981472d79072a8697d22a27}} 
+\index{k\_processes.h@{k\_processes.h}!k\_DeallocatePCB@{k\_DeallocatePCB}}
+\index{k\_DeallocatePCB@{k\_DeallocatePCB}!k\_processes.h@{k\_processes.h}}
+\doxysubsubsection{\texorpdfstring{k\_DeallocatePCB()}{k\_DeallocatePCB()}}
+{\footnotesize\ttfamily void k\+\_\+\+Deallocate\+P\+CB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}}}]{id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+De-\/allocates a P\+CB. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & Process ID to be de-\/allocated. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__processes_8h_a9ea70364f7d015c8df1b31ddeee0b13c}\label{k__processes_8h_a9ea70364f7d015c8df1b31ddeee0b13c}} 
+\index{k\_processes.h@{k\_processes.h}!k\_pcreate@{k\_pcreate}}
+\index{k\_pcreate@{k\_pcreate}!k\_processes.h@{k\_processes.h}}
+\doxysubsubsection{\texorpdfstring{k\_pcreate()}{k\_pcreate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} k\+\_\+pcreate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}{process\+\_\+attr\+\_\+t}} $\ast$}]{attr,  }\item[{void($\ast$)()}]{program,  }\item[{void($\ast$)()}]{terminate }\end{DoxyParamCaption})}
+
+
+
+Creates a process and registers it in kernel space. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em attr} & Pointer to process attributes to configure a process with. \\
+\hline
+\mbox{\texttt{ in}}  & {\em priortity} & Priority level that the process will run in. \\
+\hline
+\mbox{\texttt{ in}}  & {\em proc\+\_\+program} & Pointer to start of the program the process will execute. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Returns} & the process ID that was created. P\+R\+O\+C\+\_\+\+E\+RR if a process wasn\textquotesingle{}t able to be created. \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{k__processes_8h_aae4d3240509e9d67a749da3ea506522a}\label{k__processes_8h_aae4d3240509e9d67a749da3ea506522a}} 
+\index{k\_processes.h@{k\_processes.h}!process\_init@{process\_init}}
+\index{process\_init@{process\_init}!k\_processes.h@{k\_processes.h}}
+\doxysubsubsection{\texorpdfstring{process\_init()}{process\_init()}}
+{\footnotesize\ttfamily void process\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initializes the kernel\textquotesingle{}s process data structures and parameters. 
+

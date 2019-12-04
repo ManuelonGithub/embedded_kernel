@@ -1,0 +1,32 @@
+digraph "kernel/k_calls.h"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="kernel/k_calls.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Defines all priviledged functions and entities regarding kernel calls."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="stdio.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="stdint.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="stdbool.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="k_types.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__types_8h.html",tooltip="Defines all data types used through the kernel."];
+  Node5 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="stdlib.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node5 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="dlist.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8h.html",tooltip="Contains all structures and function declarations on how to manage double linked lists."];
+  Node7 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="k_defs.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__defs_8h.html",tooltip="Contains all kernel configuration definitions."];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="bitmap.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8h.html",tooltip="Contains all definitions and function prototypes related to operating a bitmap."];
+  Node9 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="k_cpu.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8h.html",tooltip="Contains all definitions and entities regarding the cpu-specific operations that the embedded kernel ..."];
+  Node10 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

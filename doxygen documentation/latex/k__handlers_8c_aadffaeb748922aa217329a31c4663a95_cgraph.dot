@@ -1,0 +1,36 @@
+digraph "k_Terminate"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="k_Terminate",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Terminates the running process."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="k_DeallocatePCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8c.html#ae25db96c8981472d79072a8697d22a27",tooltip="De-allocates a PCB."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="ClearBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a1450145a97ea1efa0f35f6aaf05dbcd9",tooltip="Clears a specific bit in a bitmap."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="k_MsgBoxUnbindAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#aa10175dda682467af0afb21aa1785efc",tooltip="Unbinds all message boxes bound to a process."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="FindSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a2b442817bc15cbc0c86a872e1c3ce95b",tooltip="Finds The earliest set bit in bitmap."];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="GetBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#aea47b36efa670baedacd8eb1c8cefed9",tooltip="Gets thevalue of a specific bit in a bitmap."];
+  Node4 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="k_MsgBoxUnbind",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a634e8b22ad815f934aa721f3bffc5630",tooltip="Unbinds a message box from a process."];
+  Node7 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="k_MsgClearAll",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a343391f72abbf77fc8d2958500298af1",tooltip="Clears all Messages currently in the message box."];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="k_pMsgDeallocate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a1f49ca1a455ee48b9566a2c6257aab49",tooltip="De-allocates a message."];
+  Node9 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="Schedule",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#ac5ec5148a4c60ac9681835af6d3c4809",tooltip="Determines which PCB should run next."];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="SetPSP",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#afb3eb72ecc6d3ee1f700c12a89e0ff3e",tooltip="Sets the current process stack pointer value."];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="SysTick_Reset",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$systick_8c.html#ad51fa075a406920a9d116e2b9ee90897",tooltip="Resets the SysTick current value register and time count."];
+  Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="UnlinkPCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#a020cd5ae59a5fa38146a31260f17ee30",tooltip="Unlinks PCB from its Process queue."];
+  Node13 -> Node14 [color="midnightblue",fontsize="10",style="solid"];
+  Node14 [label="dUnlink",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8c.html#a4ac5bcc32a4b91f514e4eeff11361b61",tooltip="Unlinks a node from its current list."];
+}

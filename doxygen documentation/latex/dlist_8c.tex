@@ -1,0 +1,65 @@
+\hypertarget{dlist_8c}{}\doxysection{utils/dlist.c File Reference}
+\label{dlist_8c}\index{utils/dlist.c@{utils/dlist.c}}
+
+
+Contains all functionality on how to manage double linked lists.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}dlist.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{dlist_8c_af800d7b4d997230f7d590c452dcb1ea3}{d\+Link}} (\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$node, \mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$front)
+\begin{DoxyCompactList}\small\item\em Links a node into the back of another. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{dlist_8c_a4ac5bcc32a4b91f514e4eeff11361b61}{d\+Unlink}} (\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Unlinks a node from its current list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all functionality on how to manage double linked lists. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+13 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{dlist_8c_af800d7b4d997230f7d590c452dcb1ea3}\label{dlist_8c_af800d7b4d997230f7d590c452dcb1ea3}} 
+\index{dlist.c@{dlist.c}!dLink@{dLink}}
+\index{dLink@{dLink}!dlist.c@{dlist.c}}
+\doxysubsubsection{\texorpdfstring{dLink()}{dLink()}}
+{\footnotesize\ttfamily void d\+Link (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$}]{node,  }\item[{\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$}]{front }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Links a node into the back of another. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em node} & Node to be linked. \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em front} & \char`\"{}\+Head node\char`\"{} where the above node will be linked to. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{dlist_8c_a4ac5bcc32a4b91f514e4eeff11361b61}\label{dlist_8c_a4ac5bcc32a4b91f514e4eeff11361b61}} 
+\index{dlist.c@{dlist.c}!dUnlink@{dUnlink}}
+\index{dUnlink@{dUnlink}!dlist.c@{dlist.c}}
+\doxysubsubsection{\texorpdfstring{dUnlink()}{dUnlink()}}
+{\footnotesize\ttfamily void d\+Unlink (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} $\ast$}]{node }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Unlinks a node from its current list. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em node} & Node to unlink from its list. \\
+\hline
+\end{DoxyParams}

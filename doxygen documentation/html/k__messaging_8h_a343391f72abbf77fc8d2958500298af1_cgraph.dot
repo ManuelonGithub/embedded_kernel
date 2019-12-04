@@ -1,0 +1,12 @@
+digraph "k_MsgClearAll"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="k_MsgClearAll",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Clears all Messages currently in the message box."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="k_pMsgDeallocate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a1f49ca1a455ee48b9566a2c6257aab49",tooltip="De-allocates a message."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="ClearBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a1450145a97ea1efa0f35f6aaf05dbcd9",tooltip="Clears a specific bit in a bitmap."];
+}

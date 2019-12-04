@@ -1,0 +1,41 @@
+\hypertarget{index_Project}{}\doxysection{Information}\label{index_Project}
+This real-\/time kernel enables multi-\/tasking capabilities in an embedded environment. ~\newline
+ It also provides message-\/passing capabilities between processes and user Input/\+Output functionality via message-\/passing.\hypertarget{index_Processes}{}\doxysection{Processes}\label{index_Processes}
+Processes are instances of a C\+PU context. This includes all general purpose registers, the stack pointer, the program counter, and the status register. ~\newline
+ A process can be registered into the kernel using the pcreate kernel call, which requires a function that the processs will run, optionally a pointer to a process attribute function to allow customization of the process\textquotesingle{} ID, priority, and name. ~\newline
+ \mbox{\hyperlink{main_8c}{main.\+c}} is the default place to register processes in, but processes themselves can register processes. ~\newline
+ Due to the kernel being made for real-\/time operations, the number of supported process is static.\hypertarget{index_Kernel}{}\doxysection{calls}\label{index_Kernel}
+Kernel functionality and information can be accessed by a process via kernel calls. ~\newline
+ The supported kernel calls can be found in \mbox{\hyperlink{calls_8h}{calls.\+h}} ~\newline
+ Message-\/passing is done via kernel calls.\hypertarget{index_Message}{}\doxysection{Passing System}\label{index_Message}
+This kernel uses a \char`\"{}boxing\char`\"{} system for message passing. A process must bind itself to an available message box in order to engage in inter-\/process communications. these message boxes allow the process to receive and send messages to other processes. A process can have multiple message boxes bound to it, and can unbind them at any time via an unbind kernel call. A process doesn\textquotesingle{}t directly use messages in I\+PC, but rather it uses the send \& recv kernel calls to send byte streams of specified length to a specific message box (denoted by its box ID) from a message box owned by the process.\hypertarget{index_Process}{}\doxysubsection{Request Transaction}\label{index_Process}
+A common interaction between process is sending a message to one with data pertaining a specific action to be performed by the destination process, and then receive a message from the same process with data related to the action performed. This is how a process communicates with the IO Server, which is responsible for displaying and receiving data to/from the user, although the request transaction is encapsulated with the send\+\_\+user and recv\+\_\+user kernel calls. To make these transaction process faster however, a \char`\"{}request\char`\"{} kernel call is offered that performs the sending and receiving with one kernel call instead of requiring two or more kernel calls to perform it.\hypertarget{index_IO}{}\doxysection{Server}\label{index_IO}
+The kernel comes with a IO server process that enables data to be displayed and received to/by the user via a terminal. Accessing the IO server can be done via a request call to the I\+O\+\_\+\+B\+OX message box, and the req\+\_\+data must be a I\+O\+\_\+metadata structure which contains information that the server requires to perform process requests to output data to user or receive data from user. This interaction is all encapsulated through send\+\_\+user and recv\+\_\+user kernel calls however.
+
+subsection IO Server Terminal mode the IO server doubles up as a terminal program that can take in user commands to enable process\textquotesingle{} IO permissions, and to view system process\textquotesingle{} information. currently supported commands are\+: sysview\+: ~\newline
+ displays information about the system processes. ~\newline
+ setio pid\# pid\# pid\#... \+: ~\newline
+ used to enable IO permissions for the system processes. Can be used with no pid\# following it to enable IO permissions for all processes. ~\newline
+ cleario pid\# pid\# pid\#... \+: ~\newline
+ used to disable IO permissions for the system processes. ~\newline
+ can be used with no pid\# following it to disable IO permissions for all processes. ~\newline
+ run\+: ~\newline
+ Places IO server process in the background and allows user processes to run. ~\newline
+ Whenever the terminal process is running, the user-\/processes won\textquotesingle{}t be able to run. the \textquotesingle{}run\textquotesingle{} command must be inputted by the user to place the terminal in the background. ~\newline
+ The IO server can be set to be in terminal mode at anytime by inputting ctrl+c, which will then pause all user processes.\hypertarget{index_Communications}{}\doxysection{Communications}\label{index_Communications}
+The IO server uses U\+A\+RT to communicate with the user, which can be accessed by a computer via a Serial C\+OM port and an emulated terminal program like Pu\+T\+TY.\hypertarget{index_Serial}{}\doxysubsection{Port Settings}\label{index_Serial}
+
+\begin{DoxyItemize}
+\item 115200 baud rate,
+\item 8 data bits,
+\item 1 stop bit,
+\item NO parity,
+\item NO flow control.
+\end{DoxyItemize}
+
+Check device manager (or equivalent) to see which C\+OM port the board is connected to.
+\begin{DoxyItemize}
+\item Name of board is \char`\"{}\+Stellaris Virtual Serial Port\char`\"{}
+\end{DoxyItemize}
+
+It is also recommended that you enable implicit CR in every LR \& implicit LR in every CR on your terminal settings. 

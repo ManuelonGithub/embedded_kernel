@@ -1,0 +1,81 @@
+\hypertarget{structterminal__}{}\doxysection{terminal\+\_\+ Struct Reference}
+\label{structterminal__}\index{terminal\_@{terminal\_}}
+
+
+Structure that encapsulates all data and elements the terminal process requires to operate.  
+
+
+
+
+{\ttfamily \#include $<$k\+\_\+terminal.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} \mbox{\hyperlink{structterminal___afea6ddd559d2729c1a70a7136c4a6245}{buf}}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structterminal___ace04677c1f8fc95888413afcff2ba492}{input\+\_\+entry}}
+\item 
+char \mbox{\hyperlink{structterminal___a5c0694de6f7b931b6351b9c925a42fbd}{header}} \mbox{[}128\mbox{]}
+\item 
+\mbox{\hyperlink{k__terminal_8h_a44ccb70ed6ea8c7fdfef957a8c997aca}{term\+\_\+mode\+\_\+t}} \mbox{\hyperlink{structterminal___a335ac59905504f100a6bcf6ba61a8c80}{mode}}
+\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{structterminal___a53a16f06e11a960f33c0c0bfec254720}{box}}
+\item 
+\mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} \mbox{\hyperlink{structterminal___a11095229ce9a7625c16a8363b914d727}{active\+\_\+pid}} \mbox{[}\mbox{\hyperlink{k__defs_8h_ad57304bdde0de57cc666dfd966ed1ada}{P\+I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}\mbox{]}
+\item 
+\mbox{\hyperlink{k__terminal_8h_a1d9a980b81c3b5963b7d54aeb758fef4}{input\+\_\+capture\+\_\+t}} \mbox{\hyperlink{structterminal___a562ba841fee89a13cf3252c6476c22ec}{capture}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Structure that encapsulates all data and elements the terminal process requires to operate. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structterminal___a11095229ce9a7625c16a8363b914d727}\label{structterminal___a11095229ce9a7625c16a8363b914d727}} 
+\index{terminal\_@{terminal\_}!active\_pid@{active\_pid}}
+\index{active\_pid@{active\_pid}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{active\_pid}{active\_pid}}
+{\footnotesize\ttfamily \mbox{\hyperlink{bitmap_8h_a635fc51278a0405ab33bc1adf9c3f58b}{bitmap\+\_\+t}} active\+\_\+pid\mbox{[}\mbox{\hyperlink{k__defs_8h_ad57304bdde0de57cc666dfd966ed1ada}{P\+I\+D\+\_\+\+B\+I\+T\+M\+A\+P\+\_\+\+S\+I\+ZE}}\mbox{]}}
+
+\mbox{\Hypertarget{structterminal___a53a16f06e11a960f33c0c0bfec254720}\label{structterminal___a53a16f06e11a960f33c0c0bfec254720}} 
+\index{terminal\_@{terminal\_}!box@{box}}
+\index{box@{box}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{box}{box}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} box}
+
+\mbox{\Hypertarget{structterminal___afea6ddd559d2729c1a70a7136c4a6245}\label{structterminal___afea6ddd559d2729c1a70a7136c4a6245}} 
+\index{terminal\_@{terminal\_}!buf@{buf}}
+\index{buf@{buf}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{buf}{buf}}
+{\footnotesize\ttfamily \mbox{\hyperlink{cirbuffer_8h_a7c4fbcfafc38ea754a6084a02ccf0910}{circular\+\_\+buffer\+\_\+t}} buf}
+
+\mbox{\Hypertarget{structterminal___a562ba841fee89a13cf3252c6476c22ec}\label{structterminal___a562ba841fee89a13cf3252c6476c22ec}} 
+\index{terminal\_@{terminal\_}!capture@{capture}}
+\index{capture@{capture}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{capture}{capture}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__terminal_8h_a1d9a980b81c3b5963b7d54aeb758fef4}{input\+\_\+capture\+\_\+t}} capture}
+
+\mbox{\Hypertarget{structterminal___a5c0694de6f7b931b6351b9c925a42fbd}\label{structterminal___a5c0694de6f7b931b6351b9c925a42fbd}} 
+\index{terminal\_@{terminal\_}!header@{header}}
+\index{header@{header}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily char header\mbox{[}128\mbox{]}}
+
+\mbox{\Hypertarget{structterminal___ace04677c1f8fc95888413afcff2ba492}\label{structterminal___ace04677c1f8fc95888413afcff2ba492}} 
+\index{terminal\_@{terminal\_}!input\_entry@{input\_entry}}
+\index{input\_entry@{input\_entry}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{input\_entry}{input\_entry}}
+{\footnotesize\ttfamily uint32\+\_\+t input\+\_\+entry}
+
+\mbox{\Hypertarget{structterminal___a335ac59905504f100a6bcf6ba61a8c80}\label{structterminal___a335ac59905504f100a6bcf6ba61a8c80}} 
+\index{terminal\_@{terminal\_}!mode@{mode}}
+\index{mode@{mode}!terminal\_@{terminal\_}}
+\doxysubsubsection{\texorpdfstring{mode}{mode}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__terminal_8h_a44ccb70ed6ea8c7fdfef957a8c997aca}{term\+\_\+mode\+\_\+t}} mode}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+kernel/\mbox{\hyperlink{k__terminal_8h}{k\+\_\+terminal.\+h}}\end{DoxyCompactItemize}

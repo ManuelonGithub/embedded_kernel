@@ -1,0 +1,242 @@
+\hypertarget{uart_8c}{}\doxysection{drivers/uart.c File Reference}
+\label{uart_8c}\index{drivers/uart.c@{drivers/uart.c}}
+
+
+Contains functionality to operate the U\+A\+R\+T0 driver for the tiva board.  
+
+
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}uart.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+cpu.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+types.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+messaging.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{uart_8c_ad31ccf0e42e087a8ea15685f70232ae7}{io\+Server\+Send}} ()
+\begin{DoxyCompactList}\small\item\em Send a character from the RX buffer to the kernel IO server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8c_ad35da456a0bfc73e5a9c6dfbfb420552}{U\+A\+R\+T0\+\_\+\+Init}} (\mbox{\hyperlink{uart_8h_a2b41088442ba6c8cde34148d137af57e}{uart\+\_\+descriptor\+\_\+t}} $\ast$descriptor)
+\begin{DoxyCompactList}\small\item\em Initializes the control registers for U\+A\+R\+T0 and the U\+A\+RT descriptor that is accessed by the driver. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8c_a13bce21e1f2ea51aa4e09f2458e4e983}{U\+A\+R\+T0\+\_\+\+Interrupt\+Enable}} (unsigned long Interrupt\+Index)
+\begin{DoxyCompactList}\small\item\em Sets the interrupt enable bit for a peripheral in the N\+V\+IC register. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8c_a4c500d740ba6227b5ed040d8d366f773}{U\+A\+R\+T0\+\_\+\+Int\+Enable}} (unsigned long flags)
+\begin{DoxyCompactList}\small\item\em Sets bits in the U\+A\+R\+T0 interrupt mask register. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8c_a7aefa599a6592b9771afc5904662ec5d}{U\+A\+R\+T0\+\_\+\+Int\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em Interrupt Handler for U\+A\+R\+T0. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8c_a24b4fec5866afe2413c63186677a5b71}{U\+A\+R\+T0\+\_\+putc}} (char c)
+\begin{DoxyCompactList}\small\item\em Send a character to U\+A\+RT 0. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{uart_8c_ae3b6ddbf08535801e98b0e8116098a97}{U\+A\+R\+T0\+\_\+\+Tx\+Ready}} (void)
+\begin{DoxyCompactList}\small\item\em Determines if U\+A\+RT 0 is ready to transmit. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8c_a2d797721c4a028583e8a104199f9075d}{U\+A\+R\+T0\+\_\+puts}} (char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Sends char string to U\+A\+RT 0. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{uart_8c_a60a498bb600eed8421130f6c7e7e19ae}{U\+A\+R\+T0\+\_\+put}} (char $\ast$data, uint8\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Sends byte stream to U\+A\+RT 0. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{uart_8c_a4296e21703ec7c6686a860a7b368cdda}{U\+A\+R\+T0\+\_\+empty}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the U\+A\+RT\textquotesingle{}s RX buffer is empty. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{uart_8c_af6582cdc278e64b5a73c86193aee0e26}{U\+A\+R\+T0\+\_\+getc}} (char $\ast$c)
+\begin{DoxyCompactList}\small\item\em Gets a character from the U\+A\+RT buffer. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{uart_8c_aa06c88030b046b939e57cedf15eb9415}{U\+A\+R\+T0\+\_\+gets}} (char $\ast$str, uint32\+\_\+t M\+A\+X\+\_\+\+B\+Y\+T\+ES)
+\begin{DoxyCompactList}\small\item\em Retrieves string from U\+A\+RT 0. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains functionality to operate the U\+A\+R\+T0 driver for the tiva board. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay, Emad Khan (Based on his work) 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+09.\+18 (Created) 
+
+2019.\+11.\+30 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{uart_8c_ad31ccf0e42e087a8ea15685f70232ae7}\label{uart_8c_ad31ccf0e42e087a8ea15685f70232ae7}} 
+\index{uart.c@{uart.c}!ioServerSend@{ioServerSend}}
+\index{ioServerSend@{ioServerSend}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{ioServerSend()}{ioServerSend()}}
+{\footnotesize\ttfamily void io\+Server\+Send (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Send a character from the RX buffer to the kernel IO server. 
+
+\mbox{\Hypertarget{uart_8c_a4296e21703ec7c6686a860a7b368cdda}\label{uart_8c_a4296e21703ec7c6686a860a7b368cdda}} 
+\index{uart.c@{uart.c}!UART0\_empty@{UART0\_empty}}
+\index{UART0\_empty@{UART0\_empty}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_empty()}{UART0\_empty()}}
+{\footnotesize\ttfamily bool U\+A\+R\+T0\+\_\+empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the U\+A\+RT\textquotesingle{}s RX buffer is empty. 
+
+\begin{DoxyReturn}{Returns}
+True if it is empty, False if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{uart_8c_af6582cdc278e64b5a73c86193aee0e26}\label{uart_8c_af6582cdc278e64b5a73c86193aee0e26}} 
+\index{uart.c@{uart.c}!UART0\_getc@{UART0\_getc}}
+\index{UART0\_getc@{UART0\_getc}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_getc()}{UART0\_getc()}}
+{\footnotesize\ttfamily bool U\+A\+R\+T0\+\_\+getc (\begin{DoxyParamCaption}\item[{char $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+Gets a character from the U\+A\+RT buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em c} & pointer to variable where the dequeued character will be placed in. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if a character was able to be dequeued, False if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{uart_8c_aa06c88030b046b939e57cedf15eb9415}\label{uart_8c_aa06c88030b046b939e57cedf15eb9415}} 
+\index{uart.c@{uart.c}!UART0\_gets@{UART0\_gets}}
+\index{UART0\_gets@{UART0\_gets}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_gets()}{UART0\_gets()}}
+{\footnotesize\ttfamily uint32\+\_\+t U\+A\+R\+T0\+\_\+gets (\begin{DoxyParamCaption}\item[{char $\ast$}]{str,  }\item[{uint32\+\_\+t}]{M\+A\+X\+\_\+\+B\+Y\+T\+ES }\end{DoxyParamCaption})}
+
+
+
+Retrieves string from U\+A\+RT 0. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em str} & where the string will be copied onto. \\
+\hline
+\mbox{\texttt{ in}}  & {\em M\+A\+X\+\_\+\+B\+Y\+T\+ES} & max size of the destination string buffer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}uint32\+\_\+t\mbox{]} Amount of bytes copied into the buffer.
+\end{DoxyReturn}
+This function copies bytes from the U\+A\+RT\textquotesingle{}s rx buffer until an end of a string has been reached, or the max amount of bytes that the buffer supports have been read.
+
+The string copied onto str will always be null-\/terminated.
+
+This function will block code progression until a valid string has been retrieved from U\+A\+RT, or until the max amount of bytes have been read. \mbox{\Hypertarget{uart_8c_ad35da456a0bfc73e5a9c6dfbfb420552}\label{uart_8c_ad35da456a0bfc73e5a9c6dfbfb420552}} 
+\index{uart.c@{uart.c}!UART0\_Init@{UART0\_Init}}
+\index{UART0\_Init@{UART0\_Init}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_Init()}{UART0\_Init()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{uart_8h_a2b41088442ba6c8cde34148d137af57e}{uart\+\_\+descriptor\+\_\+t}} $\ast$}]{descriptor }\end{DoxyParamCaption})}
+
+
+
+Initializes the control registers for U\+A\+R\+T0 and the U\+A\+RT descriptor that is accessed by the driver. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em descriptor} & pointer to uart descriptor that will be accessed by the driver. \\
+\hline
+\mbox{\texttt{ in}}  & {\em echo\+\_\+en} & Specifies if RX echo is enabled at driver level. \\
+\hline
+\mbox{\texttt{ in}}  & {\em auto\+\_\+flush\+\_\+en} & Specifies if driver should automatically send TX data if available.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]Convert the boolean configurations into a bit-\/style configuration. \end{DoxyRefDesc}
+\mbox{\Hypertarget{uart_8c_a4c500d740ba6227b5ed040d8d366f773}\label{uart_8c_a4c500d740ba6227b5ed040d8d366f773}} 
+\index{uart.c@{uart.c}!UART0\_IntEnable@{UART0\_IntEnable}}
+\index{UART0\_IntEnable@{UART0\_IntEnable}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_IntEnable()}{UART0\_IntEnable()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Int\+Enable (\begin{DoxyParamCaption}\item[{unsigned long}]{flags }\end{DoxyParamCaption})}
+
+
+
+Sets bits in the U\+A\+R\+T0 interrupt mask register. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em flags} & Determines which bits will be set in the register based on its set bits. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{uart_8c_a13bce21e1f2ea51aa4e09f2458e4e983}\label{uart_8c_a13bce21e1f2ea51aa4e09f2458e4e983}} 
+\index{uart.c@{uart.c}!UART0\_InterruptEnable@{UART0\_InterruptEnable}}
+\index{UART0\_InterruptEnable@{UART0\_InterruptEnable}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_InterruptEnable()}{UART0\_InterruptEnable()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Interrupt\+Enable (\begin{DoxyParamCaption}\item[{unsigned long}]{Interrupt\+Index }\end{DoxyParamCaption})}
+
+
+
+Sets the interrupt enable bit for a peripheral in the N\+V\+IC register. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Interrupt\+Index} & The peripheral\textquotesingle{}s interrupt index in the N\+V\+IC register. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{uart_8c_a7aefa599a6592b9771afc5904662ec5d}\label{uart_8c_a7aefa599a6592b9771afc5904662ec5d}} 
+\index{uart.c@{uart.c}!UART0\_IntHandler@{UART0\_IntHandler}}
+\index{UART0\_IntHandler@{UART0\_IntHandler}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_IntHandler()}{UART0\_IntHandler()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Int\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Interrupt Handler for U\+A\+R\+T0. 
+
+This handler is shared between all possible interrupt types for the U\+A\+RT peripheral. The types of interrupts enabled are determined by the interrupt mask register. This means that the handler needs to have code to handle all enabled interrupt types. Currently it only handles interrupts for successful RX and TX.
+
+The handler is what\textquotesingle{}s in charge for acting based on the echo configuration of the U\+A\+RT descriptor. \mbox{\Hypertarget{uart_8c_a60a498bb600eed8421130f6c7e7e19ae}\label{uart_8c_a60a498bb600eed8421130f6c7e7e19ae}} 
+\index{uart.c@{uart.c}!UART0\_put@{UART0\_put}}
+\index{UART0\_put@{UART0\_put}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_put()}{UART0\_put()}}
+{\footnotesize\ttfamily uint32\+\_\+t U\+A\+R\+T0\+\_\+put (\begin{DoxyParamCaption}\item[{char $\ast$}]{data,  }\item[{uint8\+\_\+t}]{length }\end{DoxyParamCaption})}
+
+
+
+Sends byte stream to U\+A\+RT 0. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em data} & pointer to string of bytes to be sent. \\
+\hline
+\mbox{\texttt{ in}}  & {\em length} & amount of bytes in the byte stream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}uint32\+\_\+t\mbox{]} Returns amount of bytes successfully sent to U\+A\+RT 0.
+\end{DoxyReturn}
+This function does not guarantee that all bytes in the string are sent. if there isn\textquotesingle{}t enough space in the TX buffer, the byte stream is truncated. \mbox{\Hypertarget{uart_8c_a24b4fec5866afe2413c63186677a5b71}\label{uart_8c_a24b4fec5866afe2413c63186677a5b71}} 
+\index{uart.c@{uart.c}!UART0\_putc@{UART0\_putc}}
+\index{UART0\_putc@{UART0\_putc}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_putc()}{UART0\_putc()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+putc (\begin{DoxyParamCaption}\item[{char}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Send a character to U\+A\+RT 0. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em c} & Character to be transmitted.\\
+\hline
+\end{DoxyParams}
+It sends a character to U\+A\+R\+T0\textquotesingle{}s data register when the U\+A\+R\+T0 peripheral is ready to transmit. This function is blocking program progression while U\+A\+R\+T0 isn\textquotesingle{}t ready to transmit. \mbox{\Hypertarget{uart_8c_a2d797721c4a028583e8a104199f9075d}\label{uart_8c_a2d797721c4a028583e8a104199f9075d}} 
+\index{uart.c@{uart.c}!UART0\_puts@{UART0\_puts}}
+\index{UART0\_puts@{UART0\_puts}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_puts()}{UART0\_puts()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+puts (\begin{DoxyParamCaption}\item[{char $\ast$}]{str }\end{DoxyParamCaption})}
+
+
+
+Sends char string to U\+A\+RT 0. 
+
+This function will block if at the time of call, The TX buffer cannot hold the whole string. Function will block until the whole string has been queued to send. \mbox{\Hypertarget{uart_8c_ae3b6ddbf08535801e98b0e8116098a97}\label{uart_8c_ae3b6ddbf08535801e98b0e8116098a97}} 
+\index{uart.c@{uart.c}!UART0\_TxReady@{UART0\_TxReady}}
+\index{UART0\_TxReady@{UART0\_TxReady}!uart.c@{uart.c}}
+\doxysubsubsection{\texorpdfstring{UART0\_TxReady()}{UART0\_TxReady()}}
+{\footnotesize\ttfamily bool U\+A\+R\+T0\+\_\+\+Tx\+Ready (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Determines if U\+A\+RT 0 is ready to transmit. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}bool\mbox{]} True if ready, false if busy.
+\end{DoxyReturn}
+TX ready is based in the B\+U\+SY flag in the U\+A\+RT 0\textquotesingle{}s flag register. 

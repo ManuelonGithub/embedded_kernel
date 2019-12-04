@@ -1,0 +1,24 @@
+digraph "run"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="run",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ChangeProcessPriority",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8c.html#a3516c38f02e3664cc6db527c4bf33c03",tooltip="Changes the priority of a process."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="GetBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#aea47b36efa670baedacd8eb1c8cefed9",tooltip="Gets thevalue of a specific bit in a bitmap."];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="LinkPCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#a6fa07eff4335f7eca76b95872e445907",tooltip="Links a PCB into a specific priority queue."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="dLink",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8c.html#af800d7b4d997230f7d590c452dcb1ea3",tooltip="Links a node into the back of another."];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="UnlinkPCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#a020cd5ae59a5fa38146a31260f17ee30",tooltip="Unlinks PCB from its Process queue."];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="dUnlink",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8c.html#a4ac5bcc32a4b91f514e4eeff11361b61",tooltip="Unlinks a node from its current list."];
+  Node1 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="UART0_puts",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8c.html#a2d797721c4a028583e8a104199f9075d",tooltip="Sends char string to UART 0."];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="buffer_size",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8c.html#a2f814236dddb19be2d91c62b2f2c90ce",tooltip="Get the size of the buffer/How many characters are currently queued."];
+}

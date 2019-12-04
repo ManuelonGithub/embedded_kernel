@@ -1,0 +1,23 @@
+digraph "send_user"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="send_user",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Send a character string to IO server to be displayed to user."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="bind",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#af77c30ce11306b9f5fcd5dbd97db3a56",tooltip="Binds a message box to the running process."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="kcall",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#a84f7c9fb55cbe7f8924be7b30eef3926",tooltip="Sets up the kernel call and gives CPU control to the kernel to service the call."];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="SetCallReg",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#a49e8ab7828a8458da2c0a7115ceb5076",tooltip="Sets the designated kernel call register with a pointer to a kernel call structure."];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="getbox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#a01cc81316a050edc81616ff5ad532aa2",tooltip="Gets the BOX ID of a box bound to the process."];
+  Node5 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="getpid",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#ac61b207337ca21b3b309593fd1a0cb82",tooltip="Requests the process ID of the running process."];
+  Node6 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="request",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$calls_8c.html#a8e195efd858e3f28f50199e071df9f87",tooltip="Performs a request transaction to a process."];
+  Node7 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

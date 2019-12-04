@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['recv_542',['recv',['../calls_8c.html#a19517e048e33085f0511109325b10392',1,'recv(pmbox_t dst, pmbox_t src, uint8_t *data, uint32_t size):&#160;calls.c'],['../calls_8h.html#a19517e048e33085f0511109325b10392',1,'recv(pmbox_t dst, pmbox_t src, uint8_t *data, uint32_t size):&#160;calls.c']]],
+  ['recv_5fuser_543',['recv_user',['../calls_8c.html#a67cfc95199f6a35287de875c59178767',1,'recv_user(char *buf, uint32_t max_size):&#160;calls.c'],['../calls_8h.html#a67cfc95199f6a35287de875c59178767',1,'recv_user(char *buf, uint32_t max_size):&#160;calls.c']]],
+  ['request_544',['request',['../calls_8c.html#a8e195efd858e3f28f50199e071df9f87',1,'request(pmbox_t dst, pmbox_t src, uint8_t *req, size_t req_size, uint8_t *ret, size_t ret_max):&#160;calls.c'],['../calls_8h.html#a8e195efd858e3f28f50199e071df9f87',1,'request(pmbox_t dst, pmbox_t src, uint8_t *req, size_t req_size, uint8_t *ret, size_t ret_max):&#160;calls.c']]],
+  ['resetinputcapture_545',['ResetInputCapture',['../k__terminal_8c.html#a09406fe2c7ef6d8a6ee586f645c27f1f',1,'ResetInputCapture(input_capture_t *cap):&#160;k_terminal.c'],['../k__terminal_8h.html#a09406fe2c7ef6d8a6ee586f645c27f1f',1,'ResetInputCapture(input_capture_t *cap):&#160;k_terminal.c']]],
+  ['resetscreen_546',['ResetScreen',['../k__terminal_8c.html#a5f6047bae9bf82be7be019edf176fdba',1,'ResetScreen():&#160;k_terminal.c'],['../k__terminal_8h.html#a5f6047bae9bf82be7be019edf176fdba',1,'ResetScreen():&#160;k_terminal.c']]],
+  ['resetterminal_547',['ResetTerminal',['../k__terminal_8c.html#a82fdf1845852f11bd394d7ff4a6be0c4',1,'ResetTerminal(terminal_t *term):&#160;k_terminal.c'],['../k__terminal_8h.html#a82fdf1845852f11bd394d7ff4a6be0c4',1,'ResetTerminal(terminal_t *term):&#160;k_terminal.c']]],
+  ['restorecontext_548',['RestoreContext',['../k__cpu_8c.html#a3cf87ce2ba0c214e8beaba41915d6ce2',1,'RestoreContext():&#160;k_cpu.c'],['../k__cpu_8h.html#a3cf87ce2ba0c214e8beaba41915d6ce2',1,'RestoreContext():&#160;k_cpu.c']]],
+  ['restoreprocesscontext_549',['RestoreProcessContext',['../k__cpu_8c.html#ad1f81d8122738b1af35ea336cef53076',1,'RestoreProcessContext():&#160;k_cpu.c'],['../k__cpu_8h.html#ad1f81d8122738b1af35ea336cef53076',1,'RestoreProcessContext():&#160;k_cpu.c']]],
+  ['run_550',['run',['../k__terminal_8c.html#a278dcd638c1669d47cac62d07ceafc39',1,'run(char *attr, terminal_t *term):&#160;k_terminal.c'],['../k__terminal_8h.html#a278dcd638c1669d47cac62d07ceafc39',1,'run(char *attr, terminal_t *term):&#160;k_terminal.c']]]
+];

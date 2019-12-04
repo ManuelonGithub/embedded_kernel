@@ -1,0 +1,58 @@
+\hypertarget{cpu_8h}{}\doxysection{utils/cpu.h File Reference}
+\label{cpu_8h}\index{utils/cpu.h@{utils/cpu.h}}
+
+
+Has some general functionality/information about the C-\/\+M4 cpu.  
+
+
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{cpu_8h_ae4b2e27681306ecb7b84367ae2b63889}{E\+N\+A\+B\+L\+E\+\_\+\+I\+RQ}}()~\+\_\+\+\_\+asm(\char`\"{} cpsie i\char`\"{})
+\item 
+\#define \mbox{\hyperlink{cpu_8h_a8b665b7df8fbc1b5d693fa71fd48a7b7}{D\+I\+S\+A\+B\+L\+E\+\_\+\+I\+RQ}}()~\+\_\+\+\_\+asm(\char`\"{} cpsid i\char`\"{})
+\item 
+\#define \mbox{\hyperlink{cpu_8h_ad863cb1b5778919213567a5200001acb}{S\+VC}}()~\+\_\+\+\_\+asm(\char`\"{} S\+VC \#0\char`\"{})
+\item 
+\#define \mbox{\hyperlink{cpu_8h_abbd8184b561fbb414c327c08f7b34740}{F\+\_\+\+C\+P\+U\+\_\+\+C\+LK}}~16000000
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Has some general functionality/information about the C-\/\+M4 cpu. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+09.\+24 (Created) 
+
+2019.\+09.\+30 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{cpu_8h_a8b665b7df8fbc1b5d693fa71fd48a7b7}\label{cpu_8h_a8b665b7df8fbc1b5d693fa71fd48a7b7}} 
+\index{cpu.h@{cpu.h}!DISABLE\_IRQ@{DISABLE\_IRQ}}
+\index{DISABLE\_IRQ@{DISABLE\_IRQ}!cpu.h@{cpu.h}}
+\doxysubsubsection{\texorpdfstring{DISABLE\_IRQ}{DISABLE\_IRQ}}
+{\footnotesize\ttfamily \#define D\+I\+S\+A\+B\+L\+E\+\_\+\+I\+RQ(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~\+\_\+\+\_\+asm(\char`\"{} cpsid i\char`\"{})}
+
+\mbox{\Hypertarget{cpu_8h_ae4b2e27681306ecb7b84367ae2b63889}\label{cpu_8h_ae4b2e27681306ecb7b84367ae2b63889}} 
+\index{cpu.h@{cpu.h}!ENABLE\_IRQ@{ENABLE\_IRQ}}
+\index{ENABLE\_IRQ@{ENABLE\_IRQ}!cpu.h@{cpu.h}}
+\doxysubsubsection{\texorpdfstring{ENABLE\_IRQ}{ENABLE\_IRQ}}
+{\footnotesize\ttfamily \#define E\+N\+A\+B\+L\+E\+\_\+\+I\+RQ(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~\+\_\+\+\_\+asm(\char`\"{} cpsie i\char`\"{})}
+
+\mbox{\Hypertarget{cpu_8h_abbd8184b561fbb414c327c08f7b34740}\label{cpu_8h_abbd8184b561fbb414c327c08f7b34740}} 
+\index{cpu.h@{cpu.h}!F\_CPU\_CLK@{F\_CPU\_CLK}}
+\index{F\_CPU\_CLK@{F\_CPU\_CLK}!cpu.h@{cpu.h}}
+\doxysubsubsection{\texorpdfstring{F\_CPU\_CLK}{F\_CPU\_CLK}}
+{\footnotesize\ttfamily \#define F\+\_\+\+C\+P\+U\+\_\+\+C\+LK~16000000}
+
+\mbox{\Hypertarget{cpu_8h_ad863cb1b5778919213567a5200001acb}\label{cpu_8h_ad863cb1b5778919213567a5200001acb}} 
+\index{cpu.h@{cpu.h}!SVC@{SVC}}
+\index{SVC@{SVC}!cpu.h@{cpu.h}}
+\doxysubsubsection{\texorpdfstring{SVC}{SVC}}
+{\footnotesize\ttfamily \#define S\+VC(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})~\+\_\+\+\_\+asm(\char`\"{} S\+VC \#0\char`\"{})}
+

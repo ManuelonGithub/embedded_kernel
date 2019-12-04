@@ -1,0 +1,246 @@
+\hypertarget{k__messaging_8h}{}\doxysection{kernel/k\+\_\+messaging.h File Reference}
+\label{k__messaging_8h}\index{kernel/k\_messaging.h@{kernel/k\_messaging.h}}
+
+
+Contains all definitions and function prototypes regarding inter-\/process communications via messaging.  
+
+
+{\ttfamily \#include \char`\"{}k\+\_\+types.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{k__messaging_8h_a131bebb939c80d50ad16a2d5a9c43b1d}{k\+\_\+\+Msg\+Init}} ()
+\begin{DoxyCompactList}\small\item\em Initalizes the Messaging Module. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{k__messaging_8h_a5c0fa3b06d0ff458b24630c65eb335bb}{k\+\_\+\+Msg\+Box\+Bind}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} id, \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$proc)
+\begin{DoxyCompactList}\small\item\em Binds a message box to a process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{k__messaging_8h_a634e8b22ad815f934aa721f3bffc5630}{k\+\_\+\+Msg\+Box\+Unbind}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} id, \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$proc)
+\begin{DoxyCompactList}\small\item\em Unbinds a message box from a process. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__messaging_8h_aa10175dda682467af0afb21aa1785efc}{k\+\_\+\+Msg\+Box\+Unbind\+All}} (\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$proc)
+\begin{DoxyCompactList}\small\item\em Unbinds all message boxes bound to a process. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$ \mbox{\hyperlink{k__messaging_8h_a0d9a71fc033e0800851d3fcd1d24a1b4}{k\+\_\+p\+Msg\+Allocate}} (uint8\+\_\+t $\ast$data, uint32\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Allocates message and fills its data and size. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__messaging_8h_a1f49ca1a455ee48b9566a2c6257aab49}{k\+\_\+p\+Msg\+Deallocate}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$$\ast$msg)
+\begin{DoxyCompactList}\small\item\em De-\/allocates a message. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__messaging_8h_a4102c8314e622c810fd8520210a4aa39}{k\+\_\+\+Msg\+Send}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$msg, size\+\_\+t $\ast$retsize)
+\begin{DoxyCompactList}\small\item\em Sends a message from one process to another. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__messaging_8h_a410b0e1c8cc0056a178c1ef49ad45bc4}{k\+\_\+\+Msg\+Recv}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$msg, size\+\_\+t $\ast$retsize)
+\begin{DoxyCompactList}\small\item\em Recieves a message from a process to another. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{k__messaging_8h_a2296f76d232e8344b339d30d174bcf98}{k\+\_\+p\+Msg\+Transfer}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$dst, \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$src)
+\begin{DoxyCompactList}\small\item\em Transfers a message to another. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__messaging_8h_a343391f72abbf77fc8d2958500298af1}{k\+\_\+\+Msg\+Clear\+All}} (\mbox{\hyperlink{k__types_8h_adfae53016c14d3763e0455b0e6f38d21}{pmsgbox\+\_\+t}} $\ast$box)
+\begin{DoxyCompactList}\small\item\em Clears all Messages currently in the message box. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$ \mbox{\hyperlink{k__messaging_8h_a70e4d17dd7f132ac9891b633571b3609}{k\+\_\+\+Search\+Message\+List}} (\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$msg, \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} box)
+\begin{DoxyCompactList}\small\item\em Searches through message list for a message with a particular message box as its source. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} \mbox{\hyperlink{k__messaging_8h_a430c0f1c82db891b062baf6c7871d413}{Owner\+P\+ID}} (\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} box\+ID)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all definitions and function prototypes regarding inter-\/process communications via messaging. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+18 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{k__messaging_8h_a5c0fa3b06d0ff458b24630c65eb335bb}\label{k__messaging_8h_a5c0fa3b06d0ff458b24630c65eb335bb}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgBoxBind@{k\_MsgBoxBind}}
+\index{k\_MsgBoxBind@{k\_MsgBoxBind}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgBoxBind()}{k\_MsgBoxBind()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} k\+\_\+\+Msg\+Box\+Bind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{id,  }\item[{\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$}]{owner }\end{DoxyParamCaption})}
+
+
+
+Binds a message box to a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & Box ID of the box to be bound to the process. ($\ast$) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em owner} & Pointer to process to have a box bound to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Box ID that was bound to the process. B\+O\+X\+\_\+\+E\+RR if it wasn\textquotesingle{}t possible to bind a box to the process.
+\end{DoxyReturn}
+If box ID is A\+N\+Y\+\_\+\+B\+OX, then an available box is bound to the process. \mbox{\Hypertarget{k__messaging_8h_a634e8b22ad815f934aa721f3bffc5630}\label{k__messaging_8h_a634e8b22ad815f934aa721f3bffc5630}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgBoxUnbind@{k\_MsgBoxUnbind}}
+\index{k\_MsgBoxUnbind@{k\_MsgBoxUnbind}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgBoxUnbind()}{k\_MsgBoxUnbind()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} k\+\_\+\+Msg\+Box\+Unbind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{id,  }\item[{\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$}]{proc }\end{DoxyParamCaption})}
+
+
+
+Unbinds a message box from a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & Box ID to be unbound from process. \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em proc} & Process to have the box unbound from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if the unbind was successful, otherwise the box ID that was attempted to be unbound. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__messaging_8h_aa10175dda682467af0afb21aa1785efc}\label{k__messaging_8h_aa10175dda682467af0afb21aa1785efc}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgBoxUnbindAll@{k\_MsgBoxUnbindAll}}
+\index{k\_MsgBoxUnbindAll@{k\_MsgBoxUnbindAll}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgBoxUnbindAll()}{k\_MsgBoxUnbindAll()}}
+{\footnotesize\ttfamily void k\+\_\+\+Msg\+Box\+Unbind\+All (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$}]{proc }\end{DoxyParamCaption})}
+
+
+
+Unbinds all message boxes bound to a process. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em proc} & pointer to process P\+CB to unbind all boxes from. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__messaging_8h_a343391f72abbf77fc8d2958500298af1}\label{k__messaging_8h_a343391f72abbf77fc8d2958500298af1}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgClearAll@{k\_MsgClearAll}}
+\index{k\_MsgClearAll@{k\_MsgClearAll}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgClearAll()}{k\_MsgClearAll()}}
+{\footnotesize\ttfamily void k\+\_\+\+Msg\+Clear\+All (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_adfae53016c14d3763e0455b0e6f38d21}{pmsgbox\+\_\+t}} $\ast$}]{box }\end{DoxyParamCaption})}
+
+
+
+Clears all Messages currently in the message box. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em box} & Message box to clear messages from. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__messaging_8h_a131bebb939c80d50ad16a2d5a9c43b1d}\label{k__messaging_8h_a131bebb939c80d50ad16a2d5a9c43b1d}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgInit@{k\_MsgInit}}
+\index{k\_MsgInit@{k\_MsgInit}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgInit()}{k\_MsgInit()}}
+{\footnotesize\ttfamily void k\+\_\+\+Msg\+Init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Initalizes the Messaging Module. 
+
+\mbox{\Hypertarget{k__messaging_8h_a410b0e1c8cc0056a178c1ef49ad45bc4}\label{k__messaging_8h_a410b0e1c8cc0056a178c1ef49ad45bc4}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgRecv@{k\_MsgRecv}}
+\index{k\_MsgRecv@{k\_MsgRecv}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgRecv()}{k\_MsgRecv()}}
+{\footnotesize\ttfamily void k\+\_\+\+Msg\+Recv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{msg,  }\item[{size\+\_\+t $\ast$}]{retsize }\end{DoxyParamCaption})}
+
+
+
+Recieves a message from a process to another. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em dst\+\_\+msg} & Pointer to the receiver\textquotesingle{}s message slot. A message that is awaiting to be received will be copied here. \\
+\hline
+\mbox{\texttt{ out}}  & {\em retsize} & Number of bytes successfully received.\\
+\hline
+\end{DoxyParams}
+If there isn\textquotesingle{}t any messages to receive, the dst\+\_\+msg and retsize\textquotesingle{}s addresses are copied onto the receiver\textquotesingle{}s message box and the process that owns the message box is then blocked while it awaits for another process to send it a message. \mbox{\Hypertarget{k__messaging_8h_a4102c8314e622c810fd8520210a4aa39}\label{k__messaging_8h_a4102c8314e622c810fd8520210a4aa39}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_MsgSend@{k\_MsgSend}}
+\index{k\_MsgSend@{k\_MsgSend}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_MsgSend()}{k\_MsgSend()}}
+{\footnotesize\ttfamily void k\+\_\+\+Msg\+Send (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{msg,  }\item[{size\+\_\+t $\ast$}]{retsize }\end{DoxyParamCaption})}
+
+
+
+Sends a message from one process to another. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em msg} & Message to be sent to a process. \\
+\hline
+\mbox{\texttt{ out}}  & {\em retsize} & Amount of bytes successfully sent to message box.\\
+\hline
+\end{DoxyParams}
+If a message was sent to a process that was awaiting the message, then this function places that process back into its scheduling queue and calls the scheduler trap to re-\/evaluate the running process. \mbox{\Hypertarget{k__messaging_8h_a0d9a71fc033e0800851d3fcd1d24a1b4}\label{k__messaging_8h_a0d9a71fc033e0800851d3fcd1d24a1b4}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_pMsgAllocate@{k\_pMsgAllocate}}
+\index{k\_pMsgAllocate@{k\_pMsgAllocate}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_pMsgAllocate()}{k\_pMsgAllocate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}}$\ast$ k\+\_\+p\+Msg\+Allocate (\begin{DoxyParamCaption}\item[{uint8\+\_\+t $\ast$}]{data,  }\item[{uint32\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Allocates message and fills its data and size. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em data} & Pointer to the message data to be copied to the message. \\
+\hline
+\mbox{\texttt{ in}}  & {\em size} & Size of the message data. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Allocated message if the allocation was successful, N\+U\+LL if it was unsuccessful. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__messaging_8h_a1f49ca1a455ee48b9566a2c6257aab49}\label{k__messaging_8h_a1f49ca1a455ee48b9566a2c6257aab49}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_pMsgDeallocate@{k\_pMsgDeallocate}}
+\index{k\_pMsgDeallocate@{k\_pMsgDeallocate}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_pMsgDeallocate()}{k\_pMsgDeallocate()}}
+{\footnotesize\ttfamily void k\+\_\+p\+Msg\+Deallocate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$$\ast$}]{msg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+De-\/allocates a message. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em msg} & pointer to message pointer to be deallocated. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{k__messaging_8h_a2296f76d232e8344b339d30d174bcf98}\label{k__messaging_8h_a2296f76d232e8344b339d30d174bcf98}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_pMsgTransfer@{k\_pMsgTransfer}}
+\index{k\_pMsgTransfer@{k\_pMsgTransfer}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_pMsgTransfer()}{k\_pMsgTransfer()}}
+{\footnotesize\ttfamily uint32\+\_\+t k\+\_\+p\+Msg\+Transfer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{dst,  }\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Transfers a message to another. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em dst} & Pointer to message that will be overwritten \\
+\hline
+\mbox{\texttt{ in}}  & {\em src} & Pointer to src message whose contents will be copied. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Amount of bytes successfully transfered from one message to another.
+\end{DoxyReturn}
+If the destination doesn\textquotesingle{}t have a valid data pointer, data won\textquotesingle{}t be transfered, but the size of the \char`\"{}would-\/be\char`\"{} transfer is still recorded. This allows for messages that just want the size of the message to be possible. \mbox{\Hypertarget{k__messaging_8h_a70e4d17dd7f132ac9891b633571b3609}\label{k__messaging_8h_a70e4d17dd7f132ac9891b633571b3609}} 
+\index{k\_messaging.h@{k\_messaging.h}!k\_SearchMessageList@{k\_SearchMessageList}}
+\index{k\_SearchMessageList@{k\_SearchMessageList}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{k\_SearchMessageList()}{k\_SearchMessageList()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}}$\ast$ k\+\_\+\+Search\+Message\+List (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$}]{msg,  }\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{box }\end{DoxyParamCaption})}
+
+
+
+Searches through message list for a message with a particular message box as its source. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em msg} & pointer to message list entry point. \\
+\hline
+\mbox{\texttt{ in}}  & {\em box} & box ID to search message\textquotesingle{}s source for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to message whose source has a matching box ID. N\+U\+LL if no messages in message list has a source matching the box ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{k__messaging_8h_a430c0f1c82db891b062baf6c7871d413}\label{k__messaging_8h_a430c0f1c82db891b062baf6c7871d413}} 
+\index{k\_messaging.h@{k\_messaging.h}!OwnerPID@{OwnerPID}}
+\index{OwnerPID@{OwnerPID}!k\_messaging.h@{k\_messaging.h}}
+\doxysubsubsection{\texorpdfstring{OwnerPID()}{OwnerPID()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}} Owner\+P\+ID (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}]{box\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+

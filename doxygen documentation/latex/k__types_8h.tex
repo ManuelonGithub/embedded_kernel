@@ -1,0 +1,206 @@
+\hypertarget{k__types_8h}{}\doxysection{kernel/k\+\_\+types.h File Reference}
+\label{k__types_8h}\index{kernel/k\_types.h@{kernel/k\_types.h}}
+
+
+Defines all data types used through the kernel.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}dlist.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+defs.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structpmsg__}{pmsg\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Message Box ID type alias. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structmsgbox__attr__}{msgbox\+\_\+attr\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Message box attributes structure. {\bfseries{W\+IP}} \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structpmsgbox__}{pmsgbox\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Inter-\/process communication Message box structure. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structprocess__attr__}{process\+\_\+attr\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Process priority type alias. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Process control block structure. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structkernel__call__arguments__}{kernel\+\_\+call\+\_\+arguments\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Kernel call return value type alias. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_i_o__metadata__}{I\+O\+\_\+metadata\+\_\+}}
+\begin{DoxyCompactList}\small\item\em IO request metadata structure. Data structure used to perform requests to the IO server. for both input and output. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structuart__msgdata__}{uart\+\_\+msgdata\+\_\+}}
+\begin{DoxyCompactList}\small\item\em data format sent from the U\+A\+RT driver to the IO server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}}
+\item 
+typedef \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}} \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em System ID type alias. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structpmsg__}{pmsg\+\_\+}} \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Message Box ID type alias. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structmsgbox__attr__}{msgbox\+\_\+attr\+\_\+}} \mbox{\hyperlink{k__types_8h_a4129149af688003243034b1b659c552c}{msgbox\+\_\+attr\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Message box attributes structure. {\bfseries{W\+IP}} \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structpmsgbox__}{pmsgbox\+\_\+}} \mbox{\hyperlink{k__types_8h_adfae53016c14d3763e0455b0e6f38d21}{pmsgbox\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Inter-\/process communication Message box structure. \end{DoxyCompactList}\item 
+typedef \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}} \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}}
+\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Process id type alias. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structprocess__attr__}{process\+\_\+attr\+\_\+}} \mbox{\hyperlink{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}{process\+\_\+attr\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Process priority type alias. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}} \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Process control block structure. \end{DoxyCompactList}\item 
+typedef uint32\+\_\+t $\ast$ \mbox{\hyperlink{k__types_8h_a782cd988847c169d093155e67d755439}{k\+\_\+arg\+\_\+t}}
+\item 
+typedef uint32\+\_\+t \mbox{\hyperlink{k__types_8h_ad7e50dcaa7fc9e8530cae8c0c080bbb8}{k\+\_\+ret\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Kernel call argument type alias. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structkernel__call__arguments__}{kernel\+\_\+call\+\_\+arguments\+\_\+}} \mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Kernel call return value type alias. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{struct_i_o__metadata__}{I\+O\+\_\+metadata\+\_\+}} \mbox{\hyperlink{k__types_8h_a695e358cbbbe198eead6f5a274151bdf}{I\+O\+\_\+metadata\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em IO request metadata structure. Data structure used to perform requests to the IO server. for both input and output. \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structuart__msgdata__}{uart\+\_\+msgdata\+\_\+}} \mbox{\hyperlink{k__types_8h_a44c17a9f7b49348f55f9cf53c0299529}{uart\+\_\+msgdata\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em data format sent from the U\+A\+RT driver to the IO server. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines all data types used through the kernel. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+11.\+19 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}\label{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}} 
+\index{k\_types.h@{k\_types.h}!id\_t@{id\_t}}
+\index{id\_t@{id\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{id\_t}{id\_t}}
+{\footnotesize\ttfamily typedef uint32\+\_\+t \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}}}
+
+\mbox{\Hypertarget{k__types_8h_a695e358cbbbe198eead6f5a274151bdf}\label{k__types_8h_a695e358cbbbe198eead6f5a274151bdf}} 
+\index{k\_types.h@{k\_types.h}!IO\_metadata\_t@{IO\_metadata\_t}}
+\index{IO\_metadata\_t@{IO\_metadata\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{IO\_metadata\_t}{IO\_metadata\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_i_o__metadata__}{I\+O\+\_\+metadata\+\_\+}}  \mbox{\hyperlink{k__types_8h_a695e358cbbbe198eead6f5a274151bdf}{I\+O\+\_\+metadata\+\_\+t}}}
+
+
+
+IO request metadata structure. Data structure used to perform requests to the IO server. for both input and output. 
+
+\mbox{\Hypertarget{k__types_8h_a782cd988847c169d093155e67d755439}\label{k__types_8h_a782cd988847c169d093155e67d755439}} 
+\index{k\_types.h@{k\_types.h}!k\_arg\_t@{k\_arg\_t}}
+\index{k\_arg\_t@{k\_arg\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{k\_arg\_t}{k\_arg\_t}}
+{\footnotesize\ttfamily typedef uint32\+\_\+t$\ast$ \mbox{\hyperlink{k__types_8h_a782cd988847c169d093155e67d755439}{k\+\_\+arg\+\_\+t}}}
+
+\mbox{\Hypertarget{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}\label{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}} 
+\index{k\_types.h@{k\_types.h}!k\_call\_t@{k\_call\_t}}
+\index{k\_call\_t@{k\_call\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{k\_call\_t}{k\_call\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structkernel__call__arguments__}{kernel\+\_\+call\+\_\+arguments\+\_\+}}  \mbox{\hyperlink{k__types_8h_a84ccefe73fa9982f4c62682b5989d9c0}{k\+\_\+call\+\_\+t}}}
+
+
+
+Kernel call return value type alias. 
+
+Kernel Call structure \mbox{\Hypertarget{k__types_8h_ad7e50dcaa7fc9e8530cae8c0c080bbb8}\label{k__types_8h_ad7e50dcaa7fc9e8530cae8c0c080bbb8}} 
+\index{k\_types.h@{k\_types.h}!k\_ret\_t@{k\_ret\_t}}
+\index{k\_ret\_t@{k\_ret\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{k\_ret\_t}{k\_ret\_t}}
+{\footnotesize\ttfamily typedef uint32\+\_\+t \mbox{\hyperlink{k__types_8h_ad7e50dcaa7fc9e8530cae8c0c080bbb8}{k\+\_\+ret\+\_\+t}}}
+
+
+
+Kernel call argument type alias. 
+
+\mbox{\Hypertarget{k__types_8h_a4129149af688003243034b1b659c552c}\label{k__types_8h_a4129149af688003243034b1b659c552c}} 
+\index{k\_types.h@{k\_types.h}!msgbox\_attr\_t@{msgbox\_attr\_t}}
+\index{msgbox\_attr\_t@{msgbox\_attr\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{msgbox\_attr\_t}{msgbox\_attr\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structmsgbox__attr__}{msgbox\+\_\+attr\+\_\+}}  \mbox{\hyperlink{k__types_8h_a4129149af688003243034b1b659c552c}{msgbox\+\_\+attr\+\_\+t}}}
+
+
+
+Message box attributes structure. {\bfseries{W\+IP}} 
+
+\mbox{\Hypertarget{k__types_8h_a6473849d68b43131fac8ddf309450eaf}\label{k__types_8h_a6473849d68b43131fac8ddf309450eaf}} 
+\index{k\_types.h@{k\_types.h}!pcb\_t@{pcb\_t}}
+\index{pcb\_t@{pcb\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{pcb\_t}{pcb\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}}  \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}}}
+
+
+
+Process control block structure. 
+
+\mbox{\Hypertarget{k__types_8h_a2c85f8278da9d362285ed05f61f67890}\label{k__types_8h_a2c85f8278da9d362285ed05f61f67890}} 
+\index{k\_types.h@{k\_types.h}!pid\_t@{pid\_t}}
+\index{pid\_t@{pid\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{pid\_t}{pid\_t}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}} \mbox{\hyperlink{k__types_8h_a2c85f8278da9d362285ed05f61f67890}{pid\+\_\+t}}}
+
+\mbox{\Hypertarget{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}\label{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}} 
+\index{k\_types.h@{k\_types.h}!pmbox\_t@{pmbox\_t}}
+\index{pmbox\_t@{pmbox\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{pmbox\_t}{pmbox\_t}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}} \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}}}
+
+
+
+System ID type alias. 
+
+\mbox{\Hypertarget{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}\label{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}} 
+\index{k\_types.h@{k\_types.h}!pmsg\_t@{pmsg\_t}}
+\index{pmsg\_t@{pmsg\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{pmsg\_t}{pmsg\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structpmsg__}{pmsg\+\_\+}}  \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}}}
+
+
+
+Message Box ID type alias. 
+
+Inter-\/process message structure \mbox{\Hypertarget{k__types_8h_adfae53016c14d3763e0455b0e6f38d21}\label{k__types_8h_adfae53016c14d3763e0455b0e6f38d21}} 
+\index{k\_types.h@{k\_types.h}!pmsgbox\_t@{pmsgbox\_t}}
+\index{pmsgbox\_t@{pmsgbox\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{pmsgbox\_t}{pmsgbox\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structpmsgbox__}{pmsgbox\+\_\+}}  \mbox{\hyperlink{k__types_8h_adfae53016c14d3763e0455b0e6f38d21}{pmsgbox\+\_\+t}}}
+
+
+
+Inter-\/process communication Message box structure. 
+
+\mbox{\Hypertarget{k__types_8h_a939323d6770bfb28c693416f86f4faae}\label{k__types_8h_a939323d6770bfb28c693416f86f4faae}} 
+\index{k\_types.h@{k\_types.h}!priority\_t@{priority\_t}}
+\index{priority\_t@{priority\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{priority\_t}{priority\_t}}
+{\footnotesize\ttfamily typedef uint32\+\_\+t \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}}}
+
+
+
+Process id type alias. 
+
+\mbox{\Hypertarget{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}\label{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}} 
+\index{k\_types.h@{k\_types.h}!process\_attr\_t@{process\_attr\_t}}
+\index{process\_attr\_t@{process\_attr\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{process\_attr\_t}{process\_attr\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structprocess__attr__}{process\+\_\+attr\+\_\+}}  \mbox{\hyperlink{k__types_8h_a03ed91c0b498fc5e27688cf638856c02}{process\+\_\+attr\+\_\+t}}}
+
+
+
+Process priority type alias. 
+
+Process attributes structure. Used to configure a process with the attributes. \mbox{\Hypertarget{k__types_8h_a44c17a9f7b49348f55f9cf53c0299529}\label{k__types_8h_a44c17a9f7b49348f55f9cf53c0299529}} 
+\index{k\_types.h@{k\_types.h}!uart\_msgdata\_t@{uart\_msgdata\_t}}
+\index{uart\_msgdata\_t@{uart\_msgdata\_t}!k\_types.h@{k\_types.h}}
+\doxysubsubsection{\texorpdfstring{uart\_msgdata\_t}{uart\_msgdata\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structuart__msgdata__}{uart\+\_\+msgdata\+\_\+}}  \mbox{\hyperlink{k__types_8h_a44c17a9f7b49348f55f9cf53c0299529}{uart\+\_\+msgdata\+\_\+t}}}
+
+
+
+data format sent from the U\+A\+RT driver to the IO server. 
+

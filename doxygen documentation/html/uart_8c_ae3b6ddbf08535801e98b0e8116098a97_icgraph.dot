@@ -1,0 +1,10 @@
+digraph "UART0_TxReady"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="UART0_TxReady",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Determines if UART 0 is ready to transmit."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="UART0_putc",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#a24b4fec5866afe2413c63186677a5b71",tooltip="Send a character to UART 0."];
+}

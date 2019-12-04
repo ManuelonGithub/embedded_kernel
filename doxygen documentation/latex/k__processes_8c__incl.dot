@@ -1,0 +1,38 @@
+digraph "kernel/k_processes.c"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="kernel/k_processes.c",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Contains the process allocation management and all supporting functionality related to the kernel pro..."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="stdint.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="stdlib.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="string.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="k_processes.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__processes_8h.html",tooltip="Contains all functions and entities related to processes and process control blocks."];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="k_types.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__types_8h.html",tooltip="Defines all data types used through the kernel."];
+  Node6 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="stdbool.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node6 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="dlist.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8h.html",tooltip="Contains all structures and function declarations on how to manage double linked lists."];
+  Node8 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="k_defs.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__defs_8h.html",tooltip="Contains all kernel configuration definitions."];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="bitmap.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8h.html",tooltip="Contains all definitions and function prototypes related to operating a bitmap."];
+  Node10 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="k_scheduler.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8h.html",tooltip="Defines all the functions and entities related to kernel scheduling."];
+  Node11 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="k_cpu.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8h.html",tooltip="Contains all definitions and entities regarding the cpu-specific operations that the embedded kernel ..."];
+  Node12 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+}

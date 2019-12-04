@@ -1,0 +1,42 @@
+\hypertarget{main_8c}{}\doxysection{main.\+c File Reference}
+\label{main_8c}\index{main.c@{main.c}}
+
+
+Entry point of the embedded kernel.  
+
+
+{\ttfamily \#include \char`\"{}k\+\_\+handlers.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}calls.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{main_8c_a840291bc02cba5474a4cb46a9b9566fe}{main}} (void)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{main_8c}{main.\+c}} \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Entry point of the embedded kernel. 
+
+Main is technically kernel code, but the user will place here its process creation requests so they get registered with the kernel. \begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+10.\+22 (Created) 
+
+2019.\+11.\+21 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8c_a840291bc02cba5474a4cb46a9b9566fe}\label{main_8c_a840291bc02cba5474a4cb46a9b9566fe}} 
+\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+\mbox{\hyperlink{main_8c}{main.\+c}} 
+
+Initializes the kernel and all processes to run in the system. It also start\textquotesingle{}s kernel\textquotesingle{}s \char`\"{}run-\/mode\char`\"{}. 

@@ -1,0 +1,20 @@
+digraph "PendSV_handler"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="PendSV_handler",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Pending Supervisor Call trap handler."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="GetPSP",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#a66b20719d7034c47a337106523fa754b",tooltip="Retrieves the current process' stack pointer value."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="RestoreProcessContext",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#ad1f81d8122738b1af35ea336cef53076",tooltip="Restores the CPU context of the process that was running before."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="SaveProcessContext",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#a758b6867fcdfa9213400084ae53c4dd6",tooltip="Saves the CPU context of the process that was running before."];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="Schedule",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#ac5ec5148a4c60ac9681835af6d3c4809",tooltip="Determines which PCB should run next."];
+  Node1 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="SetPSP",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__cpu_8c.html#afb3eb72ecc6d3ee1f700c12a89e0ff3e",tooltip="Sets the current process stack pointer value."];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="SysTick_Reset",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$systick_8c.html#ad51fa075a406920a9d116e2b9ee90897",tooltip="Resets the SysTick current value register and time count."];
+}

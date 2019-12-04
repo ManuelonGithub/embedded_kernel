@@ -1,0 +1,73 @@
+\hypertarget{structpmsgbox__}{}\doxysection{pmsgbox\+\_\+ Struct Reference}
+\label{structpmsgbox__}\index{pmsgbox\_@{pmsgbox\_}}
+
+
+Inter-\/process communication Message box structure.  
+
+
+
+
+{\ttfamily \#include $<$k\+\_\+types.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}} $\ast$ \mbox{\hyperlink{structpmsgbox___a97f36da46ebec2746afc7994df7dbe54}{owner}}
+\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{structpmsgbox___a726511a6c8e398ba1464af773f56e44a}{id}}
+\item 
+\mbox{\hyperlink{k__defs_8h_ad22c75b5d72d880a0b645594b9a63569}{msgbox\+\_\+mode\+\_\+t}} \mbox{\hyperlink{structpmsgbox___ad63dfb517c6103374e5ec2b81fd20c2f}{mode}}
+\item 
+\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$ \mbox{\hyperlink{structpmsgbox___a86d01ba80a033b30cb8561c2320dae61}{recv\+\_\+msgq}}
+\item 
+\mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}} $\ast$ \mbox{\hyperlink{structpmsgbox___a26b1abe4e3221645f082f9b0217f1b0c}{wait\+\_\+msg}}
+\item 
+size\+\_\+t $\ast$ \mbox{\hyperlink{structpmsgbox___abeda4a1350fd4ffc25f60e8b0b487514}{retsize}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Inter-\/process communication Message box structure. 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structpmsgbox___a726511a6c8e398ba1464af773f56e44a}\label{structpmsgbox___a726511a6c8e398ba1464af773f56e44a}} 
+\index{pmsgbox\_@{pmsgbox\_}!id@{id}}
+\index{id@{id}!pmsgbox\_@{pmsgbox\_}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} id}
+
+Message box ID \mbox{\Hypertarget{structpmsgbox___ad63dfb517c6103374e5ec2b81fd20c2f}\label{structpmsgbox___ad63dfb517c6103374e5ec2b81fd20c2f}} 
+\index{pmsgbox\_@{pmsgbox\_}!mode@{mode}}
+\index{mode@{mode}!pmsgbox\_@{pmsgbox\_}}
+\doxysubsubsection{\texorpdfstring{mode}{mode}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__defs_8h_ad22c75b5d72d880a0b645594b9a63569}{msgbox\+\_\+mode\+\_\+t}} mode}
+
+Message box mode/permissions. {\bfseries{W\+IP}} \mbox{\Hypertarget{structpmsgbox___a97f36da46ebec2746afc7994df7dbe54}\label{structpmsgbox___a97f36da46ebec2746afc7994df7dbe54}} 
+\index{pmsgbox\_@{pmsgbox\_}!owner@{owner}}
+\index{owner@{owner}!pmsgbox\_@{pmsgbox\_}}
+\doxysubsubsection{\texorpdfstring{owner}{owner}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structpcb__}{pcb\+\_\+}}$\ast$ owner}
+
+Pointer to owner P\+CB \mbox{\Hypertarget{structpmsgbox___a86d01ba80a033b30cb8561c2320dae61}\label{structpmsgbox___a86d01ba80a033b30cb8561c2320dae61}} 
+\index{pmsgbox\_@{pmsgbox\_}!recv\_msgq@{recv\_msgq}}
+\index{recv\_msgq@{recv\_msgq}!pmsgbox\_@{pmsgbox\_}}
+\doxysubsubsection{\texorpdfstring{recv\_msgq}{recv\_msgq}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}}$\ast$ recv\+\_\+msgq}
+
+Pointer to the receive message list queue. \mbox{\Hypertarget{structpmsgbox___abeda4a1350fd4ffc25f60e8b0b487514}\label{structpmsgbox___abeda4a1350fd4ffc25f60e8b0b487514}} 
+\index{pmsgbox\_@{pmsgbox\_}!retsize@{retsize}}
+\index{retsize@{retsize}!pmsgbox\_@{pmsgbox\_}}
+\doxysubsubsection{\texorpdfstring{retsize}{retsize}}
+{\footnotesize\ttfamily size\+\_\+t$\ast$ retsize}
+
+\mbox{\Hypertarget{structpmsgbox___a26b1abe4e3221645f082f9b0217f1b0c}\label{structpmsgbox___a26b1abe4e3221645f082f9b0217f1b0c}} 
+\index{pmsgbox\_@{pmsgbox\_}!wait\_msg@{wait\_msg}}
+\index{wait\_msg@{wait\_msg}!pmsgbox\_@{pmsgbox\_}}
+\doxysubsubsection{\texorpdfstring{wait\_msg}{wait\_msg}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a840a019f640bc1606dc2fb0e6a77189c}{pmsg\+\_\+t}}$\ast$ wait\+\_\+msg}
+
+Pointer to a pending receive request message. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+kernel/\mbox{\hyperlink{k__types_8h}{k\+\_\+types.\+h}}\end{DoxyCompactItemize}

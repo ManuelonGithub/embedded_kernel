@@ -1,0 +1,100 @@
+\hypertarget{structpmsg__}{}\doxysection{pmsg\+\_\+ Struct Reference}
+\label{structpmsg__}\index{pmsg\_@{pmsg\_}}
+
+
+Message Box ID type alias.  
+
+
+
+
+{\ttfamily \#include $<$k\+\_\+types.\+h$>$}
+
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>struct \{\\
+\>\>struct \mbox{\hyperlink{structpmsg__}{pmsg\_}} $\ast$ \mbox{\hyperlink{structpmsg___a5bc0c304c58946714df65533a15cb9a3}{next}}\\
+\>\>struct \mbox{\hyperlink{structpmsg__}{pmsg\_}} $\ast$ \mbox{\hyperlink{structpmsg___a7c6bbc3b59d88106d10ce6af170b83a3}{prev}}\\
+\>\} \\
+\>\mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\_t}} \mbox{\hyperlink{structpmsg___a1d708e4b6da4c12e0272e2db4ffb83af}{list}}\\
+\}; \\
+
+\end{tabbing}\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{structpmsg___adb38919c70974c2ae13ae0a41bb77cdd}{src}}
+\item 
+\mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} \mbox{\hyperlink{structpmsg___a341a337693276695b1887731125833ef}{dst}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structpmsg___a854352f53b148adc24983a58a1866d66}{size}}
+\item 
+\mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}} \mbox{\hyperlink{structpmsg___ab422d351e33961ae630725512bddd8ce}{id}}
+\item 
+uint8\+\_\+t $\ast$ \mbox{\hyperlink{structpmsg___abe222f6d3581e7920dcad5306cc906a8}{data}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Message Box ID type alias. 
+
+Inter-\/process message structure 
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structpmsg___abb8b9d28a54ae8652ff57f894f80d210}\label{structpmsg___abb8b9d28a54ae8652ff57f894f80d210}} 
+\doxysubsubsection{\texorpdfstring{"@1}{@1}}
+{\footnotesize\ttfamily union \{ ... \} }
+
+\mbox{\Hypertarget{structpmsg___abe222f6d3581e7920dcad5306cc906a8}\label{structpmsg___abe222f6d3581e7920dcad5306cc906a8}} 
+\index{pmsg\_@{pmsg\_}!data@{data}}
+\index{data@{data}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily uint8\+\_\+t$\ast$ data}
+
+Pointer to Location of the message data. \mbox{\Hypertarget{structpmsg___a341a337693276695b1887731125833ef}\label{structpmsg___a341a337693276695b1887731125833ef}} 
+\index{pmsg\_@{pmsg\_}!dst@{dst}}
+\index{dst@{dst}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{dst}{dst}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} dst}
+
+Box ID where message is meant to go. \mbox{\Hypertarget{structpmsg___ab422d351e33961ae630725512bddd8ce}\label{structpmsg___ab422d351e33961ae630725512bddd8ce}} 
+\index{pmsg\_@{pmsg\_}!id@{id}}
+\index{id@{id}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a513ee83176411bfc889c87bff2f5b6e4}{id\+\_\+t}} id}
+
+Internal ID number used for msg allocation. \mbox{\Hypertarget{structpmsg___a1d708e4b6da4c12e0272e2db4ffb83af}\label{structpmsg___a1d708e4b6da4c12e0272e2db4ffb83af}} 
+\index{pmsg\_@{pmsg\_}!list@{list}}
+\index{list@{list}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{list}{list}}
+{\footnotesize\ttfamily \mbox{\hyperlink{dlist_8h_a38f7020633ceadf24f531b56520d21dc}{node\+\_\+t}} list}
+
+list node where other messages connect to. \mbox{\Hypertarget{structpmsg___a5bc0c304c58946714df65533a15cb9a3}\label{structpmsg___a5bc0c304c58946714df65533a15cb9a3}} 
+\index{pmsg\_@{pmsg\_}!next@{next}}
+\index{next@{next}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{next}{next}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structpmsg__}{pmsg\+\_\+}}$\ast$ next}
+
+\mbox{\Hypertarget{structpmsg___a7c6bbc3b59d88106d10ce6af170b83a3}\label{structpmsg___a7c6bbc3b59d88106d10ce6af170b83a3}} 
+\index{pmsg\_@{pmsg\_}!prev@{prev}}
+\index{prev@{prev}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{prev}{prev}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structpmsg__}{pmsg\+\_\+}}$\ast$ prev}
+
+\mbox{\Hypertarget{structpmsg___a854352f53b148adc24983a58a1866d66}\label{structpmsg___a854352f53b148adc24983a58a1866d66}} 
+\index{pmsg\_@{pmsg\_}!size@{size}}
+\index{size@{size}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{size}{size}}
+{\footnotesize\ttfamily size\+\_\+t size}
+
+Size of the message contents (in Bytes). \mbox{\Hypertarget{structpmsg___adb38919c70974c2ae13ae0a41bb77cdd}\label{structpmsg___adb38919c70974c2ae13ae0a41bb77cdd}} 
+\index{pmsg\_@{pmsg\_}!src@{src}}
+\index{src@{src}!pmsg\_@{pmsg\_}}
+\doxysubsubsection{\texorpdfstring{src}{src}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a5fa90c34369b535c8845a9ace5b5c67b}{pmbox\+\_\+t}} src}
+
+Box ID where message was sent from. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+kernel/\mbox{\hyperlink{k__types_8h}{k\+\_\+types.\+h}}\end{DoxyCompactItemize}

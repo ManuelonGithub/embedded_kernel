@@ -1,0 +1,13 @@
+digraph "utils/bitmap.c"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="utils/bitmap.c",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Contains all functionality related to operating a bitmap."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="bitmap.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8h.html",tooltip="Contains all definitions and function prototypes related to operating a bitmap."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="stdint.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="stdbool.h",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

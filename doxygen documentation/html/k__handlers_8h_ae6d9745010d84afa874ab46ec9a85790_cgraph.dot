@@ -1,0 +1,23 @@
+digraph "k_recvCall"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="k_recvCall",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Performs all operations required to receive a message from a message box to a message box belonging t..."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="k_MsgRecv",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a410b0e1c8cc0056a178c1ef49ad45bc4",tooltip="Recieves a message from a process to another."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="dUnlink",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dlist_8c.html#a4ac5bcc32a4b91f514e4eeff11361b61",tooltip="Unlinks a node from its current list."];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="k_pMsgDeallocate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a1f49ca1a455ee48b9566a2c6257aab49",tooltip="De-allocates a message."];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="ClearBit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$bitmap_8c.html#a1450145a97ea1efa0f35f6aaf05dbcd9",tooltip="Clears a specific bit in a bitmap."];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="k_pMsgTransfer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a2296f76d232e8344b339d30d174bcf98",tooltip="Transfers a message to another."];
+  Node2 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="k_SearchMessageList",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__messaging_8c.html#a70e4d17dd7f132ac9891b633571b3609",tooltip="Searches through message list for a message with a particular message box as its source."];
+  Node2 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="UnlinkPCB",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__scheduler_8c.html#a020cd5ae59a5fa38146a31260f17ee30",tooltip="Unlinks PCB from its Process queue."];
+  Node8 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

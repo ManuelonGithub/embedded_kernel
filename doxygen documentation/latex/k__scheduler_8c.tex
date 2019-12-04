@@ -1,0 +1,92 @@
+\hypertarget{k__scheduler_8c}{}\doxysection{kernel/k\+\_\+scheduler.c File Reference}
+\label{k__scheduler_8c}\index{kernel/k\_scheduler.c@{kernel/k\_scheduler.c}}
+
+
+Contains The System\textquotesingle{}s process queues and all the supporting functionality to schedule process in the kernel.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}k\+\_\+scheduler.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}dlist.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{k__scheduler_8c_a6fa07eff4335f7eca76b95872e445907}{Link\+P\+CB}} (\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$P\+CB, \mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}} proc\+\_\+lvl)
+\begin{DoxyCompactList}\small\item\em Links a P\+CB into a specific priority queue. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{k__scheduler_8c_a020cd5ae59a5fa38146a31260f17ee30}{Unlink\+P\+CB}} (\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$pcb)
+\begin{DoxyCompactList}\small\item\em Unlinks P\+CB from its Process queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$ \mbox{\hyperlink{k__scheduler_8c_ac5ec5148a4c60ac9681835af6d3c4809}{Schedule}} ()
+\begin{DoxyCompactList}\small\item\em Determines which P\+CB should run next. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$ \mbox{\hyperlink{k__scheduler_8c_a1b39f9db6521c8eb695227d9217be098}{Process\+Queue}} \mbox{[}\mbox{\hyperlink{k__defs_8h_a0cca6a878a6e8cb6375ec8c9d0957eb3}{P\+R\+O\+C\+E\+S\+S\+\_\+\+Q\+U\+E\+U\+ES}}\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains The System\textquotesingle{}s process queues and all the supporting functionality to schedule process in the kernel. 
+
+This module should not be exposed to user programs. \begin{DoxyAuthor}{Author}
+Manuel Burnay 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+10.\+23 (Created) 
+
+2019.\+11.\+29 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{k__scheduler_8c_a6fa07eff4335f7eca76b95872e445907}\label{k__scheduler_8c_a6fa07eff4335f7eca76b95872e445907}} 
+\index{k\_scheduler.c@{k\_scheduler.c}!LinkPCB@{LinkPCB}}
+\index{LinkPCB@{LinkPCB}!k\_scheduler.c@{k\_scheduler.c}}
+\doxysubsubsection{\texorpdfstring{LinkPCB()}{LinkPCB()}}
+{\footnotesize\ttfamily void Link\+P\+CB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$}]{P\+CB,  }\item[{\mbox{\hyperlink{k__types_8h_a939323d6770bfb28c693416f86f4faae}{priority\+\_\+t}}}]{proc\+\_\+lvl }\end{DoxyParamCaption})}
+
+
+
+Links a P\+CB into a specific priority queue. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em P\+CB} & pointer to P\+CB element to link into the respective process queue.\\
+\hline
+\end{DoxyParams}
+This function is also used to place the idle process in the idle process queue. This poses a potential risk that processes may be initialized with a \char`\"{}priority\char`\"{} lower than what is allowed, but that will only cause that process to never run. \mbox{\Hypertarget{k__scheduler_8c_ac5ec5148a4c60ac9681835af6d3c4809}\label{k__scheduler_8c_ac5ec5148a4c60ac9681835af6d3c4809}} 
+\index{k\_scheduler.c@{k\_scheduler.c}!Schedule@{Schedule}}
+\index{Schedule@{Schedule}!k\_scheduler.c@{k\_scheduler.c}}
+\doxysubsubsection{\texorpdfstring{Schedule()}{Schedule()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}}$\ast$ Schedule (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Determines which P\+CB should run next. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to P\+CB of the next process that should run.
+\end{DoxyReturn}
+This function does not perform any process switching. It simply iterates through the process queues to find the next available process to run. \mbox{\Hypertarget{k__scheduler_8c_a020cd5ae59a5fa38146a31260f17ee30}\label{k__scheduler_8c_a020cd5ae59a5fa38146a31260f17ee30}} 
+\index{k\_scheduler.c@{k\_scheduler.c}!UnlinkPCB@{UnlinkPCB}}
+\index{UnlinkPCB@{UnlinkPCB}!k\_scheduler.c@{k\_scheduler.c}}
+\doxysubsubsection{\texorpdfstring{UnlinkPCB()}{UnlinkPCB()}}
+{\footnotesize\ttfamily void Unlink\+P\+CB (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}} $\ast$}]{pcb }\end{DoxyParamCaption})}
+
+
+
+Unlinks P\+CB from its Process queue. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em pcb} & Pointer to P\+CB to be unlinked from its queue.\\
+\hline
+\end{DoxyParams}
+This function can only be called if the pcb has an established priority, otherwise it will fault. 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{k__scheduler_8c_a1b39f9db6521c8eb695227d9217be098}\label{k__scheduler_8c_a1b39f9db6521c8eb695227d9217be098}} 
+\index{k\_scheduler.c@{k\_scheduler.c}!ProcessQueue@{ProcessQueue}}
+\index{ProcessQueue@{ProcessQueue}!k\_scheduler.c@{k\_scheduler.c}}
+\doxysubsubsection{\texorpdfstring{ProcessQueue}{ProcessQueue}}
+{\footnotesize\ttfamily \mbox{\hyperlink{k__types_8h_a6473849d68b43131fac8ddf309450eaf}{pcb\+\_\+t}}$\ast$ Process\+Queue\mbox{[}\mbox{\hyperlink{k__defs_8h_a0cca6a878a6e8cb6375ec8c9d0957eb3}{P\+R\+O\+C\+E\+S\+S\+\_\+\+Q\+U\+E\+U\+ES}}\mbox{]}}
+

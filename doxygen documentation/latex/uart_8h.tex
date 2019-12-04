@@ -1,0 +1,607 @@
+\hypertarget{uart_8h}{}\doxysection{drivers/uart.h File Reference}
+\label{uart_8h}\index{drivers/uart.h@{drivers/uart.h}}
+
+
+Contains all the definitions, structures and function prototypes required to operate the U\+A\+R\+T0 driver for the tiva board.  
+
+
+{\ttfamily \#include \char`\"{}cirbuffer.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structuart__descriptor__}{uart\+\_\+descriptor\+\_\+}}
+\begin{DoxyCompactList}\small\item\em U\+A\+RT descriptor structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{uart_8h_af5b07acb4f1cc3ca489610f8c70f0e95}{G\+P\+I\+O\+\_\+\+P\+O\+R\+T\+A\+\_\+\+A\+F\+S\+E\+L\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x40058420))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a803f6958edee8ea0e1b655978e66b8e1}{G\+P\+I\+O\+\_\+\+P\+O\+R\+T\+A\+\_\+\+D\+E\+N\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4005851C))
+\item 
+\#define \mbox{\hyperlink{uart_8h_ade9da9d2c5b929e1b256ea5100dfaf88}{G\+P\+I\+O\+\_\+\+P\+O\+R\+T\+A\+\_\+\+P\+C\+T\+L\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4005852C))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a790578e9f5f0a737207fb693978e557d}{U\+A\+R\+T0\+\_\+\+D\+R\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C000))
+\item 
+\#define \mbox{\hyperlink{uart_8h_ae738100d51303b557a9547805432a1c5}{U\+A\+R\+T0\+\_\+\+F\+R\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C018))
+\item 
+\#define \mbox{\hyperlink{uart_8h_ae16c9fb116fb143bda75e5389325ebbe}{U\+A\+R\+T0\+\_\+\+I\+B\+R\+D\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C024))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a4dd10db3d1bd613f3d8bbf86cc534937}{U\+A\+R\+T0\+\_\+\+F\+B\+R\+D\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C028))
+\item 
+\#define \mbox{\hyperlink{uart_8h_acb65c4d58de72b98b81b1358f88d8f62}{U\+A\+R\+T0\+\_\+\+L\+C\+R\+H\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C02C))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a325cfd8c0c88771955a886d92127372b}{U\+A\+R\+T0\+\_\+\+C\+T\+L\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C030))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a695e6a7a75019012f46e99b4ee9fbb91}{U\+A\+R\+T0\+\_\+\+I\+F\+L\+S\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C034))
+\item 
+\#define \mbox{\hyperlink{uart_8h_ae2d0a1142fb2005e44f21dc0704e17ac}{U\+A\+R\+T0\+\_\+\+I\+M\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C038))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a92e7c42254ef08ad2320b2a879961a65}{U\+A\+R\+T0\+\_\+\+M\+I\+S\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C040))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a10640b112c27db38978399adb2dbe5ef}{U\+A\+R\+T0\+\_\+\+I\+C\+R\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C044))
+\item 
+\#define \mbox{\hyperlink{uart_8h_adedc541d594d4b9191b2cc9b064b8922}{U\+A\+R\+T0\+\_\+\+C\+C\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x4000\+C\+F\+C8))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a9bfb56e9ccdc98d054efcd0b6725e662}{I\+N\+T\+\_\+\+V\+E\+C\+\_\+\+U\+A\+R\+T0}}~5
+\item 
+\#define \mbox{\hyperlink{uart_8h_a2f6a08ae8a3005e737005cbd607081b1}{U\+A\+R\+T\+\_\+\+F\+R\+\_\+\+T\+X\+FF}}~0x00000020
+\item 
+\#define \mbox{\hyperlink{uart_8h_a9ba067e6425a6c5b5aca79874c549364}{U\+A\+R\+T\+\_\+\+F\+R\+\_\+\+R\+X\+FE}}~0x00000010
+\item 
+\#define \mbox{\hyperlink{uart_8h_a39a3e9403d1914dba75ca838fdc73364}{U\+A\+R\+T\+\_\+\+F\+R\+\_\+\+B\+U\+SY}}~0x00000008
+\item 
+\#define \mbox{\hyperlink{uart_8h_a16d2496e0bd0c62c6d7b1dc03df616ca}{U\+A\+R\+T\+\_\+\+R\+X\+\_\+\+F\+I\+F\+O\+\_\+\+O\+N\+E\+\_\+\+E\+I\+G\+HT}}~0x00000038
+\item 
+\#define \mbox{\hyperlink{uart_8h_abd5bda0a330f4a0ddb92fe4384e95ee1}{U\+A\+R\+T\+\_\+\+T\+X\+\_\+\+F\+I\+F\+O\+\_\+\+S\+V\+N\+\_\+\+E\+I\+G\+HT}}~0x00000007
+\item 
+\#define \mbox{\hyperlink{uart_8h_ae0e27af519dfbffe6d6a50942bdf30f7}{U\+A\+R\+T\+\_\+\+L\+C\+R\+H\+\_\+\+W\+L\+E\+N\+\_\+8}}~0x00000060
+\item 
+\#define \mbox{\hyperlink{uart_8h_ac63fc7bdadb98a24125de76e1468510e}{U\+A\+R\+T\+\_\+\+L\+C\+R\+H\+\_\+\+F\+EN}}~0x00000010
+\item 
+\#define \mbox{\hyperlink{uart_8h_a3d170d515d0d3082a4a4720c2a8c4fde}{U\+A\+R\+T\+\_\+\+C\+T\+L\+\_\+\+U\+A\+R\+T\+EN}}~0x00000301
+\item 
+\#define \mbox{\hyperlink{uart_8h_a5edf87050364febe668e42a5f973dd1a}{U\+A\+R\+T\+\_\+\+I\+N\+T\+\_\+\+TX}}~0x020
+\item 
+\#define \mbox{\hyperlink{uart_8h_a62a4b9cc83e120b3eee5a0a7636b558c}{U\+A\+R\+T\+\_\+\+I\+N\+T\+\_\+\+RX}}~0x010
+\item 
+\#define \mbox{\hyperlink{uart_8h_a6d6d4d5d9fd23170c5f48fefa14e147c}{U\+A\+R\+T\+\_\+\+I\+N\+T\+\_\+\+RT}}~0x040
+\item 
+\#define \mbox{\hyperlink{uart_8h_a94ba876fdc237d15d664750dc8035264}{U\+A\+R\+T\+\_\+\+C\+T\+L\+\_\+\+E\+OT}}~0x00000010
+\item 
+\#define \mbox{\hyperlink{uart_8h_a2d3d1dfe0a80773476b82f674dbf9707}{E\+N\+\_\+\+R\+X\+\_\+\+P\+A0}}~0x00000001
+\item 
+\#define \mbox{\hyperlink{uart_8h_a5f79d9c6800fe16e2873f92ea68a75f2}{E\+N\+\_\+\+T\+X\+\_\+\+P\+A1}}~0x00000002
+\item 
+\#define \mbox{\hyperlink{uart_8h_a713aff1f0b391470569cf09a1bf9e309}{E\+N\+\_\+\+D\+I\+G\+\_\+\+P\+A0}}~0x00000001
+\item 
+\#define \mbox{\hyperlink{uart_8h_a8dc58b824223af3c074845ba803796de}{E\+N\+\_\+\+D\+I\+G\+\_\+\+P\+A1}}~0x00000002
+\item 
+\#define \mbox{\hyperlink{uart_8h_a6aa1400abe132a6f85e7bb982902f457}{S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+G\+P\+I\+O\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x400\+F\+E608))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a7ba7ce6c5be75ff206c663a817b7f522}{S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+U\+A\+R\+T\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x400\+F\+E618))
+\item 
+\#define \mbox{\hyperlink{uart_8h_ae3160808fc619746ff484fb13624b557}{S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+G\+P\+I\+O\+\_\+\+U\+A\+R\+T0}}~0x00000001
+\item 
+\#define \mbox{\hyperlink{uart_8h_a98fde01fb157d98a63773873127d0c77}{S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+U\+A\+R\+T\+\_\+\+G\+P\+I\+OA}}~0x00000001
+\item 
+\#define \mbox{\hyperlink{uart_8h_aad9fe9e380941006663e5a83a106ebb3}{S\+Y\+S\+C\+T\+R\+L\+\_\+\+R\+C\+C\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x400\+F\+E0\+B0))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a90a6d066471e3247419250ea622bbf5e}{C\+L\+E\+A\+R\+\_\+\+U\+S\+R\+S\+Y\+S\+D\+IV}}~0x\+F83\+F\+F\+F\+FF
+\item 
+\#define \mbox{\hyperlink{uart_8h_ab01dec15959f1824f9207427ac09559f}{S\+E\+T\+\_\+\+B\+Y\+P\+A\+SS}}~0x00000800
+\item 
+\#define \mbox{\hyperlink{uart_8h_a116f514784f648ad8b4634731406bd4c}{N\+V\+I\+C\+\_\+\+E\+N0\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x\+E000\+E100))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a2579967f4c45e4eaca0f61838ee3687b}{N\+V\+I\+C\+\_\+\+E\+N1\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x\+E000\+E104))
+\item 
+\#define \mbox{\hyperlink{uart_8h_aaf32ad7592a5695ee47b5f66da40cdb0}{N\+V\+I\+C\+\_\+\+S\+Y\+S\+\_\+\+P\+R\+I1\+\_\+R}}~($\ast$((volatile unsigned long $\ast$)0x\+E000\+E404))
+\item 
+\#define \mbox{\hyperlink{uart_8h_a7cd8a4d1ca32df67e3588b975ca2a793}{U\+A\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+VL}}~0x00004000
+\item 
+\#define \mbox{\hyperlink{uart_8h_ad5afcdb5c8ada8302c54a06692a32133}{U\+A\+R\+T0\+\_\+\+E\+C\+H\+O\+\_\+\+ON}}~true
+\item 
+\#define \mbox{\hyperlink{uart_8h_a426ebcc2bafd229c4098ca61affc5488}{U\+A\+R\+T0\+\_\+\+E\+C\+H\+O\+\_\+\+O\+FF}}~false
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structuart__descriptor__}{uart\+\_\+descriptor\+\_\+}} \mbox{\hyperlink{uart_8h_a2b41088442ba6c8cde34148d137af57e}{uart\+\_\+descriptor\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em U\+A\+RT descriptor structure. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{uart_8h_ad35da456a0bfc73e5a9c6dfbfb420552}{U\+A\+R\+T0\+\_\+\+Init}} (\mbox{\hyperlink{uart_8h_a2b41088442ba6c8cde34148d137af57e}{uart\+\_\+descriptor\+\_\+t}} $\ast$descriptor)
+\begin{DoxyCompactList}\small\item\em Initializes the control registers for U\+A\+R\+T0 and the U\+A\+RT descriptor that is accessed by the driver. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8h_a13bce21e1f2ea51aa4e09f2458e4e983}{U\+A\+R\+T0\+\_\+\+Interrupt\+Enable}} (unsigned long Interrupt\+Index)
+\begin{DoxyCompactList}\small\item\em Sets the interrupt enable bit for a peripheral in the N\+V\+IC register. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8h_a4c500d740ba6227b5ed040d8d366f773}{U\+A\+R\+T0\+\_\+\+Int\+Enable}} (unsigned long flags)
+\begin{DoxyCompactList}\small\item\em Sets bits in the U\+A\+R\+T0 interrupt mask register. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8h_a7aefa599a6592b9771afc5904662ec5d}{U\+A\+R\+T0\+\_\+\+Int\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em Interrupt Handler for U\+A\+R\+T0. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{uart_8h_ae3b6ddbf08535801e98b0e8116098a97}{U\+A\+R\+T0\+\_\+\+Tx\+Ready}} (void)
+\begin{DoxyCompactList}\small\item\em Determines if U\+A\+RT 0 is ready to transmit. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8h_a24b4fec5866afe2413c63186677a5b71}{U\+A\+R\+T0\+\_\+putc}} (char c)
+\begin{DoxyCompactList}\small\item\em Send a character to U\+A\+RT 0. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{uart_8h_a60a498bb600eed8421130f6c7e7e19ae}{U\+A\+R\+T0\+\_\+put}} (char $\ast$data, uint8\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Sends byte stream to U\+A\+RT 0. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{uart_8h_ae75d4801cdc710abee941098b636dac8}{U\+A\+R\+T0\+\_\+puts}} (char $\ast$data)
+\begin{DoxyCompactList}\small\item\em Sends char string to U\+A\+RT 0. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{uart_8h_a4296e21703ec7c6686a860a7b368cdda}{U\+A\+R\+T0\+\_\+empty}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the U\+A\+RT\textquotesingle{}s RX buffer is empty. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{uart_8h_af6582cdc278e64b5a73c86193aee0e26}{U\+A\+R\+T0\+\_\+getc}} (char $\ast$c)
+\begin{DoxyCompactList}\small\item\em Gets a character from the U\+A\+RT buffer. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{uart_8h_aa06c88030b046b939e57cedf15eb9415}{U\+A\+R\+T0\+\_\+gets}} (char $\ast$str, uint32\+\_\+t M\+A\+X\+\_\+\+B\+Y\+T\+ES)
+\begin{DoxyCompactList}\small\item\em Retrieves string from U\+A\+RT 0. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all the definitions, structures and function prototypes required to operate the U\+A\+R\+T0 driver for the tiva board. 
+
+\begin{DoxyAuthor}{Author}
+Manuel Burnay, Emad Khan (Based on his work) 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019.\+09.\+18 (Created) 
+
+2019.\+10.\+03 (Last Modified) 
+\end{DoxyDate}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{uart_8h_a90a6d066471e3247419250ea622bbf5e}\label{uart_8h_a90a6d066471e3247419250ea622bbf5e}} 
+\index{uart.h@{uart.h}!CLEAR\_USRSYSDIV@{CLEAR\_USRSYSDIV}}
+\index{CLEAR\_USRSYSDIV@{CLEAR\_USRSYSDIV}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{CLEAR\_USRSYSDIV}{CLEAR\_USRSYSDIV}}
+{\footnotesize\ttfamily \#define C\+L\+E\+A\+R\+\_\+\+U\+S\+R\+S\+Y\+S\+D\+IV~0x\+F83\+F\+F\+F\+FF}
+
+\mbox{\Hypertarget{uart_8h_a713aff1f0b391470569cf09a1bf9e309}\label{uart_8h_a713aff1f0b391470569cf09a1bf9e309}} 
+\index{uart.h@{uart.h}!EN\_DIG\_PA0@{EN\_DIG\_PA0}}
+\index{EN\_DIG\_PA0@{EN\_DIG\_PA0}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{EN\_DIG\_PA0}{EN\_DIG\_PA0}}
+{\footnotesize\ttfamily \#define E\+N\+\_\+\+D\+I\+G\+\_\+\+P\+A0~0x00000001}
+
+\mbox{\Hypertarget{uart_8h_a8dc58b824223af3c074845ba803796de}\label{uart_8h_a8dc58b824223af3c074845ba803796de}} 
+\index{uart.h@{uart.h}!EN\_DIG\_PA1@{EN\_DIG\_PA1}}
+\index{EN\_DIG\_PA1@{EN\_DIG\_PA1}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{EN\_DIG\_PA1}{EN\_DIG\_PA1}}
+{\footnotesize\ttfamily \#define E\+N\+\_\+\+D\+I\+G\+\_\+\+P\+A1~0x00000002}
+
+\mbox{\Hypertarget{uart_8h_a2d3d1dfe0a80773476b82f674dbf9707}\label{uart_8h_a2d3d1dfe0a80773476b82f674dbf9707}} 
+\index{uart.h@{uart.h}!EN\_RX\_PA0@{EN\_RX\_PA0}}
+\index{EN\_RX\_PA0@{EN\_RX\_PA0}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{EN\_RX\_PA0}{EN\_RX\_PA0}}
+{\footnotesize\ttfamily \#define E\+N\+\_\+\+R\+X\+\_\+\+P\+A0~0x00000001}
+
+\mbox{\Hypertarget{uart_8h_a5f79d9c6800fe16e2873f92ea68a75f2}\label{uart_8h_a5f79d9c6800fe16e2873f92ea68a75f2}} 
+\index{uart.h@{uart.h}!EN\_TX\_PA1@{EN\_TX\_PA1}}
+\index{EN\_TX\_PA1@{EN\_TX\_PA1}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{EN\_TX\_PA1}{EN\_TX\_PA1}}
+{\footnotesize\ttfamily \#define E\+N\+\_\+\+T\+X\+\_\+\+P\+A1~0x00000002}
+
+\mbox{\Hypertarget{uart_8h_af5b07acb4f1cc3ca489610f8c70f0e95}\label{uart_8h_af5b07acb4f1cc3ca489610f8c70f0e95}} 
+\index{uart.h@{uart.h}!GPIO\_PORTA\_AFSEL\_R@{GPIO\_PORTA\_AFSEL\_R}}
+\index{GPIO\_PORTA\_AFSEL\_R@{GPIO\_PORTA\_AFSEL\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{GPIO\_PORTA\_AFSEL\_R}{GPIO\_PORTA\_AFSEL\_R}}
+{\footnotesize\ttfamily \#define G\+P\+I\+O\+\_\+\+P\+O\+R\+T\+A\+\_\+\+A\+F\+S\+E\+L\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x40058420))}
+
+\mbox{\Hypertarget{uart_8h_a803f6958edee8ea0e1b655978e66b8e1}\label{uart_8h_a803f6958edee8ea0e1b655978e66b8e1}} 
+\index{uart.h@{uart.h}!GPIO\_PORTA\_DEN\_R@{GPIO\_PORTA\_DEN\_R}}
+\index{GPIO\_PORTA\_DEN\_R@{GPIO\_PORTA\_DEN\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{GPIO\_PORTA\_DEN\_R}{GPIO\_PORTA\_DEN\_R}}
+{\footnotesize\ttfamily \#define G\+P\+I\+O\+\_\+\+P\+O\+R\+T\+A\+\_\+\+D\+E\+N\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4005851C))}
+
+\mbox{\Hypertarget{uart_8h_ade9da9d2c5b929e1b256ea5100dfaf88}\label{uart_8h_ade9da9d2c5b929e1b256ea5100dfaf88}} 
+\index{uart.h@{uart.h}!GPIO\_PORTA\_PCTL\_R@{GPIO\_PORTA\_PCTL\_R}}
+\index{GPIO\_PORTA\_PCTL\_R@{GPIO\_PORTA\_PCTL\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{GPIO\_PORTA\_PCTL\_R}{GPIO\_PORTA\_PCTL\_R}}
+{\footnotesize\ttfamily \#define G\+P\+I\+O\+\_\+\+P\+O\+R\+T\+A\+\_\+\+P\+C\+T\+L\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4005852C))}
+
+\mbox{\Hypertarget{uart_8h_a9bfb56e9ccdc98d054efcd0b6725e662}\label{uart_8h_a9bfb56e9ccdc98d054efcd0b6725e662}} 
+\index{uart.h@{uart.h}!INT\_VEC\_UART0@{INT\_VEC\_UART0}}
+\index{INT\_VEC\_UART0@{INT\_VEC\_UART0}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{INT\_VEC\_UART0}{INT\_VEC\_UART0}}
+{\footnotesize\ttfamily \#define I\+N\+T\+\_\+\+V\+E\+C\+\_\+\+U\+A\+R\+T0~5}
+
+\mbox{\Hypertarget{uart_8h_a116f514784f648ad8b4634731406bd4c}\label{uart_8h_a116f514784f648ad8b4634731406bd4c}} 
+\index{uart.h@{uart.h}!NVIC\_EN0\_R@{NVIC\_EN0\_R}}
+\index{NVIC\_EN0\_R@{NVIC\_EN0\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{NVIC\_EN0\_R}{NVIC\_EN0\_R}}
+{\footnotesize\ttfamily \#define N\+V\+I\+C\+\_\+\+E\+N0\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x\+E000\+E100))}
+
+\mbox{\Hypertarget{uart_8h_a2579967f4c45e4eaca0f61838ee3687b}\label{uart_8h_a2579967f4c45e4eaca0f61838ee3687b}} 
+\index{uart.h@{uart.h}!NVIC\_EN1\_R@{NVIC\_EN1\_R}}
+\index{NVIC\_EN1\_R@{NVIC\_EN1\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{NVIC\_EN1\_R}{NVIC\_EN1\_R}}
+{\footnotesize\ttfamily \#define N\+V\+I\+C\+\_\+\+E\+N1\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x\+E000\+E104))}
+
+\mbox{\Hypertarget{uart_8h_aaf32ad7592a5695ee47b5f66da40cdb0}\label{uart_8h_aaf32ad7592a5695ee47b5f66da40cdb0}} 
+\index{uart.h@{uart.h}!NVIC\_SYS\_PRI1\_R@{NVIC\_SYS\_PRI1\_R}}
+\index{NVIC\_SYS\_PRI1\_R@{NVIC\_SYS\_PRI1\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{NVIC\_SYS\_PRI1\_R}{NVIC\_SYS\_PRI1\_R}}
+{\footnotesize\ttfamily \#define N\+V\+I\+C\+\_\+\+S\+Y\+S\+\_\+\+P\+R\+I1\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x\+E000\+E404))}
+
+\mbox{\Hypertarget{uart_8h_ab01dec15959f1824f9207427ac09559f}\label{uart_8h_ab01dec15959f1824f9207427ac09559f}} 
+\index{uart.h@{uart.h}!SET\_BYPASS@{SET\_BYPASS}}
+\index{SET\_BYPASS@{SET\_BYPASS}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{SET\_BYPASS}{SET\_BYPASS}}
+{\footnotesize\ttfamily \#define S\+E\+T\+\_\+\+B\+Y\+P\+A\+SS~0x00000800}
+
+\mbox{\Hypertarget{uart_8h_a6aa1400abe132a6f85e7bb982902f457}\label{uart_8h_a6aa1400abe132a6f85e7bb982902f457}} 
+\index{uart.h@{uart.h}!SYSCTL\_RCGCGPIO\_R@{SYSCTL\_RCGCGPIO\_R}}
+\index{SYSCTL\_RCGCGPIO\_R@{SYSCTL\_RCGCGPIO\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{SYSCTL\_RCGCGPIO\_R}{SYSCTL\_RCGCGPIO\_R}}
+{\footnotesize\ttfamily \#define S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+G\+P\+I\+O\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x400\+F\+E608))}
+
+\mbox{\Hypertarget{uart_8h_ae3160808fc619746ff484fb13624b557}\label{uart_8h_ae3160808fc619746ff484fb13624b557}} 
+\index{uart.h@{uart.h}!SYSCTL\_RCGCGPIO\_UART0@{SYSCTL\_RCGCGPIO\_UART0}}
+\index{SYSCTL\_RCGCGPIO\_UART0@{SYSCTL\_RCGCGPIO\_UART0}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{SYSCTL\_RCGCGPIO\_UART0}{SYSCTL\_RCGCGPIO\_UART0}}
+{\footnotesize\ttfamily \#define S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+G\+P\+I\+O\+\_\+\+U\+A\+R\+T0~0x00000001}
+
+\mbox{\Hypertarget{uart_8h_a98fde01fb157d98a63773873127d0c77}\label{uart_8h_a98fde01fb157d98a63773873127d0c77}} 
+\index{uart.h@{uart.h}!SYSCTL\_RCGCUART\_GPIOA@{SYSCTL\_RCGCUART\_GPIOA}}
+\index{SYSCTL\_RCGCUART\_GPIOA@{SYSCTL\_RCGCUART\_GPIOA}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{SYSCTL\_RCGCUART\_GPIOA}{SYSCTL\_RCGCUART\_GPIOA}}
+{\footnotesize\ttfamily \#define S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+U\+A\+R\+T\+\_\+\+G\+P\+I\+OA~0x00000001}
+
+\mbox{\Hypertarget{uart_8h_a7ba7ce6c5be75ff206c663a817b7f522}\label{uart_8h_a7ba7ce6c5be75ff206c663a817b7f522}} 
+\index{uart.h@{uart.h}!SYSCTL\_RCGCUART\_R@{SYSCTL\_RCGCUART\_R}}
+\index{SYSCTL\_RCGCUART\_R@{SYSCTL\_RCGCUART\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{SYSCTL\_RCGCUART\_R}{SYSCTL\_RCGCUART\_R}}
+{\footnotesize\ttfamily \#define S\+Y\+S\+C\+T\+L\+\_\+\+R\+C\+G\+C\+U\+A\+R\+T\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x400\+F\+E618))}
+
+\mbox{\Hypertarget{uart_8h_aad9fe9e380941006663e5a83a106ebb3}\label{uart_8h_aad9fe9e380941006663e5a83a106ebb3}} 
+\index{uart.h@{uart.h}!SYSCTRL\_RCC\_R@{SYSCTRL\_RCC\_R}}
+\index{SYSCTRL\_RCC\_R@{SYSCTRL\_RCC\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{SYSCTRL\_RCC\_R}{SYSCTRL\_RCC\_R}}
+{\footnotesize\ttfamily \#define S\+Y\+S\+C\+T\+R\+L\+\_\+\+R\+C\+C\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x400\+F\+E0\+B0))}
+
+\mbox{\Hypertarget{uart_8h_adedc541d594d4b9191b2cc9b064b8922}\label{uart_8h_adedc541d594d4b9191b2cc9b064b8922}} 
+\index{uart.h@{uart.h}!UART0\_CC\_R@{UART0\_CC\_R}}
+\index{UART0\_CC\_R@{UART0\_CC\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_CC\_R}{UART0\_CC\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+C\+C\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C\+F\+C8))}
+
+\mbox{\Hypertarget{uart_8h_a325cfd8c0c88771955a886d92127372b}\label{uart_8h_a325cfd8c0c88771955a886d92127372b}} 
+\index{uart.h@{uart.h}!UART0\_CTL\_R@{UART0\_CTL\_R}}
+\index{UART0\_CTL\_R@{UART0\_CTL\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_CTL\_R}{UART0\_CTL\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+C\+T\+L\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C030))}
+
+\mbox{\Hypertarget{uart_8h_a790578e9f5f0a737207fb693978e557d}\label{uart_8h_a790578e9f5f0a737207fb693978e557d}} 
+\index{uart.h@{uart.h}!UART0\_DR\_R@{UART0\_DR\_R}}
+\index{UART0\_DR\_R@{UART0\_DR\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_DR\_R}{UART0\_DR\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+D\+R\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C000))}
+
+\mbox{\Hypertarget{uart_8h_a426ebcc2bafd229c4098ca61affc5488}\label{uart_8h_a426ebcc2bafd229c4098ca61affc5488}} 
+\index{uart.h@{uart.h}!UART0\_ECHO\_OFF@{UART0\_ECHO\_OFF}}
+\index{UART0\_ECHO\_OFF@{UART0\_ECHO\_OFF}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_ECHO\_OFF}{UART0\_ECHO\_OFF}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+E\+C\+H\+O\+\_\+\+O\+FF~false}
+
+\mbox{\Hypertarget{uart_8h_ad5afcdb5c8ada8302c54a06692a32133}\label{uart_8h_ad5afcdb5c8ada8302c54a06692a32133}} 
+\index{uart.h@{uart.h}!UART0\_ECHO\_ON@{UART0\_ECHO\_ON}}
+\index{UART0\_ECHO\_ON@{UART0\_ECHO\_ON}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_ECHO\_ON}{UART0\_ECHO\_ON}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+E\+C\+H\+O\+\_\+\+ON~true}
+
+\mbox{\Hypertarget{uart_8h_a4dd10db3d1bd613f3d8bbf86cc534937}\label{uart_8h_a4dd10db3d1bd613f3d8bbf86cc534937}} 
+\index{uart.h@{uart.h}!UART0\_FBRD\_R@{UART0\_FBRD\_R}}
+\index{UART0\_FBRD\_R@{UART0\_FBRD\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_FBRD\_R}{UART0\_FBRD\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+F\+B\+R\+D\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C028))}
+
+\mbox{\Hypertarget{uart_8h_ae738100d51303b557a9547805432a1c5}\label{uart_8h_ae738100d51303b557a9547805432a1c5}} 
+\index{uart.h@{uart.h}!UART0\_FR\_R@{UART0\_FR\_R}}
+\index{UART0\_FR\_R@{UART0\_FR\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_FR\_R}{UART0\_FR\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+F\+R\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C018))}
+
+\mbox{\Hypertarget{uart_8h_ae16c9fb116fb143bda75e5389325ebbe}\label{uart_8h_ae16c9fb116fb143bda75e5389325ebbe}} 
+\index{uart.h@{uart.h}!UART0\_IBRD\_R@{UART0\_IBRD\_R}}
+\index{UART0\_IBRD\_R@{UART0\_IBRD\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_IBRD\_R}{UART0\_IBRD\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+I\+B\+R\+D\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C024))}
+
+\mbox{\Hypertarget{uart_8h_a10640b112c27db38978399adb2dbe5ef}\label{uart_8h_a10640b112c27db38978399adb2dbe5ef}} 
+\index{uart.h@{uart.h}!UART0\_ICR\_R@{UART0\_ICR\_R}}
+\index{UART0\_ICR\_R@{UART0\_ICR\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_ICR\_R}{UART0\_ICR\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+I\+C\+R\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C044))}
+
+\mbox{\Hypertarget{uart_8h_a695e6a7a75019012f46e99b4ee9fbb91}\label{uart_8h_a695e6a7a75019012f46e99b4ee9fbb91}} 
+\index{uart.h@{uart.h}!UART0\_IFLS\_R@{UART0\_IFLS\_R}}
+\index{UART0\_IFLS\_R@{UART0\_IFLS\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_IFLS\_R}{UART0\_IFLS\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+I\+F\+L\+S\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C034))}
+
+\mbox{\Hypertarget{uart_8h_ae2d0a1142fb2005e44f21dc0704e17ac}\label{uart_8h_ae2d0a1142fb2005e44f21dc0704e17ac}} 
+\index{uart.h@{uart.h}!UART0\_IM\_R@{UART0\_IM\_R}}
+\index{UART0\_IM\_R@{UART0\_IM\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_IM\_R}{UART0\_IM\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+I\+M\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C038))}
+
+\mbox{\Hypertarget{uart_8h_acb65c4d58de72b98b81b1358f88d8f62}\label{uart_8h_acb65c4d58de72b98b81b1358f88d8f62}} 
+\index{uart.h@{uart.h}!UART0\_LCRH\_R@{UART0\_LCRH\_R}}
+\index{UART0\_LCRH\_R@{UART0\_LCRH\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_LCRH\_R}{UART0\_LCRH\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+L\+C\+R\+H\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C02C))}
+
+\mbox{\Hypertarget{uart_8h_a92e7c42254ef08ad2320b2a879961a65}\label{uart_8h_a92e7c42254ef08ad2320b2a879961a65}} 
+\index{uart.h@{uart.h}!UART0\_MIS\_R@{UART0\_MIS\_R}}
+\index{UART0\_MIS\_R@{UART0\_MIS\_R}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_MIS\_R}{UART0\_MIS\_R}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T0\+\_\+\+M\+I\+S\+\_\+R~($\ast$((volatile unsigned long $\ast$)0x4000\+C040))}
+
+\mbox{\Hypertarget{uart_8h_a94ba876fdc237d15d664750dc8035264}\label{uart_8h_a94ba876fdc237d15d664750dc8035264}} 
+\index{uart.h@{uart.h}!UART\_CTL\_EOT@{UART\_CTL\_EOT}}
+\index{UART\_CTL\_EOT@{UART\_CTL\_EOT}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_CTL\_EOT}{UART\_CTL\_EOT}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+C\+T\+L\+\_\+\+E\+OT~0x00000010}
+
+\mbox{\Hypertarget{uart_8h_a3d170d515d0d3082a4a4720c2a8c4fde}\label{uart_8h_a3d170d515d0d3082a4a4720c2a8c4fde}} 
+\index{uart.h@{uart.h}!UART\_CTL\_UARTEN@{UART\_CTL\_UARTEN}}
+\index{UART\_CTL\_UARTEN@{UART\_CTL\_UARTEN}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_CTL\_UARTEN}{UART\_CTL\_UARTEN}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+C\+T\+L\+\_\+\+U\+A\+R\+T\+EN~0x00000301}
+
+\mbox{\Hypertarget{uart_8h_a39a3e9403d1914dba75ca838fdc73364}\label{uart_8h_a39a3e9403d1914dba75ca838fdc73364}} 
+\index{uart.h@{uart.h}!UART\_FR\_BUSY@{UART\_FR\_BUSY}}
+\index{UART\_FR\_BUSY@{UART\_FR\_BUSY}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_FR\_BUSY}{UART\_FR\_BUSY}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+F\+R\+\_\+\+B\+U\+SY~0x00000008}
+
+\mbox{\Hypertarget{uart_8h_a9ba067e6425a6c5b5aca79874c549364}\label{uart_8h_a9ba067e6425a6c5b5aca79874c549364}} 
+\index{uart.h@{uart.h}!UART\_FR\_RXFE@{UART\_FR\_RXFE}}
+\index{UART\_FR\_RXFE@{UART\_FR\_RXFE}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_FR\_RXFE}{UART\_FR\_RXFE}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+F\+R\+\_\+\+R\+X\+FE~0x00000010}
+
+\mbox{\Hypertarget{uart_8h_a2f6a08ae8a3005e737005cbd607081b1}\label{uart_8h_a2f6a08ae8a3005e737005cbd607081b1}} 
+\index{uart.h@{uart.h}!UART\_FR\_TXFF@{UART\_FR\_TXFF}}
+\index{UART\_FR\_TXFF@{UART\_FR\_TXFF}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_FR\_TXFF}{UART\_FR\_TXFF}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+F\+R\+\_\+\+T\+X\+FF~0x00000020}
+
+\mbox{\Hypertarget{uart_8h_a6d6d4d5d9fd23170c5f48fefa14e147c}\label{uart_8h_a6d6d4d5d9fd23170c5f48fefa14e147c}} 
+\index{uart.h@{uart.h}!UART\_INT\_RT@{UART\_INT\_RT}}
+\index{UART\_INT\_RT@{UART\_INT\_RT}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_INT\_RT}{UART\_INT\_RT}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+I\+N\+T\+\_\+\+RT~0x040}
+
+\mbox{\Hypertarget{uart_8h_a62a4b9cc83e120b3eee5a0a7636b558c}\label{uart_8h_a62a4b9cc83e120b3eee5a0a7636b558c}} 
+\index{uart.h@{uart.h}!UART\_INT\_RX@{UART\_INT\_RX}}
+\index{UART\_INT\_RX@{UART\_INT\_RX}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_INT\_RX}{UART\_INT\_RX}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+I\+N\+T\+\_\+\+RX~0x010}
+
+\mbox{\Hypertarget{uart_8h_a5edf87050364febe668e42a5f973dd1a}\label{uart_8h_a5edf87050364febe668e42a5f973dd1a}} 
+\index{uart.h@{uart.h}!UART\_INT\_TX@{UART\_INT\_TX}}
+\index{UART\_INT\_TX@{UART\_INT\_TX}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_INT\_TX}{UART\_INT\_TX}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+I\+N\+T\+\_\+\+TX~0x020}
+
+\mbox{\Hypertarget{uart_8h_ac63fc7bdadb98a24125de76e1468510e}\label{uart_8h_ac63fc7bdadb98a24125de76e1468510e}} 
+\index{uart.h@{uart.h}!UART\_LCRH\_FEN@{UART\_LCRH\_FEN}}
+\index{UART\_LCRH\_FEN@{UART\_LCRH\_FEN}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_LCRH\_FEN}{UART\_LCRH\_FEN}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+L\+C\+R\+H\+\_\+\+F\+EN~0x00000010}
+
+\mbox{\Hypertarget{uart_8h_ae0e27af519dfbffe6d6a50942bdf30f7}\label{uart_8h_ae0e27af519dfbffe6d6a50942bdf30f7}} 
+\index{uart.h@{uart.h}!UART\_LCRH\_WLEN\_8@{UART\_LCRH\_WLEN\_8}}
+\index{UART\_LCRH\_WLEN\_8@{UART\_LCRH\_WLEN\_8}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_LCRH\_WLEN\_8}{UART\_LCRH\_WLEN\_8}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+L\+C\+R\+H\+\_\+\+W\+L\+E\+N\+\_\+8~0x00000060}
+
+\mbox{\Hypertarget{uart_8h_a7cd8a4d1ca32df67e3588b975ca2a793}\label{uart_8h_a7cd8a4d1ca32df67e3588b975ca2a793}} 
+\index{uart.h@{uart.h}!UART\_PRIORITY\_LVL@{UART\_PRIORITY\_LVL}}
+\index{UART\_PRIORITY\_LVL@{UART\_PRIORITY\_LVL}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_PRIORITY\_LVL}{UART\_PRIORITY\_LVL}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+P\+R\+I\+O\+R\+I\+T\+Y\+\_\+\+L\+VL~0x00004000}
+
+\mbox{\Hypertarget{uart_8h_a16d2496e0bd0c62c6d7b1dc03df616ca}\label{uart_8h_a16d2496e0bd0c62c6d7b1dc03df616ca}} 
+\index{uart.h@{uart.h}!UART\_RX\_FIFO\_ONE\_EIGHT@{UART\_RX\_FIFO\_ONE\_EIGHT}}
+\index{UART\_RX\_FIFO\_ONE\_EIGHT@{UART\_RX\_FIFO\_ONE\_EIGHT}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_RX\_FIFO\_ONE\_EIGHT}{UART\_RX\_FIFO\_ONE\_EIGHT}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+R\+X\+\_\+\+F\+I\+F\+O\+\_\+\+O\+N\+E\+\_\+\+E\+I\+G\+HT~0x00000038}
+
+\mbox{\Hypertarget{uart_8h_abd5bda0a330f4a0ddb92fe4384e95ee1}\label{uart_8h_abd5bda0a330f4a0ddb92fe4384e95ee1}} 
+\index{uart.h@{uart.h}!UART\_TX\_FIFO\_SVN\_EIGHT@{UART\_TX\_FIFO\_SVN\_EIGHT}}
+\index{UART\_TX\_FIFO\_SVN\_EIGHT@{UART\_TX\_FIFO\_SVN\_EIGHT}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART\_TX\_FIFO\_SVN\_EIGHT}{UART\_TX\_FIFO\_SVN\_EIGHT}}
+{\footnotesize\ttfamily \#define U\+A\+R\+T\+\_\+\+T\+X\+\_\+\+F\+I\+F\+O\+\_\+\+S\+V\+N\+\_\+\+E\+I\+G\+HT~0x00000007}
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{uart_8h_a2b41088442ba6c8cde34148d137af57e}\label{uart_8h_a2b41088442ba6c8cde34148d137af57e}} 
+\index{uart.h@{uart.h}!uart\_descriptor\_t@{uart\_descriptor\_t}}
+\index{uart\_descriptor\_t@{uart\_descriptor\_t}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{uart\_descriptor\_t}{uart\_descriptor\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structuart__descriptor__}{uart\+\_\+descriptor\+\_\+}}  \mbox{\hyperlink{uart_8h_a2b41088442ba6c8cde34148d137af57e}{uart\+\_\+descriptor\+\_\+t}}}
+
+
+
+U\+A\+RT descriptor structure. 
+
+contains the rx and tx circular buffers and uart configuration information. 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{uart_8h_a4296e21703ec7c6686a860a7b368cdda}\label{uart_8h_a4296e21703ec7c6686a860a7b368cdda}} 
+\index{uart.h@{uart.h}!UART0\_empty@{UART0\_empty}}
+\index{UART0\_empty@{UART0\_empty}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_empty()}{UART0\_empty()}}
+{\footnotesize\ttfamily bool U\+A\+R\+T0\+\_\+empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if the U\+A\+RT\textquotesingle{}s RX buffer is empty. 
+
+\begin{DoxyReturn}{Returns}
+True if it is empty, False if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{uart_8h_af6582cdc278e64b5a73c86193aee0e26}\label{uart_8h_af6582cdc278e64b5a73c86193aee0e26}} 
+\index{uart.h@{uart.h}!UART0\_getc@{UART0\_getc}}
+\index{UART0\_getc@{UART0\_getc}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_getc()}{UART0\_getc()}}
+{\footnotesize\ttfamily bool U\+A\+R\+T0\+\_\+getc (\begin{DoxyParamCaption}\item[{char $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+Gets a character from the U\+A\+RT buffer. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em c} & pointer to variable where the dequeued character will be placed in. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if a character was able to be dequeued, False if not. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{uart_8h_aa06c88030b046b939e57cedf15eb9415}\label{uart_8h_aa06c88030b046b939e57cedf15eb9415}} 
+\index{uart.h@{uart.h}!UART0\_gets@{UART0\_gets}}
+\index{UART0\_gets@{UART0\_gets}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_gets()}{UART0\_gets()}}
+{\footnotesize\ttfamily uint32\+\_\+t U\+A\+R\+T0\+\_\+gets (\begin{DoxyParamCaption}\item[{char $\ast$}]{str,  }\item[{uint32\+\_\+t}]{M\+A\+X\+\_\+\+B\+Y\+T\+ES }\end{DoxyParamCaption})}
+
+
+
+Retrieves string from U\+A\+RT 0. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ out}}  & {\em str} & where the string will be copied onto. \\
+\hline
+\mbox{\texttt{ in}}  & {\em M\+A\+X\+\_\+\+B\+Y\+T\+ES} & max size of the destination string buffer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}uint32\+\_\+t\mbox{]} Amount of bytes copied into the buffer.
+\end{DoxyReturn}
+This function copies bytes from the U\+A\+RT\textquotesingle{}s rx buffer until an end of a string has been reached, or the max amount of bytes that the buffer supports have been read.
+
+The string copied onto str will always be null-\/terminated.
+
+This function will block code progression until a valid string has been retrieved from U\+A\+RT, or until the max amount of bytes have been read. \mbox{\Hypertarget{uart_8h_ad35da456a0bfc73e5a9c6dfbfb420552}\label{uart_8h_ad35da456a0bfc73e5a9c6dfbfb420552}} 
+\index{uart.h@{uart.h}!UART0\_Init@{UART0\_Init}}
+\index{UART0\_Init@{UART0\_Init}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_Init()}{UART0\_Init()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{uart_8h_a2b41088442ba6c8cde34148d137af57e}{uart\+\_\+descriptor\+\_\+t}} $\ast$}]{descriptor }\end{DoxyParamCaption})}
+
+
+
+Initializes the control registers for U\+A\+R\+T0 and the U\+A\+RT descriptor that is accessed by the driver. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em descriptor} & pointer to uart descriptor that will be accessed by the driver. \\
+\hline
+\mbox{\texttt{ in}}  & {\em echo\+\_\+en} & Specifies if RX echo is enabled at driver level. \\
+\hline
+\mbox{\texttt{ in}}  & {\em auto\+\_\+flush\+\_\+en} & Specifies if driver should automatically send TX data if available.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]Convert the boolean configurations into a bit-\/style configuration. \end{DoxyRefDesc}
+\mbox{\Hypertarget{uart_8h_a4c500d740ba6227b5ed040d8d366f773}\label{uart_8h_a4c500d740ba6227b5ed040d8d366f773}} 
+\index{uart.h@{uart.h}!UART0\_IntEnable@{UART0\_IntEnable}}
+\index{UART0\_IntEnable@{UART0\_IntEnable}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_IntEnable()}{UART0\_IntEnable()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Int\+Enable (\begin{DoxyParamCaption}\item[{unsigned long}]{flags }\end{DoxyParamCaption})}
+
+
+
+Sets bits in the U\+A\+R\+T0 interrupt mask register. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em flags} & Determines which bits will be set in the register based on its set bits. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{uart_8h_a13bce21e1f2ea51aa4e09f2458e4e983}\label{uart_8h_a13bce21e1f2ea51aa4e09f2458e4e983}} 
+\index{uart.h@{uart.h}!UART0\_InterruptEnable@{UART0\_InterruptEnable}}
+\index{UART0\_InterruptEnable@{UART0\_InterruptEnable}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_InterruptEnable()}{UART0\_InterruptEnable()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Interrupt\+Enable (\begin{DoxyParamCaption}\item[{unsigned long}]{Interrupt\+Index }\end{DoxyParamCaption})}
+
+
+
+Sets the interrupt enable bit for a peripheral in the N\+V\+IC register. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em Interrupt\+Index} & The peripheral\textquotesingle{}s interrupt index in the N\+V\+IC register. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{uart_8h_a7aefa599a6592b9771afc5904662ec5d}\label{uart_8h_a7aefa599a6592b9771afc5904662ec5d}} 
+\index{uart.h@{uart.h}!UART0\_IntHandler@{UART0\_IntHandler}}
+\index{UART0\_IntHandler@{UART0\_IntHandler}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_IntHandler()}{UART0\_IntHandler()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+\+Int\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Interrupt Handler for U\+A\+R\+T0. 
+
+This handler is shared between all possible interrupt types for the U\+A\+RT peripheral. The types of interrupts enabled are determined by the interrupt mask register. This means that the handler needs to have code to handle all enabled interrupt types. Currently it only handles interrupts for successful RX and TX.
+
+The handler is what\textquotesingle{}s in charge for acting based on the echo configuration of the U\+A\+RT descriptor. \mbox{\Hypertarget{uart_8h_a60a498bb600eed8421130f6c7e7e19ae}\label{uart_8h_a60a498bb600eed8421130f6c7e7e19ae}} 
+\index{uart.h@{uart.h}!UART0\_put@{UART0\_put}}
+\index{UART0\_put@{UART0\_put}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_put()}{UART0\_put()}}
+{\footnotesize\ttfamily uint32\+\_\+t U\+A\+R\+T0\+\_\+put (\begin{DoxyParamCaption}\item[{char $\ast$}]{data,  }\item[{uint8\+\_\+t}]{length }\end{DoxyParamCaption})}
+
+
+
+Sends byte stream to U\+A\+RT 0. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em data} & pointer to string of bytes to be sent. \\
+\hline
+\mbox{\texttt{ in}}  & {\em length} & amount of bytes in the byte stream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{[}uint32\+\_\+t\mbox{]} Returns amount of bytes successfully sent to U\+A\+RT 0.
+\end{DoxyReturn}
+This function does not guarantee that all bytes in the string are sent. if there isn\textquotesingle{}t enough space in the TX buffer, the byte stream is truncated. \mbox{\Hypertarget{uart_8h_a24b4fec5866afe2413c63186677a5b71}\label{uart_8h_a24b4fec5866afe2413c63186677a5b71}} 
+\index{uart.h@{uart.h}!UART0\_putc@{UART0\_putc}}
+\index{UART0\_putc@{UART0\_putc}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_putc()}{UART0\_putc()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+putc (\begin{DoxyParamCaption}\item[{char}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Send a character to U\+A\+RT 0. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em c} & Character to be transmitted.\\
+\hline
+\end{DoxyParams}
+It sends a character to U\+A\+R\+T0\textquotesingle{}s data register when the U\+A\+R\+T0 peripheral is ready to transmit. This function is blocking program progression while U\+A\+R\+T0 isn\textquotesingle{}t ready to transmit. \mbox{\Hypertarget{uart_8h_ae75d4801cdc710abee941098b636dac8}\label{uart_8h_ae75d4801cdc710abee941098b636dac8}} 
+\index{uart.h@{uart.h}!UART0\_puts@{UART0\_puts}}
+\index{UART0\_puts@{UART0\_puts}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_puts()}{UART0\_puts()}}
+{\footnotesize\ttfamily void U\+A\+R\+T0\+\_\+puts (\begin{DoxyParamCaption}\item[{char $\ast$}]{str }\end{DoxyParamCaption})}
+
+
+
+Sends char string to U\+A\+RT 0. 
+
+This function will block if at the time of call, The TX buffer cannot hold the whole string. Function will block until the whole string has been queued to send. \mbox{\Hypertarget{uart_8h_ae3b6ddbf08535801e98b0e8116098a97}\label{uart_8h_ae3b6ddbf08535801e98b0e8116098a97}} 
+\index{uart.h@{uart.h}!UART0\_TxReady@{UART0\_TxReady}}
+\index{UART0\_TxReady@{UART0\_TxReady}!uart.h@{uart.h}}
+\doxysubsubsection{\texorpdfstring{UART0\_TxReady()}{UART0\_TxReady()}}
+{\footnotesize\ttfamily bool U\+A\+R\+T0\+\_\+\+Tx\+Ready (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Determines if U\+A\+RT 0 is ready to transmit. 
+
+\begin{DoxyReturn}{Returns}
+\mbox{[}bool\mbox{]} True if ready, false if busy.
+\end{DoxyReturn}
+TX ready is based in the B\+U\+SY flag in the U\+A\+RT 0\textquotesingle{}s flag register. 

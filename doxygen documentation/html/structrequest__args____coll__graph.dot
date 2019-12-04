@@ -1,0 +1,13 @@
+digraph "request_args_"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="request_args_",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Argument structure of a Request Kernel call."];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" req_msg\nret_msg" ,fontname="Helvetica"];
+  Node2 [label="pmsg_",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structpmsg__.html",tooltip="Message Box ID type alias."];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" list" ,fontname="Helvetica"];
+  Node3 [label="node_",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structnode__.html",tooltip="Double linked list node structure."];
+  Node3 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" prev\nnext" ,fontname="Helvetica"];
+  Node2 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" prev\nnext" ,fontname="Helvetica"];
+}

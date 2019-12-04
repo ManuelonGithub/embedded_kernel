@@ -1,0 +1,55 @@
+digraph "buffer_size"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="buffer_size",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Get the size of the buffer/How many characters are currently queued."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="dequeue",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8h.html#a7eb543f614cc99d572b6c25672c9dde7",tooltip="Dequeues a length of bytes."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="enqueue",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8h.html#a83992d4464ed839807002c80786085e6",tooltip="Enqueues a length of bytes into a circular buffer."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="enqueues",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$cirbuffer_8h.html#a84fd87fd2dbf0d62e814ea57b0ab08ff",tooltip="Enqueues a string into a circular buffer."];
+  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="UART0_put",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#a60a498bb600eed8421130f6c7e7e19ae",tooltip="Sends byte stream to UART 0."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="ProcessInput",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a64ca3a424dd85aa6cbdd6600f59a3780",tooltip="Processes an input character sent from UART."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="terminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aadb0857d6d4bedf44cea1a4d10b01947",tooltip="Terminal process."];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="kernel_init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__handlers_8h.html#a3f19ffb1e6c83b6c0203fd69c0534437",tooltip="Initializes kernel data structures, drivers, and critical processes."];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#a840291bc02cba5474a4cb46a9b9566fe",tooltip="main.c"];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="UART0_empty",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#a4296e21703ec7c6686a860a7b368cdda",tooltip="Checks if the UART's RX buffer is empty."];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="UART0_getc",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#af6582cdc278e64b5a73c86193aee0e26",tooltip="Gets a character from the UART buffer."];
+  Node1 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="UART0_gets",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#aa06c88030b046b939e57cedf15eb9415",tooltip="Retrieves string from UART 0."];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="UART0_puts",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$uart_8h.html#ae75d4801cdc710abee941098b636dac8",tooltip="Sends char string to UART 0."];
+  Node13 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="ClearIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aaa27a5cf4effb4de9793dbc5d8485251",tooltip=" "];
+  Node13 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="CommandCheck",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a17d4e3cec6e8979d90f76e0c1c8ed02b",tooltip="Checks terminal's buffer for valid commands and calls their respective handler functions."];
+  Node15 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="ResetScreen",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a5f6047bae9bf82be7be019edf176fdba",tooltip="Resets the computer terminal settings and cursor position."];
+  Node16 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="ResetTerminal",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a82fdf1845852f11bd394d7ff4a6be0c4",tooltip="Resets the terminal settings."];
+  Node17 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="run",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a278dcd638c1669d47cac62d07ceafc39",tooltip=" "];
+  Node13 -> Node19 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="send_header",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a54c8e2feafb5a3efa9c223ea1d87b2b9",tooltip="Sends the header line to computer terminal."];
+  Node19 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 -> Node20 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="SetIO",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#a2b892bb8fbb3ea3eae878299e47bbb6c",tooltip=" "];
+  Node13 -> Node21 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="SystemView",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$k__terminal_8h.html#aa169a6634a28f7b9afb5439b82e8ef27",tooltip="Displays information about the system and allocated processes."];
+  Node13 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}
