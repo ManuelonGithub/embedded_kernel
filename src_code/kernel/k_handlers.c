@@ -22,7 +22,6 @@
 #include "k_terminal.h"
 
 pcb_t *running, *pTerminal, *pIdle;
-uart_descriptor_t uart;
 
 extern pcb_t   proc_table[PID_MAX];
 extern pmsgbox_t msgbox[BOXID_MAX];
@@ -39,9 +38,7 @@ void kernel_init()
 
     SysTick_Init(1000);  // 1000 Hz rate -> system tick triggers every milisecond
 
-    uart.echo = false;
-
-    UART0_Init(&uart);
+    UART0_Init();
 
     process_attr_t pattr = {
          .id = 0,

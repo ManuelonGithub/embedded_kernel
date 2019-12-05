@@ -71,13 +71,12 @@
      * @details contains the rx and tx circular buffers
      *          and uart configuration information.
      */
-	typedef struct uart_descriptor_ {
+	typedef struct uart_ {
 		circular_buffer_t   tx;
 		circular_buffer_t   rx;
-		bool            echo;
-	} uart_descriptor_t;
+	} uart_t;
 
-	void UART0_Init(uart_descriptor_t* descriptor);
+	void UART0_Init();
 	void UART0_InterruptEnable(unsigned long InterruptIndex);
 	void UART0_IntEnable(unsigned long flags);
 

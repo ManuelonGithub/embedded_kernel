@@ -63,13 +63,13 @@ void terminal();
 
 void init_term(terminal_t* term);
 
-void generate_header(char* header, uint32_t width);
-inline void send_header(char* header);
+void GenerateHeader(char* header, uint32_t width);
+inline void SendHeader(char* header);
 
 inline void ResetScreen();
 inline void ResetTerminal(terminal_t* term);
 
-inline void ConfigureInputCapture(input_capture_t* cap, IO_metadata_t* meta);
+inline void ConfigureInputCapture(input_capture_t* cap, IO_metadata_t* meta, pmbox_t box);
 inline void ResetInputCapture(input_capture_t* cap);
 
 void ProcessInput(char c, terminal_t* term);
@@ -78,9 +78,9 @@ void SendUserInput(terminal_t* term);
 
 bool CommandCheck(terminal_t* term);
 
-bool SystemView(char* attr_str, terminal_t* term);
-bool SetIO(char* attr_str, terminal_t* term);
-bool ClearIO(char* attr, terminal_t* term);
+bool ProcessStatus(char* attr_str, terminal_t* term);
+bool EnableIO(char* attr_str, terminal_t* term);
+bool DisableIO(char* attr, terminal_t* term);
 bool run(char* attr, terminal_t* term);
 
 #endif // K_TERMINAL_H

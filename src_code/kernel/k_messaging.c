@@ -111,13 +111,11 @@ void k_MsgBoxUnbindAll(pcb_t* proc)
 }
 
 /**
- * @brief   Allocates message and fills its data and size.
- * @param   [in] data: Pointer to the message data to be copied to the message.
- * @param   [in] size: Size of the message data.
+ * @brief   Allocates message from available allocatable messages.
  * @return  Allocated message if the allocation was successful,
  *          NULL if it was unsuccessful.
  */
-inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
+inline pmsg_t* k_pMsgAllocate()
 {
     pmsg_t* msg = NULL;
 
@@ -127,18 +125,12 @@ inline pmsg_t* k_pMsgAllocate(uint8_t* data, uint32_t size)
 
     msg = &msg_table[i];
     SetBit(available_msg, i);
-    if (size > MSG_MAX_SIZE)    msg->size = MSG_MAX_SIZE;
-    else                        msg->size = size;
 
     msg->list.next = NULL;
     msg->list.prev = NULL;
-
-    if (data != NULL) {
-        memcpy(msg->data, data, size);
-    }
-    else {
-        msg->size = 0;
-    }
+    msg->dst = ANY_BOX;
+    msg->src = ANY_BOX;
+    msg->size = MSG_MAX_SIZE;
 
     return msg;
 }
@@ -186,9 +178,8 @@ void k_MsgSend(pmsg_t* msg, size_t* retsize)
     }
     else {
         // Allocate Message
-        msg_out = k_pMsgAllocate(msg->data, msg->size);
-        msg_out->dst = msg->dst;
-        msg_out->src = msg->src;
+        msg_out = k_pMsgAllocate();
+        size = k_pMsgTransfer(msg_out, msg);
 
         // Send if message allocation was successful
         if (msg_out != NULL) {
@@ -236,7 +227,7 @@ void k_MsgRecv(pmsg_t* msg, size_t* retsize)
         dst_box->owner->state = BLOCKED;
         PendSV();
     }
-    else if (msg->src == ANY_BOX || dst_box->recv_msgq->src == msg->src){
+    else if (msg->src == ANY_BOX || dst_box->recv_msgq->src == msg->src) {
         src_msg = dst_box->recv_msgq;
 
         dst_box->recv_msgq = dst_box->recv_msgq->next;

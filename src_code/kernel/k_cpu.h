@@ -82,7 +82,7 @@ inline void SetCallReg(volatile k_call_t* call);
 inline k_call_t* GetCallReg();
 inline k_call_t* GetProcessCall(uint32_t* psp);
 
-inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)());
+inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)(), void* arg);
 
 inline void SetPSP(volatile uint32_t ProcessStack);
 inline uint32_t GetPSP();

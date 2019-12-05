@@ -77,7 +77,9 @@ pid_t k_pcreate(process_attr_t* attr, void (*program)(), void (*terminate)())
             strcpy(pcb->name, "N/A");
         }
 
-        InitProcessContext(&pcb->sp, program, terminate);
+        void* arg = (attr == NULL) ? NULL : attr->arg;
+
+        InitProcessContext(&pcb->sp, program, terminate, arg);
         LinkPCB(pcb, priority);
     }
     else {

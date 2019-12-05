@@ -28,17 +28,6 @@ typedef struct pcreate_args_ {
 }pcreate_args_t;
 
 /**
- * @brief   Argument structure of a message box bind kernel call
- * @details Contains two arguments:
- *          attr: pointer to message box attribute structure. Can be NULL.
- *          box: box ID number used in the binding procedure.
- */
-typedef struct bind_args_ {
-    msgbox_attr_t* attr;
-    pmbox_t box;
-} bind_args_t;
-
-/**
  * @brief   Argument structure of a Request Kernel call.
  * @details Contains two arguments:
  *          req_msg: Pointer to message that will be sent to destination message box.
@@ -48,7 +37,6 @@ typedef struct request_args_ {
     pmsg_t* req_msg;
     pmsg_t* ret_msg;
 } request_args_t;
-
 
 inline k_ret_t kcall(k_code_t code, k_arg_t arg);
 
@@ -63,13 +51,13 @@ pmbox_t unbind(pmbox_t box);
 pmbox_t getbox();
 
 size_t send(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
-size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size);
+size_t recv(pmbox_t dst, pmbox_t src, uint8_t* data, uint32_t size, pmbox_t* src_ret);
 
 size_t request(pmbox_t dst, pmbox_t src,
                uint8_t* req, size_t req_size, uint8_t* ret, size_t ret_max);
 
-size_t send_user(char* str);
-size_t recv_user(char* buf, uint32_t max_size);
+size_t send_user(pmbox_t box, char* str);
+size_t recv_user(pmbox_t box, char* buf, uint32_t max_size);
 
 void get_name(char* dst_str);
 void set_name(char* src_str);

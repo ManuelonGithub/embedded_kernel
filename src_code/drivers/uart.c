@@ -15,18 +15,13 @@
 
 void ioServerSend();
 
-static uart_descriptor_t* UART0;
+static uart_t UART0;
 
 /**
  * @brief   Initializes the control registers for UART0 and the UART descriptor
  *          that is accessed by the driver.
- * @param   [in,out] descriptor: pointer to uart descriptor that will be accessed by the driver.
- * @param   [in] echo_en: Specifies if RX echo is enabled at driver level.
- * @param   [in] auto_flush_en: Specifies if driver should automatically send TX data if available.
- *
- * @todo    Convert the boolean configurations into a bit-style configuration.
  */
-void UART0_Init(uart_descriptor_t* descriptor)
+void UART0_Init()
 {
     volatile int wait;
 
@@ -51,10 +46,8 @@ void UART0_Init(uart_descriptor_t* descriptor)
     UART0_CTL_R = UART_CTL_UARTEN;        // Enable the UART
     wait = 0; // wait; give UART time to enable itself.
 
-    UART0 = descriptor;
-
-    circular_buffer_init(&UART0->tx);
-    circular_buffer_init(&UART0->rx);
+    circular_buffer_init(&UART0.tx);
+    circular_buffer_init(&UART0.rx);
 
     NVIC_SYS_PRI1_R = (UART_PRIORITY_LVL);
 
@@ -100,7 +93,7 @@ void UART0_IntHandler(void)
         /* RECV done - clear interrupt and make char available to application */
         UART0_ICR_R |= UART_INT_RX;
 
-        enqueuec(&UART0->rx, UART0_DR_R);
+        enqueuec(&UART0.rx, UART0_DR_R);
 
         ioServerSend();
     }
@@ -110,8 +103,8 @@ void UART0_IntHandler(void)
         UART0_ICR_R |= UART_INT_TX;
     }
 
-    if (buffer_size(&UART0->tx) != BUFFER_EMPTY) {
-        UART0_putc(dequeuec(&UART0->tx));
+    if (buffer_size(&UART0.tx) != BUFFER_EMPTY) {
+        UART0_putc(dequeuec(&UART0.tx));
     }
 }
 
@@ -158,7 +151,7 @@ void UART0_puts(char* str)
          * than to only call it once there is room
          * to queue more characters from the string.
          */
-        if (buffer_size(&UART0->tx) != BUFFER_FULL) 
+        if (buffer_size(&UART0.tx) != BUFFER_FULL)
             bytes_sent += UART0_put(str+bytes_sent, length-bytes_sent);
     }
 }
@@ -174,9 +167,9 @@ void UART0_puts(char* str)
  */
 uint32_t UART0_put(char* data, uint8_t length)
 {
-    uint8_t bytes_sent = enqueue(&UART0->tx, data, length);
+    uint8_t bytes_sent = enqueue(&UART0.tx, data, length);
 
-    UART0_putc(dequeuec(&UART0->tx));
+    UART0_putc(dequeuec(&UART0.tx));
 
     return bytes_sent;
 }
@@ -188,7 +181,7 @@ uint32_t UART0_put(char* data, uint8_t length)
  */
 inline bool UART0_empty()
 {
-    return (buffer_size(&UART0->rx) == 0);
+    return (buffer_size(&UART0.rx) == 0);
 }
 
 /**
@@ -200,8 +193,8 @@ inline bool UART0_empty()
  */
 bool UART0_getc(char* c)
 {
-    if (buffer_size(&UART0->rx) != BUFFER_EMPTY) {
-        *c = dequeuec(&UART0->rx);
+    if (buffer_size(&UART0.rx) != BUFFER_EMPTY) {
+        *c = dequeuec(&UART0.rx);
         return true;
     }
 
@@ -227,8 +220,8 @@ uint32_t UART0_gets(char* str, uint32_t MAX_BYTES)
     char c;
 
     while (bytes_read < MAX_BYTES && !str_done) {
-        if (buffer_size(&UART0->rx) != BUFFER_EMPTY) {
-            c = dequeuec(&UART0->rx);
+        if (buffer_size(&UART0.rx) != BUFFER_EMPTY) {
+            c = dequeuec(&UART0.rx);
             str[bytes_read++] = c;
             str_done = (c == '\n' || c == '\0' || c == '\r');
         }
@@ -249,12 +242,13 @@ uint32_t UART0_gets(char* str, uint32_t MAX_BYTES)
  */
 void ioServerSend()
 {
-    uart_msgdata_t data = {.box_id = IO_BOX, .c = dequeuec(&UART0->rx)};
+    uint8_t c = dequeuec(&UART0.rx);
+
     pmsg_t msg = {
          .dst = IO_BOX,
          .src = IO_BOX,
-         .data = (uint8_t*)&data,
-         .size = sizeof(uart_msgdata_t)
+         .data = &c,
+         .size = 1
     };
 
     k_MsgSend(&msg, NULL);

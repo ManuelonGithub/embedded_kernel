@@ -19,7 +19,7 @@
 #include "k_scheduler.h"
 #include "cstr_utils.h"
 
-enum SUPPORTED_COMMANDS {SYSVIEW, SETIO, CLEARIO, RUN, COMMANDS_SIZE};
+enum SUPPORTED_COMMANDS {PS, IO_ON, IO_OFF, RUN, COMMANDS_SIZE};
 
 /**
  * @brief   Supported command keywords. Commands are case insensitive.
@@ -30,18 +30,13 @@ enum SUPPORTED_COMMANDS {SYSVIEW, SETIO, CLEARIO, RUN, COMMANDS_SIZE};
  *               and lets user processes run.
  */
 const char* const COMMAND[] = {
-    "SYSVIEW", "SETIO", "CLEARIO", "RUN"
-};
-
-/** @brief  IO command sub-options supported. */
-const char* const IO_OPTIONS[] = {
-    "ON", "OFF"
+    "PS", "IO_ON", "IO_OFF", "RUN"
 };
 
 bool (* const CommHandler[])(char*, terminal_t*) = {
-    SystemView,
-    SetIO,
-    ClearIO,
+    ProcessStatus,
+    EnableIO,
+    DisableIO,
     run
 };
 
@@ -58,13 +53,13 @@ void init_term(terminal_t* term)
 
     term->box = bind(IO_BOX);
 
-    ClearBitRange(term->active_pid, 0, PID_MAX);
+    SetBitRange(term->active_pid, 0, PID_MAX);
     ResetInputCapture(&term->capture);
 
     // Places in IDLE in high priority so user processes do not run
     ChangeProcessPriority(IDLE_ID, 1);
 
-    generate_header(term->header, 64);
+    GenerateHeader(term->header, 64);
 }
 
 /**
@@ -75,7 +70,7 @@ void init_term(terminal_t* term)
  *              generated output will be placed in.
  * @param   [in] width: Width of the header line.
  */
-void generate_header(char* home, uint32_t width)
+void GenerateHeader(char* home, uint32_t width)
 {
     // Find middle and end offsets for the frame and text
     uint8_t mid_off =
@@ -104,7 +99,7 @@ void generate_header(char* home, uint32_t width)
 /**
  * @brief   Sends the header line to computer terminal
  */
-inline void send_header(char* header)
+inline void SendHeader(char* header)
 {
     UART0_puts(CURSOR_SAVE);
     UART0_puts(CURSOR_HOME);
@@ -140,7 +135,7 @@ inline void ResetTerminal(terminal_t* term)
     term->input_entry = 0;
 
     ResetScreen();
-    send_header(term->header);
+    SendHeader(term->header);
 
     term->mode = COMMAND_HANDLER;
 
@@ -157,10 +152,10 @@ inline void ResetTerminal(terminal_t* term)
  *              pointer to metadata structure containing the
  *              input configuration of a process request.
  */
-inline void ConfigureInputCapture(input_capture_t* cap, IO_metadata_t* meta)
+inline void ConfigureInputCapture(input_capture_t* cap, IO_metadata_t* meta, pmbox_t box)
 {
     cap->en  = true;
-    cap->dst = meta->box_id;
+    cap->dst = box;
     cap->max = meta->size;
     cap->pid = meta->proc_id;
 }
@@ -189,7 +184,7 @@ void terminal()
     init_term(&term);
 
     ResetScreen();
-    send_header(term.header);
+    SendHeader(term.header);
 
     uint8_t rx_buf[MSG_MAX_SIZE];
 
@@ -199,20 +194,20 @@ void terminal()
     // Depending on the src_box value,
     // rx_buf has two different data structures
     IO_metadata_t* IO_meta = (IO_metadata_t*)rx_buf;
-    uart_msgdata_t* uart = (uart_msgdata_t*)rx_buf;
-    // The first four bytes in array should be the source box
-    pmbox_t* src_box = (pmbox_t*)&rx_buf;
+
+    uint8_t* uart_char = (uint8_t*)rx_buf;
+    pmbox_t src_box;
 
     while (1) {
-        recv(term.box, ANY_BOX, rx_buf, MSG_MAX_SIZE);
+        recv(term.box, ANY_BOX, rx_buf, MSG_MAX_SIZE, &src_box);
 
-        if (*src_box == IO_BOX) {
+        if (src_box == IO_BOX) {
             // Process UART input
-            if (uart->c == TERM_ESC) {
+            if (*uart_char == TERM_ESC) {
                 ResetTerminal(&term);
             }
             else if (term.mode == COMMAND_HANDLER || term.capture.en) {
-                ProcessInput(uart->c, &term);
+                ProcessInput(*uart_char, &term);
             }
         }
         else if (GetBit(term.active_pid, IO_meta->proc_id) && !term.capture.en) {
@@ -220,14 +215,14 @@ void terminal()
             if (IO_meta->is_send) {
                 UART0_puts((char*)IO_meta->send_data);
                 // Sends data back just so the sender's recv gets the size sent to uart.
-                send(*src_box, term.box, IO_meta->send_data, IO_meta->size);
+                send(src_box, term.box, IO_meta->send_data, IO_meta->size);
             }
             else {
-                ConfigureInputCapture(&term.capture, IO_meta);
+                ConfigureInputCapture(&term.capture, IO_meta, src_box);
             }
         }
         else {
-            send(*src_box, term.box, "", 0);
+            send(src_box, term.box, "", 0);
         }
     }
 }
@@ -269,10 +264,6 @@ void ProcessInput(char c, terminal_t* term)
             term->input_entry = 0;
             term->buf.wr_ptr = 0;
         } break;
-
-//        case 0x1B: {
-//            CursorCodeCheck(rx_buf);
-//        } break;
 
         default: {
             if (term->mode == COMMAND_HANDLER)  c = toupper(c);
@@ -359,7 +350,7 @@ bool CommandCheck(terminal_t* term)
  * @param   [in] term: pointer to active terminal (not used in this command).
  * @returns true.
  */
-bool SystemView(char* attr, terminal_t* term)
+bool ProcessStatus(char* attr, terminal_t* term)
 {
     pcb_t* pcb;
 
@@ -410,7 +401,7 @@ bool SystemView(char* attr, terminal_t* term)
 /**
  * @brief
  */
-bool SetIO(char* attr, terminal_t* term)
+bool EnableIO(char* attr, terminal_t* term)
 {
     uint32_t start = 0, i = 0, end;
     pid_t pid;
@@ -447,7 +438,7 @@ bool SetIO(char* attr, terminal_t* term)
     return true;
 }
 
-bool ClearIO(char* attr, terminal_t* term)
+bool DisableIO(char* attr, terminal_t* term)
 {
     uint32_t start = 0, i = 0, end;
     pid_t pid;

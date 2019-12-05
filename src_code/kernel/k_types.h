@@ -36,20 +36,13 @@ typedef struct pmsg_ {
     uint8_t*    data;   /**< Pointer to Location of the message data. */
 } pmsg_t;
 
-/** @brief  Message box attributes structure. **WIP** */
-typedef struct msgbox_attr_ {
-    pmbox_t         id;             /**< Message Box ID. */
-    msgbox_mode_t   mode;           /**< Message box mode/permissions. */
-} msgbox_attr_t;
-
 /** @brief  Inter-process communication Message box structure */
 typedef struct pmsgbox_ {
     struct pcb_*    owner;      /**< Pointer to owner PCB */
     pmbox_t         id;         /**< Message box ID */
-    msgbox_mode_t   mode;       /**< Message box mode/permissions. **WIP** */
     pmsg_t*         recv_msgq;  /**< Pointer to the receive message list queue. */
     pmsg_t*         wait_msg;   /**< Pointer to a pending receive request message. */
-    size_t*         retsize;
+    size_t*         retsize;    /**< pointer to return value of pending receive. */
 } pmsgbox_t;
 
 typedef id_t        pid_t;      /// Process id type alias
@@ -62,6 +55,7 @@ typedef struct process_attr_ {
     pid_t       id;         /**< Process ID. */
     priority_t  priority;   /**< Process priority. */
     char        name[32];   /**< Process name. */
+    void*       arg;        /**< process argument. */
 } process_attr_t;
 
 /** @brief  Process control block structure */
@@ -84,7 +78,7 @@ typedef struct pcb_ {
     bitmap_t    owned_box[MSGBOX_BITMAP_SIZE];      /**< Process owned box' bitmap. */
 } pcb_t;
 
-typedef uint32_t*   k_arg_t;    /// Kernel call argument type alias
+typedef void*       k_arg_t;    /// Kernel call argument type alias
 typedef uint32_t    k_ret_t;    /// Kernel call return value type alias
 
 /** @brief Kernel Call structure */
@@ -100,19 +94,11 @@ typedef struct kernel_call_arguments_ {
  *          for both input and output.
  */
 typedef struct IO_metadata_ {
-    pmbox_t     box_id;     /**< Msg box that the request originated from. */
     pid_t       proc_id;    /**< Process ID that made the request. */
     bool        is_send;    /**< True if the request is to output data. */
     size_t      size;       /**< Size of request data (for both input and output) */
     uint8_t*    send_data;  /**< Pointer to output data buffer */
 } IO_metadata_t;
 
-/**
- * @brief   data format sent from the UART driver to the IO server.
- */
-typedef struct uart_msgdata_ {
-    pmbox_t     box_id; /**< Box ID. Should always be the IO_BOX. */
-    char        c;      /**< character to send to IO server. */
-} uart_msgdata_t;
 
 #endif

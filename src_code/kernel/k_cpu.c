@@ -97,7 +97,7 @@ inline k_call_t* GetProcessCall(uint32_t* psp) {
 /**
  * @brief   Initializes the CPU context of a process.
  */
-inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)())
+inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exit_program)(), void* arg)
 {
     *sp -= (sizeof(cpu_context_t)/4 -1);
 
@@ -106,6 +106,7 @@ inline void InitProcessContext(uint32_t** sp, void (*proc_program)(), void (*exi
 	cpu->psr = PSR_INIT_VAL;
     cpu->lr = (uint32_t)exit_program;
     cpu->pc = (uint32_t)proc_program;
+    cpu->r0 = (uint32_t)arg;
 }
 
 /**

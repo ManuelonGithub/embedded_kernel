@@ -122,6 +122,55 @@
 #include "k_handlers.h"
 #include "calls.h"
 #include <string.h>
+#include "cstr_utils.h"
+
+void send_test()
+{
+     pmbox_t box = bind(ANY_BOX), dst_box = 10;
+
+     pid_t id = getpid();
+
+     uint8_t name[32] = {"Test process #"}, num_buf[10];
+
+     strcat((char*)name, itoa((int)id, (char*)num_buf));
+
+     set_name((char*)name);
+
+     uint8_t data[64] = {"Hello from "};
+
+     strcat((char*)data, (char*)name);
+
+     send(dst_box, box, data, 64);
+
+     nice(LOWEST_PRIORITY);
+     for(;;) {}
+}
+
+void multi_recv_test()
+{
+    pmbox_t box = bind(10), src_box;
+
+    nice(LOWEST_PRIORITY);
+
+    uint8_t data[64], num_buf[10];
+
+    while (1) {
+        recv(box, ANY_BOX, data, 64, &src_box);
+
+        send_user(box, "Box #");
+        send_user(box, itoa((int)src_box, (char*)num_buf));
+        send_user(box, ": ");
+        send_user(box, (char*)data);
+        send_user(box, "\n\n");
+    }
+}
+
+void arg_test(void* arg)
+{
+    uint32_t get_arg = *(uint32_t*)(arg);
+
+    while(1) {}
+}
 
 /**
  * @brief   main.c
@@ -134,15 +183,20 @@ int main(void)
     kernel_init();
 
     /* Place Process Create requests here */
+//    pcreate(NULL, &multi_recv_test);
+//    pcreate(NULL, &send_test);
+//    pcreate(NULL, &send_test);
+//    pcreate(NULL, &send_test);
+//    pcreate(NULL, &send_test);
 
+    uint32_t arg = 1000;
 
+    process_attr_t attr = {.arg = &arg, .id = 0, .priority = 0, .name = "arg tester"};
 
+    pcreate(&attr, &arg_test);
     /*                                    */
 
     kernel_start();
 
-	return 0;
+    return 0;
 }
-
-
-
